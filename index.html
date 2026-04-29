@@ -17,7 +17,7 @@
         .hero {
             background: linear-gradient(135deg, #22c55e, #16a34a, #15803d);
             color: white;
-            padding: 50px 20px 60px;
+            padding: 70px 20px;
             position: relative;
             overflow: hidden;
         }
@@ -51,21 +51,6 @@
             50% { transform: translate(15px, -15px) scale(1.1); }
         }
 
-        /* ===== صورة SVG مدمجة ===== */
-        .hero-illustration {
-            position: relative;
-            z-index: 1;
-            width: 280px;
-            height: 180px;
-            margin: 0 auto 20px;
-            animation: floatIllustration 4s infinite ease-in-out;
-        }
-
-        @keyframes floatIllustration {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
-        }
-
         .hero h1 { 
             font-size: 3em; 
             margin-bottom: 10px; 
@@ -86,10 +71,27 @@
         .hero p { 
             font-size: 1em; 
             opacity: 0.8; 
-            margin-bottom: 0; 
+            margin-bottom: 30px; 
             position: relative; 
             z-index: 1;
             animation: fadeInUp 1s ease 0.3s both;
+        }
+
+        /* ===== أيقونة متحركة ===== */
+        .icon-plate {
+            font-size: 4em;
+            display: block;
+            margin-bottom: 15px;
+            animation: bouncePlate 2s infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes bouncePlate {
+            0%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-15px); }
+            50% { transform: translateY(0); }
+            70% { transform: translateY(-8px); }
         }
 
         /* ===== خطوات ===== */
@@ -254,7 +256,6 @@
         /* ===== تجاوب مع الجوال ===== */
         @media (max-width: 600px) {
             .hero h1 { font-size: 2em; }
-            .hero-illustration { width: 220px; height: 140px; }
             .step { width: 90%; }
             .feature { width: 80%; }
         }
@@ -263,61 +264,7 @@
 <body>
 
     <div class="hero">
-        <!-- SVG Illustration: طاولة بوفيه احترافية -->
-        <div class="hero-illustration">
-            <svg viewBox="0 0 280 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- طاولة -->
-                <rect x="30" y="100" width="220" height="15" rx="4" fill="#fbbf24" opacity="0.9"/>
-                <rect x="50" y="115" width="15" height="40" rx="2" fill="#fbbf24" opacity="0.7"/>
-                <rect x="215" y="115" width="15" height="40" rx="2" fill="#fbbf24" opacity="0.7"/>
-                
-                <!-- طبق تقديم كبير (وسط) -->
-                <ellipse cx="140" cy="85" rx="55" ry="18" fill="white" opacity="0.95"/>
-                <ellipse cx="140" cy="83" rx="40" ry="12" fill="#fef3c7"/>
-                <!-- طعام في الطبق -->
-                <circle cx="125" cy="80" r="5" fill="#f59e0b"/>
-                <circle cx="140" cy="78" r="6" fill="#d97706"/>
-                <circle cx="155" cy="80" r="5" fill="#f59e0b"/>
-                <circle cx="132" cy="85" r="4" fill="#b45309"/>
-                <circle cx="148" cy="85" r="4" fill="#b45309"/>
-                
-                <!-- طبق جانبي يسار -->
-                <ellipse cx="75" cy="90" rx="22" ry="8" fill="white" opacity="0.85"/>
-                <ellipse cx="75" cy="89" rx="14" ry="5" fill="#dcfce7"/>
-                <circle cx="70" cy="87" r="3" fill="#22c55e"/>
-                <circle cx="78" cy="87" r="3" fill="#16a34a"/>
-                
-                <!-- طبق جانبي يمين -->
-                <ellipse cx="205" cy="90" rx="22" ry="8" fill="white" opacity="0.85"/>
-                <ellipse cx="205" cy="89" rx="14" ry="5" fill="#fce7f3"/>
-                <circle cx="200" cy="87" r="3" fill="#ec4899"/>
-                <circle cx="210" cy="87" r="3" fill="#db2777"/>
-                
-                <!-- قبة حافظة طعام (كلوش) -->
-                <path d="M120 70 Q140 35 160 70" stroke="white" stroke-width="2" fill="white" opacity="0.3"/>
-                
-                <!-- غطاء طبق -->
-                <ellipse cx="140" cy="50" rx="25" ry="6" fill="white" opacity="0.6"/>
-                <path d="M115 50 Q115 30 140 25 Q165 30 165 50" fill="white" opacity="0.4"/>
-                <circle cx="140" cy="28" r="4" fill="white" opacity="0.8"/>
-                
-                <!-- أوراق زينة -->
-                <path d="M60 75 Q50 65 55 55" stroke="#86efac" stroke-width="2" fill="none"/>
-                <path d="M220 75 Q230 65 225 55" stroke="#86efac" stroke-width="2" fill="none"/>
-                
-                <!-- نجوم / بريق -->
-                <circle cx="100" cy="40" r="2" fill="white" opacity="0.6">
-                    <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
-                </circle>
-                <circle cx="180" cy="35" r="2" fill="white" opacity="0.6">
-                    <animate attributeName="opacity" values="0.6;0;0.6" dur="2.5s" repeatCount="indefinite"/>
-                </circle>
-                <circle cx="145" cy="20" r="1.5" fill="white" opacity="0.6">
-                    <animate attributeName="opacity" values="0.6;0;0.6" dur="1.8s" repeatCount="indefinite"/>
-                </circle>
-            </svg>
-        </div>
-
+        <div class="icon-plate">🍽️</div>
         <h1>Catering Hub</h1>
         <div class="tagline">منصتك الذكية لحجز خدمات البوفيهات والحفلات</div>
         <p>نربطك بأفضل الموردين في مدينتك • قارن العروض • وفر وقتك ومالك</p>
