@@ -3,315 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catering Hub - احصل على عروض البوفيهات والحفلات</title>
+    <title>CaterHub - كاترينغ اجتماعات مسقط</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body { 
-            font-family: 'Segoe UI', Tahoma, sans-serif; 
-            background: #f0fdf4; 
-            text-align: center; 
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            text-align: center;
+            line-height: 1.7;
         }
 
-        /* ===== القسم العلوي ===== */
+        /* ========= البانر العلوي ========= */
         .hero {
-            background: linear-gradient(135deg, #22c55e, #16a34a, #15803d);
+            background: linear-gradient(135deg, #0f172a, #1e293b);
             color: white;
-            padding: 70px 20px;
+            padding: 50px 20px 40px;
             position: relative;
             overflow: hidden;
-        }
-
-        .hero::before {
-            content: "";
-            position: absolute;
-            top: -50px;
-            left: -50px;
-            width: 200px;
-            height: 200px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 50%;
-            animation: floatHero 6s infinite ease-in-out;
         }
 
         .hero::after {
             content: "";
             position: absolute;
-            bottom: -60px;
-            right: -40px;
-            width: 250px;
-            height: 250px;
-            background: rgba(255,255,255,0.06);
-            border-radius: 50%;
-            animation: floatHero 8s infinite ease-in-out reverse;
+            bottom: -30px;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: #f8fafc;
+            border-radius: 50% 50% 0 0;
         }
 
-        @keyframes floatHero {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(15px, -15px) scale(1.1); }
+        .logo {
+            font-size: 2.8em;
+            font-weight: 900;
+            color: #fbbf24;
+            letter-spacing: -1px;
+            margin-bottom: 5px;
         }
 
-        .hero h1 { 
-            font-size: 3em; 
-            margin-bottom: 10px; 
-            position: relative; 
-            z-index: 1;
-            animation: fadeInDown 1s ease;
+        .location {
+            font-size: 1.1em;
+            color: #cbd5e1;
+            margin-bottom: 20px;
         }
 
-        .hero .tagline {
-            font-size: 1.2em;
-            opacity: 0.9;
-            margin-bottom: 8px;
-            position: relative;
-            z-index: 1;
-            animation: fadeInUp 1s ease 0.2s both;
+        .hero h1 {
+            font-size: 2.2em;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: white;
         }
 
-        .hero p { 
-            font-size: 1em; 
-            opacity: 0.8; 
-            margin-bottom: 30px; 
-            position: relative; 
-            z-index: 1;
-            animation: fadeInUp 1s ease 0.3s both;
-        }
-
-        /* ===== أيقونة متحركة ===== */
-        .icon-plate {
-            font-size: 4em;
-            display: block;
+        .hero .subtitle {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #fbbf24;
             margin-bottom: 15px;
-            animation: bouncePlate 2s infinite;
-            position: relative;
-            z-index: 1;
         }
 
-        @keyframes bouncePlate {
-            0%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-15px); }
-            50% { transform: translateY(0); }
-            70% { transform: translateY(-8px); }
+        .hero .description {
+            font-size: 1em;
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto 25px;
         }
 
-        /* ===== خطوات ===== */
-        .steps {
+        /* ========= أيقونات المزايا ========= */
+        .features-strip {
             display: flex;
             justify-content: center;
-            gap: 25px;
-            margin: -40px 20px 50px;
+            gap: 30px;
             flex-wrap: wrap;
+            margin: -20px 20px 40px;
             position: relative;
             z-index: 2;
         }
 
-        .step {
+        .feature-tag {
             background: white;
-            padding: 30px 20px;
-            border-radius: 20px;
-            width: 240px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-            animation: fadeInUp 0.8s ease both;
-            border: 1px solid #dcfce7;
+            padding: 12px 20px;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #e2e8f0;
         }
 
-        .step:nth-child(1) { animation-delay: 0.1s; }
-        .step:nth-child(2) { animation-delay: 0.3s; }
-        .step:nth-child(3) { animation-delay: 0.5s; }
-
-        .step:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(34,197,94,0.2);
-            border-color: #86efac;
-        }
-
-        .step .number {
-            display: inline-block;
-            width: 55px;
-            height: 55px;
-            line-height: 55px;
-            font-size: 1.8em;
-            font-weight: bold;
-            color: white;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
+        .feature-tag .dot {
+            width: 10px;
+            height: 10px;
+            background: #22c55e;
             border-radius: 50%;
-            margin-bottom: 15px;
-            box-shadow: 0 5px 15px rgba(34,197,94,0.4);
         }
 
-        .step h3 { margin: 10px 0; color: #166534; font-size: 1.2em; }
-        .step p { color: #4b5563; font-size: 0.95em; line-height: 1.5; }
+        /* ========= قسم "مثال لـ" ========= */
+        .examples {
+            margin: 50px 20px;
+        }
 
-        /* ===== زر CTA ===== */
-        .cta-wrapper {
-            margin: 20px 0 60px;
+        .examples h2 {
+            font-size: 1.2em;
+            color: #64748b;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .example-grid {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .example-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px 25px;
+            font-weight: 600;
+            color: #1e293b;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+            transition: all 0.3s;
+        }
+
+        .example-card:hover {
+            border-color: #fbbf24;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(251,191,36,0.15);
+        }
+
+        /* ========= زر الطلب الأساسي ========= */
+        .cta-section {
+            margin: 50px 20px 30px;
         }
 
         .cta-button {
             display: inline-block;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: white;
-            padding: 18px 55px;
-            font-size: 1.4em;
+            background: #fbbf24;
+            color: #0f172a;
+            padding: 16px 45px;
+            font-size: 1.2em;
+            font-weight: 700;
             border-radius: 50px;
             text-decoration: none;
-            font-weight: bold;
-            box-shadow: 0 10px 30px rgba(34,197,94,0.5);
+            box-shadow: 0 10px 30px rgba(251,191,36,0.4);
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            animation: pulse 2.5s infinite;
-        }
-
-        .cta-button::after {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.3s;
+            border: 2px solid #fbbf24;
         }
 
         .cta-button:hover {
-            transform: translateY(-4px) scale(1.03);
-            box-shadow: 0 15px 40px rgba(34,197,94,0.6);
+            background: #f59e0b;
+            border-color: #f59e0b;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(251,191,36,0.5);
         }
 
-        .cta-button:hover::after {
-            opacity: 1;
+        .cta-sub {
+            font-size: 0.9em;
+            color: #64748b;
+            margin-top: 12px;
         }
 
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 10px 30px rgba(34,197,94,0.5); }
-            50% { box-shadow: 0 15px 45px rgba(34,197,94,0.75); }
-        }
-
-        /* ===== قسم ميزات إضافي ===== */
-        .features {
+        /* ========= قسم أيقونات الخدمات ========= */
+        .services {
             display: flex;
             justify-content: center;
-            gap: 30px;
-            margin: 0 20px 50px;
+            gap: 40px;
+            margin: 60px 20px 40px;
             flex-wrap: wrap;
         }
 
-        .feature {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            width: 200px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
-            border: 1px solid #dcfce7;
+        .service-item {
+            text-align: center;
+            max-width: 150px;
         }
 
-        .feature:hover {
-            transform: scale(1.05);
-            border-color: #86efac;
-        }
-
-        .feature .icon {
+        .service-icon {
             font-size: 2.5em;
             margin-bottom: 10px;
         }
 
-        .feature h4 {
-            color: #166534;
-            margin-bottom: 5px;
+        .service-item h4 {
+            font-size: 1em;
+            color: #1e293b;
+            font-weight: 700;
         }
 
-        .feature p {
-            color: #6b7280;
-            font-size: 0.85em;
-        }
-
-        /* ===== تذييل ===== */
+        /* ========= تذييل ========= */
         footer {
-            background: #14532d;
-            color: #bbf7d0;
+            background: #0f172a;
+            color: #94a3b8;
             padding: 25px;
             font-size: 0.9em;
+            margin-top: 30px;
         }
 
-        footer span {
-            color: #4ade80;
-            font-weight: bold;
+        footer .whatsapp-link {
+            color: #22c55e;
+            font-weight: 700;
+            text-decoration: none;
+            margin: 0 5px;
         }
 
-        /* ===== حركات ===== */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ===== تجاوب مع الجوال ===== */
+        /* ========= تجاوب مع الجوال ========= */
         @media (max-width: 600px) {
-            .hero h1 { font-size: 2em; }
-            .step { width: 90%; }
-            .feature { width: 80%; }
+            .hero h1 { font-size: 1.6em; }
+            .hero .subtitle { font-size: 1.1em; }
+            .logo { font-size: 2.2em; }
+            .example-grid { flex-direction: column; align-items: center; }
+            .example-card { width: 80%; }
+            .services { gap: 25px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- البانر العلوي -->
     <div class="hero">
-        <div class="icon-plate">🍽️</div>
-        <h1>Catering Hub</h1>
-        <div class="tagline">منصتك الذكية لحجز خدمات البوفيهات والحفلات</div>
-        <p>نربطك بأفضل الموردين في مدينتك • قارن العروض • وفر وقتك ومالك</p>
+        <div class="logo">CaterHub</div>
+        <div class="location">🇴🇲 مسقط</div>
+        <h1>كترينج اجتماعاتك</h1>
+        <p class="subtitle">صار أسهل!</p>
+        <p class="description">
+            نوفّر لك 3 عروض من أفضل موردين الكترينج في مسقط خلال أقل من ساعة
+        </p>
     </div>
 
-    <div class="steps">
-        <div class="step">
-            <div class="number">1</div>
-            <h3>📝 أرسل طلبك</h3>
-            <p>املأ بيانات مناسبتك وعدد الضيوف ونوع الأكل بضغطة زر</p>
-        </div>
-        <div class="step">
-            <div class="number">2</div>
-            <h3>📩 استلم العروض</h3>
-            <p>خلال ساعتين توصلك عروض أسعار منافسة من أفضل الموردين</p>
-        </div>
-        <div class="step">
-            <div class="number">3</div>
-            <h3>✅ اختار الأنسب</h3>
-            <p>قارن التقييمات والأسعار واختار العرض اللي يناسبك</p>
-        </div>
+    <!-- أيقونات المزايا السريعة -->
+    <div class="features-strip">
+        <div class="feature-tag"><span class="dot"></span> عروض خلال 60 دقيقة</div>
+        <div class="feature-tag"><span class="dot"></span> أفضل الأسعار والجودة</div>
+        <div class="feature-tag"><span class="dot"></span> موردين موثوقين</div>
+        <div class="feature-tag"><span class="dot"></span> دعم سريع ومتابعة</div>
     </div>
 
-    <div class="cta-wrapper">
-        <a href="https://forms.gle/vqMb9K8r5wrsKCKM8" class="cta-button" target="_blank">📋 أطلب عرض سعر الآن</a>
-    </div>
-
-    <div class="features">
-        <div class="feature">
-            <div class="icon">⚡</div>
-            <h4>سرعة</h4>
-            <p>عروض خلال ساعتين</p>
-        </div>
-        <div class="feature">
-            <div class="icon">🛡️</div>
-            <h4>موثوقية</h4>
-            <p>موردين معتمدين</p>
-        </div>
-        <div class="feature">
-            <div class="icon">💰</div>
-            <h4>أسعار منافسة</h4>
-            <p>قارن واختار الأفضل</p>
+    <!-- أمثلة للاستخدام -->
+    <div class="examples">
+        <h2>مثال لـ:</h2>
+        <div class="example-grid">
+            <div class="example-card">🏢 اجتماعات الشركات</div>
+            <div class="example-card">🎤 المؤتمرات والندوات</div>
+            <div class="example-card">🏛️ الجهات الحكومية</div>
+            <div class="example-card">🎉 الفعاليات والحفلات</div>
         </div>
     </div>
 
+    <!-- زر الطلب الأساسي -->
+    <div class="cta-section">
+        <a href="https://forms.gle/vqMb9K8r5wrsKCKM8" class="cta-button" target="_blank">📋 اطلب عرضك الآن</a>
+        <p class="cta-sub">وجرّب خدماتنا بدون أي التزام</p>
+    </div>
+
+    <!-- أيقونات الخدمات -->
+    <div class="services">
+        <div class="service-item">
+            <div class="service-icon">💰</div>
+            <h4>أسعار تنافسية</h4>
+        </div>
+        <div class="service-item">
+            <div class="service-icon">🍽️</div>
+            <h4>تنوع في القوائم</h4>
+        </div>
+        <div class="service-item">
+            <div class="service-icon">⏱️</div>
+            <h4>التزام بالمواعيد</h4>
+        </div>
+    </div>
+
+    <!-- تذييل -->
     <footer>
-        © 2026 <span>Catering Hub</span> - جميع الحقوق محفوظة |  
+        📞 للتواصل: <a class="whatsapp-link" href="https://wa.me/96891234567" target="_blank">واتساب 96891234567</a>
+        <br><br>
+        © 2025 CaterHub. جميع الحقوق محفوظة.
     </footer>
 
 </body>
