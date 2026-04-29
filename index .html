@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catering Hub - احصل على عروض البوفيهات والحفلات</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            background: #f0fdf4; 
+            text-align: center; 
+        }
+
+        /* ===== القسم العلوي ===== */
+        .hero {
+            background: linear-gradient(135deg, #22c55e, #16a34a, #15803d);
+            color: white;
+            padding: 70px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+            animation: floatHero 6s infinite ease-in-out;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            bottom: -60px;
+            right: -40px;
+            width: 250px;
+            height: 250px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 50%;
+            animation: floatHero 8s infinite ease-in-out reverse;
+        }
+
+        @keyframes floatHero {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(15px, -15px) scale(1.1); }
+        }
+
+        .hero h1 { 
+            font-size: 3em; 
+            margin-bottom: 10px; 
+            position: relative; 
+            z-index: 1;
+            animation: fadeInDown 1s ease;
+        }
+
+        .hero .tagline {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .hero p { 
+            font-size: 1em; 
+            opacity: 0.8; 
+            margin-bottom: 30px; 
+            position: relative; 
+            z-index: 1;
+            animation: fadeInUp 1s ease 0.3s both;
+        }
+
+        /* ===== أيقونة متحركة ===== */
+        .icon-plate {
+            font-size: 4em;
+            display: block;
+            margin-bottom: 15px;
+            animation: bouncePlate 2s infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes bouncePlate {
+            0%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-15px); }
+            50% { transform: translateY(0); }
+            70% { transform: translateY(-8px); }
+        }
+
+        /* ===== خطوات ===== */
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: -40px 20px 50px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 20px;
+            width: 240px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease both;
+            border: 1px solid #dcfce7;
+        }
+
+        .step:nth-child(1) { animation-delay: 0.1s; }
+        .step:nth-child(2) { animation-delay: 0.3s; }
+        .step:nth-child(3) { animation-delay: 0.5s; }
+
+        .step:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(34,197,94,0.2);
+            border-color: #86efac;
+        }
+
+        .step .number {
+            display: inline-block;
+            width: 55px;
+            height: 55px;
+            line-height: 55px;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border-radius: 50%;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(34,197,94,0.4);
+        }
+
+        .step h3 { margin: 10px 0; color: #166534; font-size: 1.2em; }
+        .step p { color: #4b5563; font-size: 0.95em; line-height: 1.5; }
+
+        /* ===== زر CTA ===== */
+        .cta-wrapper {
+            margin: 20px 0 60px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            padding: 18px 55px;
+            font-size: 1.4em;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(34,197,94,0.5);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: pulse 2.5s infinite;
+        }
+
+        .cta-button::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 15px 40px rgba(34,197,94,0.6);
+        }
+
+        .cta-button:hover::after {
+            opacity: 1;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 10px 30px rgba(34,197,94,0.5); }
+            50% { box-shadow: 0 15px 45px rgba(34,197,94,0.75); }
+        }
+
+        /* ===== قسم ميزات إضافي ===== */
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 0 20px 50px;
+            flex-wrap: wrap;
+        }
+
+        .feature {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            width: 200px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+            border: 1px solid #dcfce7;
+        }
+
+        .feature:hover {
+            transform: scale(1.05);
+            border-color: #86efac;
+        }
+
+        .feature .icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .feature h4 {
+            color: #166534;
+            margin-bottom: 5px;
+        }
+
+        .feature p {
+            color: #6b7280;
+            font-size: 0.85em;
+        }
+
+        /* ===== تذييل ===== */
+        footer {
+            background: #14532d;
+            color: #bbf7d0;
+            padding: 25px;
+            font-size: 0.9em;
+        }
+
+        footer span {
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        /* ===== حركات ===== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== تجاوب مع الجوال ===== */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2em; }
+            .step { width: 90%; }
+            .feature { width: 80%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <div class="icon-plate">🍽️</div>
+        <h1>Catering Hub</h1>
+        <div class="tagline">منصتك الذكية لحجز خدمات البوفيهات والحفلات</div>
+        <p>نربطك بأفضل الموردين في مدينتك • قارن العروض • وفر وقتك ومالك</p>
+    </div>
+
+    <div class="steps">
+        <div class="step">
+            <div class="number">1</div>
+            <h3>📝 أرسل طلبك</h3>
+            <p>املأ بيانات مناسبتك وعدد الضيوف ونوع الأكل بضغطة زر</p>
+        </div>
+        <div class="step">
+            <div class="number">2</div>
+            <h3>📩 استلم العروض</h3>
+            <p>خلال ساعتين توصلك عروض أسعار منافسة من أفضل الموردين</p>
+        </div>
+        <div class="step">
+            <div class="number">3</div>
+            <h3>✅ اختار الأنسب</h3>
+            <p>قارن التقييمات والأسعار واختار العرض اللي يناسبك</p>
+        </div>
+    </div>
+
+    <div class="cta-wrapper">
+        <a href="https://forms.gle/vqMb9K8r5wrsKCKM8" class="cta-button" target="_blank">📋 أطلب عرض سعر الآن</a>
+    </div>
+
+    <div class="features">
+        <div class="feature">
+            <div class="icon">⚡</div>
+            <h4>سرعة</h4>
+            <p>عروض خلال ساعتين</p>
+        </div>
+        <div class="feature">
+            <div class="icon">🛡️</div>
+            <h4>موثوقية</h4>
+            <p>موردين معتمدين</p>
+        </div>
+        <div class="feature">
+            <div class="icon">💰</div>
+            <h4>أسعار منافسة</h4>
+            <p>قارن واختار الأفضل</p>
+        </div>
+    </div>
+
+    <footer>
+        © 2025 <span>Catering Hub</span> - جميع الحقوق محفوظة | 📞 للتواصل واتساب: 05xxxxxxxx
+    </footer>
+
+</body>
+</html>
