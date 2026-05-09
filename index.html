@@ -1,318 +1,250 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catering Hub - احصل على عروض البوفيهات والحفلات</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>Gulf Catering Hub | فخامة الضيافة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,900;1,900&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root {
+            --gold: #c5a059;
+            --black: #0a0a0a;
+            --white: #ffffff;
+            --cream: #f9f6f0;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body { 
-            font-family: 'Segoe UI', Tahoma, sans-serif; 
-            background: #f0fdf4; 
-            text-align: center; 
+        body {
+            font-family: 'Noto Kufi Arabic', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            overflow-x: hidden;
         }
 
-        /* ===== القسم العلوي ===== */
-        .hero {
-            background: linear-gradient(135deg, #22c55e, #16a34a, #15803d);
-            color: white;
-            padding: 70px 20px;
+        /* Hero Section الملكي */
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             position: relative;
-            overflow: hidden;
+            /* صورة كاترينج فخمة جديدة */
+            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),
+                        url('https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=1600') center/cover no-repeat fixed;
+            color: var(--white);
+            text-align: center;
+            border-bottom: 5px solid var(--gold);
         }
 
-        .hero::before {
-            content: "";
-            position: absolute;
-            top: -50px;
-            left: -50px;
-            width: 200px;
-            height: 200px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 50%;
-            animation: floatHero 6s infinite ease-in-out;
+        .logo-hero {
+            height: 160px;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 0 15px rgba(197, 160, 89, 0.4));
         }
 
-        .hero::after {
-            content: "";
-            position: absolute;
-            bottom: -60px;
-            right: -40px;
-            width: 250px;
-            height: 250px;
-            background: rgba(255,255,255,0.06);
-            border-radius: 50%;
-            animation: floatHero 8s infinite ease-in-out reverse;
+        .brand-name {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(2rem, 8vw, 4.5rem);
+            font-weight: 900;
+            letter-spacing: 8px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 15px;
         }
 
-        @keyframes floatHero {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(15px, -15px) scale(1.1); }
+        .hero-tagline {
+            font-size: 1.5rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            border-top: 1px solid var(--gold);
+            border-bottom: 1px solid var(--gold);
+            padding: 10px 30px;
+            display: inline-block;
         }
 
-        .hero h1 { 
-            font-size: 3em; 
-            margin-bottom: 10px; 
-            position: relative; 
-            z-index: 1;
-            animation: fadeInDown 1s ease;
+        /* الأقسام وتنسيق الصور الجديد */
+        .content-wrapper { padding: 100px 0; background: var(--cream); }
+
+        .step-section {
+            max-width: 1200px;
+            margin: 0 auto 120px;
+            padding: 0 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
         }
 
-        .hero .tagline {
-            font-size: 1.2em;
-            opacity: 0.9;
-            margin-bottom: 8px;
+        .step-image {
+            width: 100%;
+            height: 500px;
+            border: 1px solid var(--gold);
+            padding: 15px;
+            background: white;
             position: relative;
-            z-index: 1;
-            animation: fadeInUp 1s ease 0.2s both;
         }
 
-        .hero p { 
-            font-size: 1em; 
-            opacity: 0.8; 
-            margin-bottom: 30px; 
-            position: relative; 
-            z-index: 1;
-            animation: fadeInUp 1s ease 0.3s both;
+        .step-image img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transition: 1.5s filter ease;
         }
 
-        /* ===== أيقونة متحركة ===== */
-        .icon-plate {
-            font-size: 4em;
+        .step-num {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 5rem;
+            color: var(--gold);
+            font-weight: 900;
+            opacity: 0.3;
+            margin-bottom: -30px;
             display: block;
-            margin-bottom: 15px;
-            animation: bouncePlate 2s infinite;
-            position: relative;
-            z-index: 1;
         }
 
-        @keyframes bouncePlate {
-            0%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-15px); }
-            50% { transform: translateY(0); }
-            70% { transform: translateY(-8px); }
-        }
+        .step-title { font-size: 2.5rem; font-weight: 900; margin-bottom: 20px; color: var(--black); }
+        .step-p { font-size: 1.2rem; color: #444; line-height: 2; }
 
-        /* ===== خطوات ===== */
-        .steps {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            margin: -40px 20px 50px;
-            flex-wrap: wrap;
-            position: relative;
-            z-index: 2;
-        }
-
-        .step {
-            background: white;
-            padding: 30px 20px;
-            border-radius: 20px;
-            width: 240px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-            animation: fadeInUp 0.8s ease both;
-            border: 1px solid #dcfce7;
-        }
-
-        .step:nth-child(1) { animation-delay: 0.1s; }
-        .step:nth-child(2) { animation-delay: 0.3s; }
-        .step:nth-child(3) { animation-delay: 0.5s; }
-
-        .step:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(34,197,94,0.2);
-            border-color: #86efac;
-        }
-
-        .step .number {
+        /* زر الطلب الملكي */
+        .btn-cta {
             display: inline-block;
-            width: 55px;
-            height: 55px;
-            line-height: 55px;
-            font-size: 1.8em;
-            font-weight: bold;
+            margin-top: 30px;
+            padding: 20px 60px;
+            background: var(--gold);
             color: white;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            border-radius: 50%;
-            margin-bottom: 15px;
-            box-shadow: 0 5px 15px rgba(34,197,94,0.4);
-        }
-
-        .step h3 { margin: 10px 0; color: #166534; font-size: 1.2em; }
-        .step p { color: #4b5563; font-size: 0.95em; line-height: 1.5; }
-
-        /* ===== زر CTA ===== */
-        .cta-wrapper {
-            margin: 20px 0 60px;
-        }
-
-        .cta-button {
-            display: inline-block;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: white;
-            padding: 18px 55px;
-            font-size: 1.4em;
-            border-radius: 50px;
             text-decoration: none;
-            font-weight: bold;
-            box-shadow: 0 10px 30px rgba(34,197,94,0.5);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            animation: pulse 2.5s infinite;
+            font-weight: 900;
+            letter-spacing: 2px;
+            transition: 0.5s;
+            border: 2px solid var(--gold);
         }
 
-        .cta-button::after {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.3s;
+        .btn-cta:hover { 
+            background: transparent; 
+            color: var(--gold);
         }
 
-        .cta-button:hover {
-            transform: translateY(-4px) scale(1.03);
-            box-shadow: 0 15px 40px rgba(34,197,94,0.6);
+        /* المميزات */
+        .why-us { padding: 100px 20px; background: white; text-align: center; }
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 60px auto 0;
         }
+        .why-item i { font-size: 3rem; color: var(--gold); margin-bottom: 20px; }
+        .why-item h3 { font-size: 1.5rem; margin-bottom: 10px; }
 
-        .cta-button:hover::after {
-            opacity: 1;
-        }
 
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 10px 30px rgba(34,197,94,0.5); }
-            50% { box-shadow: 0 15px 45px rgba(34,197,94,0.75); }
-        }
 
-        /* ===== قسم ميزات إضافي ===== */
-        .features {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin: 0 20px 50px;
-            flex-wrap: wrap;
-        }
-
-        .feature {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            width: 200px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
-            border: 1px solid #dcfce7;
-        }
-
-        .feature:hover {
-            transform: scale(1.05);
-            border-color: #86efac;
-        }
-
-        .feature .icon {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-
-        .feature h4 {
-            color: #166534;
-            margin-bottom: 5px;
-        }
-
-        .feature p {
-            color: #6b7280;
-            font-size: 0.85em;
-        }
-
-        /* ===== تذييل ===== */
         footer {
-            background: #14532d;
-            color: #bbf7d0;
-            padding: 25px;
-            font-size: 0.9em;
+            padding: 80px 20px;
+            background: var(--black);
+            color: white;
+            text-align: center;
+            border-top: 4px solid var(--gold);
         }
 
-        footer span {
-            color: #4ade80;
-            font-weight: bold;
-        }
-
-        /* ===== حركات ===== */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ===== تجاوب مع الجوال ===== */
-        @media (max-width: 600px) {
-            .hero h1 { font-size: 2em; }
-            .step { width: 90%; }
-            .feature { width: 80%; }
+        @media (max-width: 900px) {
+            .step-section { grid-template-columns: 1fr; text-align: center; }
+            .step-image { height: 350px; order: -1; }
+            .brand-name { letter-spacing: 4px; }
+            .hero-tagline { font-size: 1.2rem; }
         }
     </style>
 </head>
+
 <body>
 
-    <div class="hero">
-        <div class="icon-plate">🍽️</div>
-        <h1>Catering Hub</h1>
-        <div class="tagline">منصتك الذكية لحجز خدمات البوفيهات والحفلات</div>
-        <p>نربطك بأفضل الموردين في مدينتك • قارن العروض • وفر وقتك ومالك</p>
-    </div>
+    <header>
+        <div data-aos="fade-down" data-aos-duration="1500">
+            <img src="https://i.postimg.cc/CK0FMh3Y/1000508313.png" alt="Logo" class="logo-hero">
+            <h1 class="brand-name">Gulf Catering Hub</h1>
+            <p class="hero-tagline">تستحق أن تتميز بمناسبتك</p>
+        </div>
+    </header>
 
-    <div class="steps">
-        <div class="step">
-            <div class="number">1</div>
-            <h3>📝 أرسل طلبك</h3>
-            <p>املأ بيانات مناسبتك وعدد الضيوف ونوع الأكل بضغطة زر</p>
+    <main class="content-wrapper">
+        <!-- Step 1: تجهيزات الطاولات -->
+        <div class="step-section" data-aos="fade-up">
+            <div class="step-image">
+                <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800" alt="Catering Setup">
+            </div>
+            <div class="step-text-content">
+                <span class="step-num">01</span>
+                <h2 class="step-title">ارسل طلبك</h2>
+                <p class="step-p">ابدأ بتحديد تفاصيل مناسبتك بدقة، وسنقوم فوراً بتحليل احتياجاتك لضمان تقديم الخيارات الأفضل.</p>
+                <a href="https://forms.gle/vqMb9K8r5wrsKCKM8" target="_blank" class="btn-cta">اطلب عرض سعر الآن</a>
+            </div>
         </div>
-        <div class="step">
-            <div class="number">2</div>
-            <h3>📩 استلم العروض</h3>
-            <p>خلال ساعتين توصلك عروض أسعار منافسة من أفضل الموردين</p>
-        </div>
-        <div class="step">
-            <div class="number">3</div>
-            <h3>✅ اختار الأنسب</h3>
-            <p>قارن التقييمات والأسعار واختار العرض اللي يناسبك</p>
-        </div>
-    </div>
 
-    <div class="cta-wrapper">
-        <a href="https://forms.gle/vqMb9K8r5wrsKCKM8" class="cta-button" target="_blank">📋 أطلب عرض سعر الآن</a>
-    </div>
+        <!-- Step 2: طاقم الخدمة - تم تصليح الرابط -->
+        <div class="step-section" data-aos="fade-up" style="direction: ltr;">
+            <div class="step-image">
+                <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?q=80&w=800" alt="Professional Service">
+            </div>
+            <div class="step-text-content" style="direction: rtl;">
+                <span class="step-num">02</span>
+                <h2 class="step-title">3 عروض سعر</h2>
+                <p class="step-p">نحن نوفر عليك عناء البحث؛ سنرسل لك أفضل 3 عروض أسعار تمت فلترتها بعناية لتناسب ميزانيتك ومعاييرك.</p>
+            </div>
+        </div>
 
-    <div class="features">
-        <div class="feature">
-            <div class="icon">⚡</div>
-            <h4>سرعة</h4>
-            <p>عروض خلال ساعتين</p>
+        <!-- Step 3: اكتمال المناسبة -->
+        <div class="step-section" data-aos="fade-up">
+            <div class="step-image">
+                <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=800" alt="Royal Event">
+            </div>
+            <div class="step-text-content">
+                <span class="step-num">03</span>
+                <h2 class="step-title">استمتع بضيافتك</h2>
+                <p class="step-p">بعد اختيار العرض المناسب، نضمن لك جودة التنفيذ والالتزام التام لتقديم تجربة تليق بك وبضيوفك.</p>
+            </div>
         </div>
-        <div class="feature">
-            <div class="icon">🛡️</div>
-            <h4>موثوقية</h4>
-            <p>موردين معتمدين</p>
+    </main>
+
+    <section class="why-us">
+        <h2 class="step-title">لماذا Gulf Catering Hub؟</h2>
+        <div class="why-grid">
+            <div class="why-item" data-aos="zoom-in">
+                <i class="fas fa-crown"></i>
+                <h3>الثقة</h3>
+                <p>تعاملنا مبني على الشفافية والاحترافية الكاملة.</p>
+            </div>
+            <div class="why-item" data-aos="zoom-in" data-aos-delay="100">
+                <i class="fas fa-shipping-fast"></i>
+                <h3>السرعة</h3>
+                <p>نصلك أينما كنت في أسرع وقت ممكن.</p>
+            </div>
+            <div class="why-item" data-aos="zoom-in" data-aos-delay="200">
+                <i class="fas fa-medal"></i>
+                <h3>الجودة</h3>
+                <p>أعلى معايير الجودة في التجهيزات والخدمة.</p>
+            </div>
+            <div class="why-item" data-aos="zoom-in" data-aos-delay="300">
+                <i class="fas fa-star"></i>
+                <h3>الخبرة</h3>
+                <p>فريقنا يمتلك سنوات من الخبرة في إدارة الفعاليات.</p>
+            </div>
+            <div class="why-item" data-aos="zoom-in" data-aos-delay="400">
+                <i class="fas fa-percentage"></i>
+                <h3>أسعار تنافسية</h3>
+                <p>عروض حصرية تناسب كافة الميزانيات.</p>
+            </div>
         </div>
-        <div class="feature">
-            <div class="icon">💰</div>
-            <h4>أسعار منافسة</h4>
-            <p>قارن واختار الأفضل</p>
-        </div>
-    </div>
+    </section>
 
     <footer>
-        © 2026 <span>Catering Hub</span> - جميع الحقوق محفوظة | 
+        <img src="https://i.postimg.cc/CK0FMh3Y/1000508313.png" alt="Logo" style="height: 100px; filter: brightness(0) invert(1); margin-bottom: 20px;">
+        <p style="letter-spacing: 10px; font-weight: 900; color: var(--gold);">GULF CATERING HUB</p>
+        <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.6;">© 2026 مسقط، سلطنة عُمان | جميع الحقوق محفوظة</p>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>AOS.init({ duration: 1200, once: true });</script>
 </body>
 </html>
