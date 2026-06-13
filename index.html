@@ -1,250 +1,1514 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>Gulf Catering Hub | فخامة الضيافة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,900;1,900&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GULF CATERING HUB | فخامة الضيافة</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --gold: #c5a059;
-            --black: #0a0a0a;
+            --gold-light: #FFD700;
+            --gold-dark: #8B6914;
+            --black: #0a0500;
+            --black-light: #1a0f05;
+            --black-medium: #2a1a0a;
             --white: #ffffff;
-            --cream: #f9f6f0;
+            --gray-light: #f5f5f5;
+            --gray: #aaa;
+            --text-dark: #333;
+            --text-light: #fff;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
-            font-family: 'Noto Kufi Arabic', sans-serif;
-            background: var(--white);
-            color: var(--black);
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--black);
+            color: var(--text-light);
             overflow-x: hidden;
+            min-height: 100vh;
+            transition: all 0.3s ease;
         }
 
-        /* Hero Section الملكي */
-        header {
-            height: 100vh;
+        body.en {
+            direction: ltr;
+            font-family: 'Playfair Display', 'Cairo', serif;
+        }
+
+        body.en .cairo-text {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        /* Splash Screen */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0500 0%, #1a0f05 50%, #0a0500 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .splash-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .splash-logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+            animation: pulse 1.5s infinite;
+        }
+
+        .splash-title {
+            color: var(--gold);
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(197, 160, 89, 0.5);
+        }
+
+        .splash-subtitle {
+            color: var(--gold-light);
+            font-size: 16px;
+            margin-top: 10px;
+            letter-spacing: 2px;
+        }
+
+        .splash-loader {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(197, 160, 89, 0.2);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-top: 30px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background-color: var(--black);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            height: 220px;
+            position: relative;
+            overflow: hidden;
+            background-image: url('https://images.unsplash.com/photo-1555244162-803834f70033?w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(197,160,89,0.3) 50%, rgba(0,0,0,0.6) 100%);
+            z-index: 1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.7) 100%);
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            position: relative;
-            /* صورة كاترينج فخمة جديدة */
-            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),
-                        url('https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=1600') center/cover no-repeat fixed;
-            color: var(--white);
-            text-align: center;
-            border-bottom: 5px solid var(--gold);
         }
 
-        .logo-hero {
-            height: 160px;
-            margin-bottom: 25px;
-            filter: drop-shadow(0 0 15px rgba(197, 160, 89, 0.4));
+        .language-switcher {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            display: flex;
+            gap: 6px;
+            z-index: 100;
+        }
+
+        body.en .language-switcher {
+            left: auto;
+            right: 12px;
+        }
+
+        .lang-btn {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(197,160,89,0.4);
+            color: var(--gold);
+            padding: 4px 10px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .lang-btn.active {
+            background: var(--gold);
+            color: var(--black);
+            border-color: var(--gold);
+        }
+
+        .lang-btn:hover {
+            background: var(--gold);
+            color: var(--black);
+        }
+
+        .brand-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .brand-logo {
+            width: 75px;
+            height: 80px;
         }
 
         .brand-name {
-            font-family: 'Bodoni Moda', serif;
-            font-size: clamp(2rem, 8vw, 4.5rem);
-            font-weight: 900;
-            letter-spacing: 8px;
             color: var(--gold);
-            text-transform: uppercase;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-shadow: 0 1px 1px #000, 0 0 5px rgba(0,0,0,0.8);
+        }
+
+        .brand-sub {
+            color: var(--gold-light);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        .divider-line {
+            width: 50px;
+            height: 1px;
+            background: var(--gold);
+            margin: 8px auto;
+        }
+
+        .pulse-text {
+            color: var(--gold-light);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+            animation: pulseText 2s infinite;
+        }
+
+        @keyframes pulseText {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Content Area */
+        .content-area {
+            position: relative;
+            background-image: url('https://images.pexels.com/photos/20551987/pexels-photo-20551987.jpeg?auto=compress&cs=tinysrgb&w=1200');
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: calc(100vh - 220px);
+        }
+
+        .content-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(10,5,0,0.70) 0%, rgba(10,5,0,0.25) 50%, rgba(10,5,0,0.85) 100%);
+            pointer-events: none;
+        }
+
+        .content-inner {
+            position: relative;
+            z-index: 1;
+            padding: 20px 0;
+        }
+
+        /* Question Cards */
+        .questions-section {
+            padding: 20px 15px;
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, rgba(26,15,5,0.96) 0%, rgba(42,26,10,0.96) 100%);
+            border: 1px solid rgba(197,160,89,0.5);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 8px 5px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .question-card:nth-child(1) { animation-delay: 0.1s; }
+        .question-card:nth-child(2) { animation-delay: 0.2s; }
+        .question-card:nth-child(3) { animation-delay: 0.3s; }
+        .question-card:nth-child(4) { animation-delay: 0.4s; }
+        .question-card:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+
+        body.en .question-card {
+            flex-direction: row-reverse;
+        }
+
+        .question-text {
+            flex: 1;
+        }
+
+        .question-title {
+            color: var(--gold-light);
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            text-align: right;
+        }
+
+        body.en .question-title {
+            text-align: left;
+        }
+
+        .question-desc {
+            color: var(--white);
+            font-size: 14px;
+            line-height: 22px;
+            text-align: right;
+        }
+
+        body.en .question-desc {
+            text-align: left;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 20px 15px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+        }
+
+        .step-card {
+            margin: 12px 5px;
+            border-radius: 24px;
+            padding: 24px;
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        .step-card:nth-child(2) { animation-delay: 0.1s; }
+        .step-card:nth-child(3) { animation-delay: 0.2s; }
+        .step-card:nth-child(4) { animation-delay: 0.3s; }
+        .step-card:nth-child(5) { animation-delay: 0.4s; }
+
+        .step-card.primary {
+            background: linear-gradient(135deg, rgba(197,160,89,0.93) 0%, rgba(139,105,20,0.93) 50%, rgba(197,160,89,0.93) 100%);
+            border: 2px solid var(--gold-light);
+            box-shadow: 0 0 20px rgba(197,160,89,0.6);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .step-card.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(197,160,89,0.8);
+        }
+
+        .step-card.secondary {
+            background: linear-gradient(135deg, rgba(42,26,10,0.96) 0%, rgba(26,10,0,0.96) 100%);
+            border: 1px solid rgba(197,160,89,0.5);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 16px;
+        }
+
+        .step-card.primary .step-header {
+            justify-content: center;
+        }
+
+        body.en .step-header {
+            flex-direction: row-reverse;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-card.primary .step-number {
+            width: 70px;
+            height: 70px;
+            background: var(--white);
+            color: var(--gold);
+            border: 2px solid var(--gold-light);
+            font-size: 32px;
+        }
+
+        .step-card.secondary .step-number {
+            background: var(--gold);
+            color: var(--black);
+        }
+
+        .step-title {
+            font-size: 24px;
+            font-weight: 700;
+            flex: 1;
+            text-align: right;
+        }
+
+        body.en .step-title {
+            text-align: left;
+        }
+
+        .step-card.primary .step-title {
+            color: var(--white);
+            font-size: 28px;
+            text-shadow: 0 1px 1px #000, 0 0 5px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .step-card.secondary .step-title {
+            color: var(--gold);
+        }
+
+        .step-desc {
+            font-size: 16px;
+            line-height: 28px;
+            text-align: right;
+        }
+
+        body.en .step-desc {
+            text-align: left;
+        }
+
+        .step-card.primary .step-desc {
+            color: var(--white);
+            font-size: 18px;
+            line-height: 32px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .step-card.secondary .step-desc {
+            color: var(--white);
+        }
+
+        .step-cta {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .cta-button {
+            background: linear-gradient(90deg, var(--white), var(--gold-light));
+            color: var(--gold-dark);
+            padding: 12px 35px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255,215,0,0.4);
+        }
+
+        /* Why Us */
+        .why-us-section {
+            margin: 30px 15px;
+            padding: 30px 20px;
+            background: rgba(26, 15, 5, 0.94);
+            border-radius: 30px;
+            border: 1px solid rgba(197,160,89,0.5);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .feature-item {
+            background: linear-gradient(135deg, rgba(58,37,16,0.96) 0%, rgba(42,26,10,0.96) 100%);
+            border: 1px solid rgba(197,160,89,0.5);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            animation: fadeIn 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .feature-item:nth-child(1) { animation-delay: 0.1s; }
+        .feature-item:nth-child(2) { animation-delay: 0.15s; }
+        .feature-item:nth-child(3) { animation-delay: 0.2s; }
+        .feature-item:nth-child(4) { animation-delay: 0.25s; }
+        .feature-item:nth-child(5) { animation-delay: 0.3s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            font-size: 12px;
+            color: var(--white);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid rgba(197,160,89,0.2);
+            background: rgba(10,5,0,0.85);
+            margin-top: 20px;
+        }
+
+        .footer-logo {
+            width: 60px;
+            height: 60px;
             margin-bottom: 15px;
         }
 
-        .hero-tagline {
-            font-size: 1.5rem;
-            font-weight: 400;
-            letter-spacing: 2px;
-            border-top: 1px solid var(--gold);
-            border-bottom: 1px solid var(--gold);
-            padding: 10px 30px;
-            display: inline-block;
+        .footer-brand {
+            color: var(--gold);
+            font-size: 12px;
+            letter-spacing: 4px;
         }
 
-        /* الأقسام وتنسيق الصور الجديد */
-        .content-wrapper { padding: 100px 0; background: var(--cream); }
+        .footer-copy {
+            color: #aa9977;
+            font-size: 10px;
+            margin-top: 15px;
+        }
 
-        .step-section {
-            max-width: 1200px;
-            margin: 0 auto 120px;
-            padding: 0 30px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--white);
+            width: 90%;
+            max-width: 450px;
+            max-height: 85vh;
+            border-radius: 30px;
+            padding: 20px;
+            overflow-y: auto;
+            transform: translateY(50px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-title {
+            font-size: 26px;
+            font-weight: 700;
+            text-align: center;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 5px;
+            display: block;
+            text-align: right;
+        }
+
+        body.en .form-label {
+            text-align: left;
+        }
+
+        .form-label .optional {
+            color: #888;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .form-input {
+            width: 100%;
+            background: var(--gray-light);
+            color: var(--text-dark);
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 14px;
+            text-align: right;
+            font-family: 'Cairo', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        body.en .form-input {
+            text-align: left;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(197,160,89,0.1);
+        }
+
+        .options-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .option-btn {
+            background: #f0f0f0;
+            color: #555;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .option-btn.selected {
+            background: var(--gold);
+            color: var(--white);
+        }
+
+        .option-btn:hover {
+            background: var(--gold);
+            color: var(--white);
+        }
+
+        .date-row {
+            display: flex;
+            gap: 10px;
             align-items: center;
         }
 
-        .step-image {
-            width: 100%;
-            height: 500px;
-            border: 1px solid var(--gold);
-            padding: 15px;
-            background: white;
-            position: relative;
+        body.en .date-row {
+            flex-direction: row-reverse;
         }
 
-        .step-image img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            transition: 1.5s filter ease;
+        .date-picker-btn {
+            flex: 1;
+            background: var(--gray-light);
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 12px;
+            cursor: pointer;
+            text-align: right;
+            color: #aaa;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            font-family: 'Cairo', sans-serif;
+            transition: border-color 0.3s ease;
         }
 
-        .step-num {
-            font-family: 'Bodoni Moda', serif;
-            font-size: 5rem;
-            color: var(--gold);
-            font-weight: 900;
-            opacity: 0.3;
-            margin-bottom: -30px;
-            display: block;
+        body.en .date-picker-btn {
+            text-align: left;
         }
 
-        .step-title { font-size: 2.5rem; font-weight: 900; margin-bottom: 20px; color: var(--black); }
-        .step-p { font-size: 1.2rem; color: #444; line-height: 2; }
+        .date-picker-btn.has-value {
+            color: var(--text-dark);
+        }
 
-        /* زر الطلب الملكي */
-        .btn-cta {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 20px 60px;
+        .date-picker-btn:hover {
+            border-color: var(--gold);
+        }
+
+        .determine-later-btn {
+            background: #f0f0f0;
+            color: #555;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 14px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            white-space: nowrap;
+            min-height: 48px;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .determine-later-btn.active {
             background: var(--gold);
-            color: white;
-            text-decoration: none;
-            font-weight: 900;
-            letter-spacing: 2px;
-            transition: 0.5s;
-            border: 2px solid var(--gold);
+            color: var(--white);
         }
 
-        .btn-cta:hover { 
-            background: transparent; 
-            color: var(--gold);
+        .determine-later-btn:hover {
+            background: var(--gold);
+            color: var(--white);
         }
 
-        /* المميزات */
-        .why-us { padding: 100px 20px; background: white; text-align: center; }
-        .why-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-            max-width: 1200px;
-            margin: 60px auto 0;
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+            color: var(--black);
+            padding: 14px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .why-item i { font-size: 3rem; color: var(--gold); margin-bottom: 20px; }
-        .why-item h3 { font-size: 1.5rem; margin-bottom: 10px; }
 
+        .submit-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(197,160,89,0.4);
+        }
 
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
 
-        footer {
-            padding: 80px 20px;
-            background: var(--black);
-            color: white;
+        .cancel-btn {
+            display: block;
             text-align: center;
-            border-top: 4px solid var(--gold);
+            color: var(--gold);
+            margin-top: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            background: none;
+            border: none;
+            width: 100%;
+            font-family: 'Cairo', sans-serif;
         }
 
-        @media (max-width: 900px) {
-            .step-section { grid-template-columns: 1fr; text-align: center; }
-            .step-image { height: 350px; order: -1; }
-            .brand-name { letter-spacing: 4px; }
-            .hero-tagline { font-size: 1.2rem; }
+        .cancel-btn:hover {
+            text-decoration: underline;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(10,5,0,0.2);
+            border-top-color: var(--black);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gold);
+            color: var(--black);
+            padding: 15px 25px;
+            border-radius: 30px;
+            font-weight: 700;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            text-align: center;
+            max-width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .toast.success {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .toast.error {
+            background: #f44336;
+            color: white;
+        }
+
+        /* Hidden date input */
+        .hidden-date-input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .brand-name {
+                font-size: 16px;
+            }
+            .section-title {
+                font-size: 24px;
+            }
+            .step-title {
+                font-size: 20px;
+            }
+            .step-card.primary .step-title {
+                font-size: 22px;
+            }
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .main-container {
+                border-left: 1px solid rgba(197,160,89,0.2);
+                border-right: 1px solid rgba(197,160,89,0.2);
+            }
         }
     </style>
 </head>
+<body class="">
 
-<body>
+    <!-- Splash Screen -->
+    <div class="splash-screen" id="splashScreen">
+        <img src="https://i.postimg.cc/CK0FMh3Y/1000508313.png" alt="Logo" class="splash-logo">
+        <div class="splash-title">GULF CATERING HUB</div>
+        <div class="splash-subtitle">فخامة الضيافة</div>
+        <div class="splash-loader"></div>
+    </div>
 
-    <header>
-        <div data-aos="fade-down" data-aos-duration="1500">
-            <img src="https://i.postimg.cc/CK0FMh3Y/1000508313.png" alt="Logo" class="logo-hero">
-            <h1 class="brand-name">Gulf Catering Hub</h1>
-            <p class="hero-tagline">تستحق أن تتميز بمناسبتك</p>
-        </div>
-    </header>
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
 
-    <main class="content-wrapper">
-        <!-- Step 1: تجهيزات الطاولات -->
-        <div class="step-section" data-aos="fade-up">
-            <div class="step-image">
-                <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800" alt="Catering Setup">
-            </div>
-            <div class="step-text-content">
-                <span class="step-num">01</span>
-                <h2 class="step-title">ارسل طلبك</h2>
-                <p class="step-p">ابدأ بتحديد تفاصيل مناسبتك بدقة، وسنقوم فوراً بتحليل احتياجاتك لضمان تقديم الخيارات الأفضل.</p>
-                <a href="https://forms.gle/vqMb9K8r5wrsKCKM8" target="_blank" class="btn-cta">اطلب عرض سعر الآن</a>
-            </div>
-        </div>
+    <!-- Main Container -->
+    <div class="main-container" id="mainContainer" style="display: none;">
+        
+        <!-- Header -->
+        <div class="header">
+            <div class="header-overlay"></div>
+            <div class="header-content">
+                <!-- Language Switcher -->
+                <div class="language-switcher">
+                    <button class="lang-btn active" onclick="switchLanguage('ar')" id="btnAr">🇸🇦 عربي</button>
+                    <button class="lang-btn" onclick="switchLanguage('en')" id="btnEn">🇬🇧 EN</button>
+                </div>
 
-        <!-- Step 2: طاقم الخدمة - تم تصليح الرابط -->
-        <div class="step-section" data-aos="fade-up" style="direction: ltr;">
-            <div class="step-image">
-                <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?q=80&w=800" alt="Professional Service">
-            </div>
-            <div class="step-text-content" style="direction: rtl;">
-                <span class="step-num">02</span>
-                <h2 class="step-title">3 عروض سعر</h2>
-                <p class="step-p">نحن نوفر عليك عناء البحث؛ سنرسل لك أفضل 3 عروض أسعار تمت فلترتها بعناية لتناسب ميزانيتك ومعاييرك.</p>
-            </div>
-        </div>
-
-        <!-- Step 3: اكتمال المناسبة -->
-        <div class="step-section" data-aos="fade-up">
-            <div class="step-image">
-                <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=800" alt="Royal Event">
-            </div>
-            <div class="step-text-content">
-                <span class="step-num">03</span>
-                <h2 class="step-title">استمتع بضيافتك</h2>
-                <p class="step-p">بعد اختيار العرض المناسب، نضمن لك جودة التنفيذ والالتزام التام لتقديم تجربة تليق بك وبضيوفك.</p>
+                <div class="brand-row">
+                    <img src="https://i.postimg.cc/CK0FMh3Y/1000508313.png" alt="Logo" class="brand-logo">
+                    <span class="brand-name">GULF CATERING HUB</span>
+                </div>
+                <div class="brand-sub" id="brandSub">فخامة الضيافة</div>
+                <div class="divider-line"></div>
+                <div class="pulse-text" id="pulseText">✨ لأن مناسبتك تستحق الأفضل ✨</div>
             </div>
         </div>
-    </main>
 
-    <section class="why-us">
-        <h2 class="step-title">لماذا Gulf Catering Hub؟</h2>
-        <div class="why-grid">
-            <div class="why-item" data-aos="zoom-in">
-                <i class="fas fa-crown"></i>
-                <h3>الثقة</h3>
-                <p>تعاملنا مبني على الشفافية والاحترافية الكاملة.</p>
-            </div>
-            <div class="why-item" data-aos="zoom-in" data-aos-delay="100">
-                <i class="fas fa-shipping-fast"></i>
-                <h3>السرعة</h3>
-                <p>نصلك أينما كنت في أسرع وقت ممكن.</p>
-            </div>
-            <div class="why-item" data-aos="zoom-in" data-aos-delay="200">
-                <i class="fas fa-medal"></i>
-                <h3>الجودة</h3>
-                <p>أعلى معايير الجودة في التجهيزات والخدمة.</p>
-            </div>
-            <div class="why-item" data-aos="zoom-in" data-aos-delay="300">
-                <i class="fas fa-star"></i>
-                <h3>الخبرة</h3>
-                <p>فريقنا يمتلك سنوات من الخبرة في إدارة الفعاليات.</p>
-            </div>
-            <div class="why-item" data-aos="zoom-in" data-aos-delay="400">
-                <i class="fas fa-percentage"></i>
-                <h3>أسعار تنافسية</h3>
-                <p>عروض حصرية تناسب كافة الميزانيات.</p>
+        <!-- Content Area -->
+        <div class="content-area">
+            <div class="content-overlay"></div>
+            <div class="content-inner">
+                
+                <!-- Questions Section -->
+                <div class="questions-section" id="questionsSection"></div>
+
+                <!-- How It Works -->
+                <div class="how-it-works">
+                    <div class="section-title" id="howItWorksTitle">كيف نعمل؟</div>
+                    <div id="stepsSection"></div>
+                </div>
+
+                <!-- Why Us -->
+                <div class="why-us-section">
+                    <div class="section-title" id="whyUsTitle">لماذا نحن؟</div>
+                    <div class="features-grid" id="featuresGrid"></div>
+                </div>
+
+                <!-- Footer -->
+                <div class="footer">
+                    <img src="https://i.postimg.cc/CK0FMh3Y/1000508313.png" alt="Logo" class="footer-logo">
+                    <div class="footer-brand">GULF CATERING HUB</div>
+                    <div class="footer-copy">© 2026 Muscat, Sultanate of Oman</div>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <footer>
-        <img src="https://i.postimg.cc/CK0FMh3Y/1000508313.png" alt="Logo" style="height: 100px; filter: brightness(0) invert(1); margin-bottom: 20px;">
-        <p style="letter-spacing: 10px; font-weight: 900; color: var(--gold);">GULF CATERING HUB</p>
-        <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.6;">© 2026 مسقط، سلطنة عُمان | جميع الحقوق محفوظة</p>
-    </footer>
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content" id="modalContent">
+            <!-- Form will be rendered here dynamically -->
+        </div>
+    </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script>AOS.init({ duration: 1200, once: true });</script>
+    <!-- Hidden date input for date picker -->
+    <input type="date" class="hidden-date-input" id="hiddenDateInput">
+
+    <script>
+        // Firebase Initialization
+        const firebaseConfig = {
+            apiKey: "AIzaSyAX2hWjzgrX02HU8QZQ0MHq75zX5wd-Rd0",
+            authDomain: "gulf-ec022.firebaseapp.com",
+            projectId: "gulf-ec022",
+            storageBucket: "gulf-ec022.firebasestorage.app",
+            messagingSenderId: "638894252333",
+            appId: "1:638894252333:web:84a64ec117a275ddb4b3a4"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // State
+        let currentLanguage = 'ar';
+        let modalVisible = false;
+        let loading = false;
+
+        // Form data
+        let formData = {
+            fullName: '',
+            eventType: '',
+            eventTypeOther: '',
+            eventDate: '',
+            peopleCount: '',
+            peopleCountOther: '',
+            buffetTime: '',
+            budget: '',
+            phoneNumber: ''
+        };
+
+        // Translations
+        const translations = {
+            ar: {
+                brandSub: 'فخامة الضيافة',
+                pulse: '✨ لأن مناسبتك تستحق الأفضل ✨',
+                questions: [
+                    { icon: '🎉', q: 'عندك مناسبة قريبة؟', d: 'زواج، تخرج، عيد ميلاد، عزومة، أو أي لحظة تستحق الاحتفال؟' },
+                    { icon: '🤝', q: 'عندك اجتماع أو فعالية؟', d: 'اجتماع شركة، ندوة، ورشة عمل، أو لقاء عملاء مهم؟' },
+                    { icon: '🍽️', q: 'تحتاج كيترنج راقي يريح بالك؟', d: 'نقدم لك أفضل خيارات البوفيه من أرقى المطابخ وبأسعار تنافسية.' },
+                    { icon: '✨', q: 'تبي شي يليق بضيوفك ويرفع مستوى مناسبتك؟', d: 'خلينا نهتم بالتفاصيل وأنت استمتع بلحظاتك الثمينة.' },
+                    { icon: '📋', q: 'محتار من فين تبدأ ومنو تختار؟', d: 'أرسل التفاصيل واترك الباقي علينا.' }
+                ],
+                howItWorks: 'كيف نعمل؟',
+                steps: [
+                    { num: '01', title: 'ارسل طلبك', desc: 'حدد تفاصيل مناسبتك بدقة، وسنقوم فوراً بتحليل احتياجاتك لضمان تقديم الخيارات الأفضل لمناسبتك.' },
+                    { num: '02', title: 'عروض سعر', desc: 'نوفر عليك عناء البحث عن افضل الاسعار وارقى الخدمات لاختياراتك. سنرسل لك أفضل 3 عروض أسعار تمت فلترتها بعناية لتناسب ميزانيتك.' },
+                    { num: '03', title: 'اختر بثقة', desc: 'بعد اختيار الباقة المناسبة، نضمن لك أفضل جاهزية للتجهيز.' },
+                    { num: '04', title: 'استمتع بضيافتك', desc: 'بعد اختيار العرض المناسب، نضمن لك جودة التنفيذ والالتزام التام لتقديم تجربة تليق بك وبضيوفك.' }
+                ],
+                whyUs: 'لماذا نحن؟',
+                features: [
+                    { icon: '👑', title: 'الثقة', desc: 'تعامل مبني على الشفافية والاحترافية' },
+                    { icon: '🚀', title: 'السرعة', desc: 'نصلك أينما كنت في أسرع وقت' },
+                    { icon: '⭐', title: 'الجودة', desc: 'أعلى معايير الجودة في التجهيزات' },
+                    { icon: '🍽️', title: 'أشهى الأطباق', desc: 'من نخبة الطهاة وأرقى المطابخ' },
+                    { icon: '💰', title: 'أسعار تنافسية', desc: 'عروض حصرية تناسب كافة الميزانيات' }
+                ],
+                eventTypes: ['حفلة زفاف(عرس)', 'عيد ميلاد', 'اجتماع', 'عزومة عامة', 'أخرى'],
+                peopleCounts: ['20-40 شخص', '40-60 شخص', '60-100 شخص', 'أخرى'],
+                buffetTimes: ['فطور', 'غداء', 'عشاء'],
+                modalTitle: 'طلب عرض سعر',
+                name: 'الاسم',
+                namePlaceholder: 'أدخل اسمك',
+                eventType: 'نوع المناسبة',
+                eventTypeOtherPlaceholder: 'اكتب نوع المناسبة',
+                eventDate: 'تاريخ المناسبة',
+                datePlaceholder: 'اختر التاريخ من هنا',
+                determineLater: 'تحديد لاحقاً',
+                determineLaterValue: 'تحديد لاحقاً',
+                peopleCount: 'عدد الأشخاص',
+                peopleCountOtherPlaceholder: 'اكتب عدد الأشخاص',
+                buffetTime: 'وقت البوفيه',
+                budget: 'الميزانية التقريبية',
+                phone: 'رقم التواصل (واتساب)',
+                send: 'إرسال الطلب',
+                cancel: 'إلغاء',
+                other: 'أخرى',
+                optional: '(اختياري)',
+                success: '✅ تم استلام طلبك بنجاح، سيتم التواصل معك قريباً',
+                error: '❌ حدث خطأ، حاول مرة أخرى',
+                nameRequired: 'الرجاء إدخال الاسم',
+                eventRequired: 'الرجاء اختيار نوع المناسبة',
+                eventOtherRequired: 'الرجاء كتابة نوع المناسبة',
+                dateRequired: 'الرجاء إدخال تاريخ المناسبة أو اختيار تحديد لاحقاً',
+                peopleRequired: 'الرجاء اختيار عدد الأشخاص',
+                peopleOtherRequired: 'الرجاء كتابة عدد الأشخاص',
+                timeRequired: 'الرجاء اختيار وقت البوفيه',
+                phoneRequired: 'الرجاء إدخال رقم التواصل',
+                phoneInvalid: 'رقم الجوال غير صحيح (8-15 رقم فقط)',
+                pastDate: 'لا يمكن اختيار تاريخ مضى',
+                budgetNotSpecified: 'غير محدد',
+                alertTitle: 'تنبيه',
+                successTitle: 'تم الإرسال',
+                errorTitle: 'خطأ'
+            },
+            en: {
+                brandSub: 'Hospitality Excellence',
+                pulse: '✨ Your occasion deserves the best ✨',
+                questions: [
+                    { icon: '🎉', q: 'Have an occasion soon?', d: 'Wedding, graduation, birthday, gathering, or any moment worth celebrating?' },
+                    { icon: '🤝', q: 'Have a meeting or event?', d: 'Company meeting, seminar, workshop, or important client meeting?' },
+                    { icon: '🍽️', q: 'Need premium catering that gives you peace of mind?', d: 'We offer the best buffet options from top kitchens at competitive prices.' },
+                    { icon: '✨', q: 'Want something that suits your guests and elevates your occasion?', d: 'Let us handle the details while you enjoy your precious moments.' },
+                    { icon: '📋', q: 'Confused where to start and whom to choose?', d: 'Send the details and leave the rest to us.' }
+                ],
+                howItWorks: 'How We Work?',
+                steps: [
+                    { num: '01', title: 'Send Your Request', desc: 'Specify your occasion details precisely, and we will immediately analyze your needs to provide the best options.' },
+                    { num: '02', title: 'Price Offers', desc: 'We save you the trouble of searching for the best prices and services. We will send you the top 3 price offers carefully filtered to suit your budget.' },
+                    { num: '03', title: 'Choose Confidently', desc: 'After choosing the right package, we guarantee the best preparation readiness.' },
+                    { num: '04', title: 'Enjoy Your Hospitality', desc: 'After choosing the right offer, we guarantee quality execution and full commitment to deliver an experience worthy of you and your guests.' }
+                ],
+                whyUs: 'Why Us?',
+                features: [
+                    { icon: '👑', title: 'Trust', desc: 'Dealings based on transparency and professionalism' },
+                    { icon: '🚀', title: 'Speed', desc: 'We reach you wherever you are as fast as possible' },
+                    { icon: '⭐', title: 'Quality', desc: 'Highest quality standards in preparations' },
+                    { icon: '🍽️', title: 'Delicious Dishes', desc: 'From top chefs and finest kitchens' },
+                    { icon: '💰', title: 'Competitive Prices', desc: 'Exclusive offers for all budgets' }
+                ],
+                eventTypes: ['Wedding', 'Birthday', 'Meeting', 'General Gathering', 'Other'],
+                peopleCounts: ['20-40 People', '40-60 People', '60-100 People', 'Other'],
+                buffetTimes: ['Breakfast', 'Lunch', 'Dinner'],
+                modalTitle: 'Request a Quote',
+                name: 'Name',
+                namePlaceholder: 'Enter your name',
+                eventType: 'Event Type',
+                eventTypeOtherPlaceholder: 'Enter event type',
+                eventDate: 'Event Date',
+                datePlaceholder: 'Select date here',
+                determineLater: 'Decide Later',
+                determineLaterValue: 'To be determined',
+                peopleCount: 'Number of People',
+                peopleCountOtherPlaceholder: 'Enter number of people',
+                buffetTime: 'Buffet Time',
+                budget: 'Approximate Budget',
+                phone: 'WhatsApp Number',
+                send: 'Submit Request',
+                cancel: 'Cancel',
+                other: 'Other',
+                optional: '(Optional)',
+                success: '✅ Your request has been received, we will contact you soon',
+                error: '❌ An error occurred, please try again',
+                nameRequired: 'Please enter your name',
+                eventRequired: 'Please select event type',
+                eventOtherRequired: 'Please enter event type',
+                dateRequired: 'Please enter event date or select Decide Later',
+                peopleRequired: 'Please select number of people',
+                peopleOtherRequired: 'Please enter number of people',
+                timeRequired: 'Please select buffet time',
+                phoneRequired: 'Please enter phone number',
+                phoneInvalid: 'Invalid phone number (8-15 digits only)',
+                pastDate: 'Cannot select a past date',
+                budgetNotSpecified: 'Not specified',
+                alertTitle: 'Notice',
+                successTitle: 'Sent',
+                errorTitle: 'Error'
+            }
+        };
+
+        function t(key) {
+            return translations[currentLanguage][key] || key;
+        }
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show splash screen for 2 seconds
+            setTimeout(function() {
+                document.getElementById('splashScreen').classList.add('hidden');
+                document.getElementById('mainContainer').style.display = 'block';
+                renderAll();
+            }, 2000);
+
+            // Date input listener
+            document.getElementById('hiddenDateInput').addEventListener('change', function(e) {
+                if (e.target.value) {
+                    formData.eventDate = e.target.value;
+                    renderModalForm();
+                }
+            });
+        });
+
+        // Switch Language
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update body class
+            if (lang === 'en') {
+                document.body.classList.add('en');
+                document.body.dir = 'ltr';
+                document.body.lang = 'en';
+            } else {
+                document.body.classList.remove('en');
+                document.body.dir = 'rtl';
+                document.body.lang = 'ar';
+            }
+
+            // Update buttons
+            document.getElementById('btnAr').classList.toggle('active', lang === 'ar');
+            document.getElementById('btnEn').classList.toggle('active', lang === 'en');
+
+            // Reset form data when switching language
+            resetForm();
+            
+            // Re-render everything
+            renderAll();
+        }
+
+        function resetForm() {
+            formData = {
+                fullName: '',
+                eventType: '',
+                eventTypeOther: '',
+                eventDate: '',
+                peopleCount: '',
+                peopleCountOther: '',
+                buffetTime: '',
+                budget: '',
+                phoneNumber: ''
+            };
+        }
+
+        // Render All
+        function renderAll() {
+            renderHeader();
+            renderQuestions();
+            renderSteps();
+            renderFeatures();
+            if (modalVisible) {
+                renderModalForm();
+            }
+        }
+
+        function renderHeader() {
+            document.getElementById('brandSub').textContent = t('brandSub');
+            document.getElementById('pulseText').textContent = t('pulse');
+            document.getElementById('howItWorksTitle').textContent = t('howItWorks');
+            document.getElementById('whyUsTitle').textContent = t('whyUs');
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questionsSection');
+            const questions = t('questions');
+            
+            container.innerHTML = questions.map(q => `
+                <div class="question-card">
+                    <div class="question-icon">${q.icon}</div>
+                    <div class="question-text">
+                        <div class="question-title">${q.q}</div>
+                        <div class="question-desc">${q.d}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderSteps() {
+            const container = document.getElementById('stepsSection');
+            const steps = t('steps');
+            
+            container.innerHTML = steps.map((step, index) => `
+                <div class="step-card ${index === 0 ? 'primary' : 'secondary'}">
+                    <div class="step-header">
+                        <div class="step-number">${step.num}</div>
+                        <div class="step-title">${step.title}</div>
+                    </div>
+                    <div class="step-desc">${step.desc}</div>
+                    ${index === 0 ? `
+                        <div class="step-cta">
+                            <button class="cta-button" onclick="openModal()">📝 ${currentLanguage === 'ar' ? 'اضغط هنا لطلب عرض السعر' : 'Click here to request a quote'}</button>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function renderFeatures() {
+            const container = document.getElementById('featuresGrid');
+            const features = t('features');
+            
+            container.innerHTML = features.map(f => `
+                <div class="feature-item">
+                    <div class="feature-icon">${f.icon}</div>
+                    <div class="feature-title">${f.title}</div>
+                    <div class="feature-desc">${f.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        // Modal Functions
+        function openModal() {
+            modalVisible = true;
+            document.getElementById('modalOverlay').classList.add('active');
+            resetForm();
+            renderModalForm();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modalVisible = false;
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function renderModalForm() {
+            const container = document.getElementById('modalContent');
+            const otherOption = t('other');
+            const determineLaterValue = t('determineLaterValue');
+
+            container.innerHTML = `
+                <div class="modal-title">${t('modalTitle')}</div>
+                
+                <div class="form-group">
+                    <label class="form-label">${t('name')} *</label>
+                    <input type="text" class="form-input" placeholder="${t('namePlaceholder')}" value="${escapeHtml(formData.fullName)}" oninput="formData.fullName = this.value" id="inputName">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">${t('eventType')} *</label>
+                    <div class="options-grid">
+                        ${t('eventTypes').map(option => `
+                            <button class="option-btn ${formData.eventType === option ? 'selected' : ''}" onclick="selectEventType('${escapeHtml(option)}')">${option}</button>
+                        `).join('')}
+                    </div>
+                    ${formData.eventType === otherOption ? `
+                        <input type="text" class="form-input" placeholder="${t('eventTypeOtherPlaceholder')}" value="${escapeHtml(formData.eventTypeOther)}" oninput="formData.eventTypeOther = this.value" style="margin-top: 8px;">
+                    ` : ''}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">${t('eventDate')} *</label>
+                    <div class="date-row">
+                        <div class="date-picker-btn ${formData.eventDate ? 'has-value' : ''}" onclick="openDatePicker()">
+                            ${formData.eventDate || t('datePlaceholder')}
+                        </div>
+                        <button class="determine-later-btn ${formData.eventDate === determineLaterValue ? 'active' : ''}" onclick="toggleDetermineLater()">
+                            ${t('determineLater')}
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">${t('peopleCount')} *</label>
+                    <div class="options-grid">
+                        ${t('peopleCounts').map(option => `
+                            <button class="option-btn ${formData.peopleCount === option ? 'selected' : ''}" onclick="selectPeopleCount('${escapeHtml(option)}')">${option}</button>
+                        `).join('')}
+                    </div>
+                    ${formData.peopleCount === otherOption ? `
+                        <input type="text" class="form-input" placeholder="${t('peopleCountOtherPlaceholder')}" value="${escapeHtml(formData.peopleCountOther)}" oninput="formData.peopleCountOther = this.value" style="margin-top: 8px;">
+                    ` : ''}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">${t('buffetTime')} *</label>
+                    <div class="options-grid">
+                        ${t('buffetTimes').map(option => `
+                            <button class="option-btn ${formData.buffetTime === option ? 'selected' : ''}" onclick="selectBuffetTime('${escapeHtml(option)}')">${option}</button>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">${t('budget')} <span class="optional">${t('optional')}</span></label>
+                    <input type="text" class="form-input" placeholder="" value="${escapeHtml(formData.budget)}" oninput="formData.budget = this.value">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">${t('phone')} *</label>
+                    <input type="tel" class="form-input" placeholder="968XXXXXXXX" value="${escapeHtml(formData.phoneNumber)}" oninput="formData.phoneNumber = this.value">
+                </div>
+
+                <button class="submit-btn" onclick="handleSubmit()" ${loading ? 'disabled' : ''}>
+                    ${loading ? '<span class="spinner"></span>' : t('send')}
+                </button>
+                <button class="cancel-btn" onclick="closeModal()">${t('cancel')}</button>
+            `;
+        }
+
+        function selectEventType(option) {
+            formData.eventType = option;
+            formData.eventTypeOther = '';
+            renderModalForm();
+        }
+
+        function selectPeopleCount(option) {
+            formData.peopleCount = option;
+            formData.peopleCountOther = '';
+            renderModalForm();
+        }
+
+        function selectBuffetTime(option) {
+            formData.buffetTime = option;
+            renderModalForm();
+        }
+
+        function openDatePicker() {
+            const dateInput = document.getElementById('hiddenDateInput');
+            // Set min date to today
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.min = today;
+            dateInput.showPicker ? dateInput.showPicker() : dateInput.click();
+        }
+
+        function toggleDetermineLater() {
+            const determineLaterValue = t('determineLaterValue');
+            if (formData.eventDate === determineLaterValue) {
+                formData.eventDate = '';
+            } else {
+                formData.eventDate = determineLaterValue;
+            }
+            renderModalForm();
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Validation
+        function validatePhoneNumber(phone) {
+            return /^[+]?[0-9]{8,15}$/.test(phone);
+        }
+
+        function validateEventDate(dateString) {
+            const determineLaterValue = t('determineLaterValue');
+            if (dateString === determineLaterValue) return true;
+            if (!dateString) return false;
+            const selectedDate = new Date(dateString);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            return selectedDate >= today;
+        }
+
+        // Toast
+        function showToast(message, type = '') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast show ' + type;
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        // Submit
+        async function handleSubmit() {
+            const otherOption = t('other');
+            const determineLaterValue = t('determineLaterValue');
+
+            // Validations
+            if (!formData.fullName.trim()) {
+                showToast(t('nameRequired'), 'error');
+                return;
+            }
+            if (!formData.eventType) {
+                showToast(t('eventRequired'), 'error');
+                return;
+            }
+            if (formData.eventType === otherOption && !formData.eventTypeOther.trim()) {
+                showToast(t('eventOtherRequired'), 'error');
+                return;
+            }
+            if (!formData.eventDate) {
+                showToast(t('dateRequired'), 'error');
+                return;
+            }
+            if (!validateEventDate(formData.eventDate)) {
+                showToast(t('pastDate'), 'error');
+                return;
+            }
+            if (!formData.peopleCount) {
+                showToast(t('peopleRequired'), 'error');
+                return;
+            }
+            if (formData.peopleCount === otherOption && !formData.peopleCountOther.trim()) {
+                showToast(t('peopleOtherRequired'), 'error');
+                return;
+            }
+            if (!formData.buffetTime) {
+                showToast(t('timeRequired'), 'error');
+                return;
+            }
+            if (!formData.phoneNumber.trim()) {
+                showToast(t('phoneRequired'), 'error');
+                return;
+            }
+            if (!validatePhoneNumber(formData.phoneNumber.trim())) {
+                showToast(t('phoneInvalid'), 'error');
+                return;
+            }
+
+            loading = true;
+            renderModalForm();
+
+            try {
+                await db.collection('orders').add({
+                    fullName: formData.fullName.trim(),
+                    eventType: formData.eventType === otherOption ? formData.eventTypeOther.trim() : formData.eventType,
+                    eventDate: formData.eventDate.trim(),
+                    peopleCount: formData.peopleCount === otherOption ? formData.peopleCountOther.trim() : formData.peopleCount,
+                    buffetTime: formData.buffetTime,
+                    budget: formData.budget.trim() || t('budgetNotSpecified'),
+                    phoneNumber: formData.phoneNumber.trim(),
+                    status: 'جديد',
+                    createdAt: new Date().toISOString()
+                });
+
+                showToast(t('success'), 'success');
+                resetForm();
+                closeModal();
+            } catch (error) {
+                console.error('Error adding document: ', error);
+                showToast(t('error'), 'error');
+            } finally {
+                loading = false;
+                renderModalForm();
+            }
+        }
+
+        // Close modal when clicking overlay
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Prevent body scroll when modal is open on mobile
+        document.addEventListener('touchmove', function(e) {
+            if (modalVisible && !document.getElementById('modalContent').contains(e.target)) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+    </script>
 </body>
 </html>
