@@ -131,7 +131,7 @@
         .header {
             position: relative;
             width: 100%;
-            height: 100vh; /* افتراضي: ملء الشاشة بالكامل للموبايل */
+            height: 100vh;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -141,7 +141,6 @@
             padding: 0;
         }
         
-        /* 🔥 على شاشات الكمبيوتر (أكبر من 992px) يصبح الارتفاع 60% من الشاشة */
         @media (min-width: 992px) {
             .header {
                 height: 60vh;
@@ -273,7 +272,6 @@
             }
         }
 
-        /* العنوان */
         .project-title {
             font-family: 'Playfair Display', 'Cairo', serif;
             font-size: 84px;
@@ -420,7 +418,6 @@
             50% { transform: scale(1.05); opacity: 0.9; }
         }
 
-        /* سهم التمرير للأسفل - يظهر فقط على الموبايل */
         .scroll-down {
             position: absolute;
             bottom: 30px;
@@ -441,7 +438,6 @@
             transition: all 0.3s ease;
         }
 
-        /* 🔥 إخفاء السهم على شاشات الكمبيوتر */
         @media (min-width: 992px) {
             .scroll-down {
                 display: none;
@@ -1069,6 +1065,7 @@
             min-height: 50px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             font-family: 'Cairo', sans-serif;
             transition: border-color 0.3s ease;
             font-size: 15px;
@@ -1084,6 +1081,17 @@
 
         .date-picker-btn:hover {
             border-color: var(--gold);
+        }
+
+        /* أيقونة التقويم */
+        .calendar-icon {
+            font-size: 20px;
+            margin-left: 8px;
+        }
+
+        body.en .calendar-icon {
+            margin-left: 0;
+            margin-right: 8px;
         }
 
         .determine-later-btn {
@@ -1364,20 +1372,20 @@
                 eventTypes: ['حفلة زفاف(عرس)', 'عيد ميلاد', 'اجتماع', 'عزومة عامة', 'أخرى'],
                 peopleCounts: ['20-40 شخص', '40-60 شخص', '60-100 شخص', 'أخرى'],
                 buffetTimes: ['فطور', 'غداء', 'عشاء'],
-                modalTitle: 'طلب عرض سعر', name: 'الاسم', namePlaceholder: 'أدخل اسمك',
-                eventTypeLabel: 'نوع المناسبة', eventTypeOtherPlaceholder: 'اكتب نوع المناسبة',
+                modalTitle: 'طلب عرض سعر', name: 'الاسم', namePlaceholder: 'أدخل اسمك (حد أقصى 30 حرف)',
+                eventTypeLabel: 'نوع المناسبة', eventTypeOtherPlaceholder: 'اكتب نوع المناسبة (حد أقصى 50 حرف)',
                 eventDate: 'تاريخ المناسبة', datePlaceholder: 'اختر التاريخ من هنا', determineLater: 'تحديد لاحقاً',
-                determineLaterValue: 'تحديد لاحقاً', peopleCount: 'عدد الأشخاص', peopleCountOtherPlaceholder: 'اكتب عدد الأشخاص',
+                determineLaterValue: 'تحديد لاحقاً', peopleCount: 'عدد الأشخاص', peopleCountOtherPlaceholder: 'اكتب عدد الأشخاص (أرقام فقط)',
                 buffetTime: 'وقت البوفيه', budget: 'الميزانية التقريبية', phone: 'رقم التواصل (واتساب)',
                 send: 'إرسال الطلب', cancel: 'إلغاء', other: 'أخرى', optional: '(اختياري)',
                 success: '✅ تم استلام طلبك بنجاح، سيتم التواصل معك قريباً',
                 error: '❌ حدث خطأ، حاول مرة أخرى', nameRequired: 'الرجاء إدخال الاسم',
                 eventRequired: 'الرجاء اختيار نوع المناسبة', eventOtherRequired: 'الرجاء كتابة نوع المناسبة',
                 dateRequired: 'الرجاء إدخال تاريخ المناسبة أو اختيار تحديد لاحقاً',
-                peopleRequired: 'الرجاء اختيار عدد الأشخاص', peopleOtherRequired: 'الرجاء كتابة عدد الأشخاص',
+                peopleRequired: 'الرجاء اختيار عدد الأشخاص', peopleOtherRequired: 'الرجاء كتابة عدد الأشخاص (أرقام فقط)',
                 timeRequired: 'الرجاء اختيار وقت البوفيه', phoneRequired: 'الرجاء إدخال رقم التواصل',
                 phoneInvalid: 'رقم الجوال غير صحيح (8-15 رقم فقط)', pastDate: 'لا يمكن اختيار تاريخ مضى',
-                budgetNotSpecified: 'غير محدد'
+                budgetNotSpecified: 'غير محدد', phonePlaceholder: 'مثال: 96812345678'
             },
             en: {
                 brandSub: 'Hospitality Excellence', pulse: '✨ Your occasion deserves the best ✨',
@@ -1406,19 +1414,20 @@
                 eventTypes: ['Wedding', 'Birthday', 'Meeting', 'General Gathering', 'Other'],
                 peopleCounts: ['20-40 People', '40-60 People', '60-100 People', 'Other'],
                 buffetTimes: ['Breakfast', 'Lunch', 'Dinner'],
-                modalTitle: 'Request a Quote', name: 'Name', namePlaceholder: 'Enter your name',
-                eventTypeLabel: 'Event Type', eventTypeOtherPlaceholder: 'Enter event type',
+                modalTitle: 'Request a Quote', name: 'Name', namePlaceholder: 'Enter your name (max 30 chars)',
+                eventTypeLabel: 'Event Type', eventTypeOtherPlaceholder: 'Enter event type (max 50 chars)',
                 eventDate: 'Event Date', datePlaceholder: 'Select date', determineLater: 'Decide Later',
-                determineLaterValue: 'To be determined', peopleCount: 'Number of People', peopleCountOtherPlaceholder: 'Enter number',
+                determineLaterValue: 'To be determined', peopleCount: 'Number of People', peopleCountOtherPlaceholder: 'Enter number (digits only)',
                 buffetTime: 'Buffet Time', budget: 'Approximate Budget', phone: 'WhatsApp Number',
                 send: 'Submit', cancel: 'Cancel', other: 'Other', optional: '(Optional)',
                 success: '✅ Request received, we will contact you soon',
                 error: '❌ An error occurred', nameRequired: 'Please enter your name',
                 eventRequired: 'Please select event type', eventOtherRequired: 'Please enter event type',
                 dateRequired: 'Please enter event date', pastDate: 'Cannot select a past date',
-                peopleRequired: 'Please select number of people', peopleOtherRequired: 'Please enter number',
+                peopleRequired: 'Please select number of people', peopleOtherRequired: 'Please enter number (digits only)',
                 timeRequired: 'Please select buffet time', phoneRequired: 'Please enter phone number',
-                phoneInvalid: 'Invalid phone number', budgetNotSpecified: 'Not specified'
+                phoneInvalid: 'Invalid phone number', budgetNotSpecified: 'Not specified',
+                phonePlaceholder: 'Ex: 96812345678'
             }
         };
 
@@ -1490,15 +1499,61 @@
 
         function renderModalForm() {
             const other = t('other'), detLater = t('determineLaterValue');
+            const dateText = formData.eventDate || t('datePlaceholder');
+            const hasDate = formData.eventDate ? 'has-value' : '';
+            
             document.getElementById('modalContent').innerHTML = `
                 <div class="modal-title">${t('modalTitle')}</div>
-                <div class="form-group"><label class="form-label">${t('name')} *</label><input class="form-input" placeholder="${t('namePlaceholder')}" value="${formData.fullName}" oninput="formData.fullName = this.value"></div>
-                <div class="form-group"><label class="form-label">${t('eventTypeLabel')} *</label><div class="options-grid">${t('eventTypes').map(opt => `<button class="option-btn ${formData.eventType === opt ? 'selected' : ''}" onclick="selectEventType('${opt.replace(/'/g, "\\'")}')">${opt}</button>`).join('')}</div>${formData.eventType === other ? `<input class="form-input" placeholder="${t('eventTypeOtherPlaceholder')}" value="${formData.eventTypeOther}" oninput="formData.eventTypeOther = this.value" style="margin-top:10px">` : ''}</div>
-                <div class="form-group"><label class="form-label">${t('eventDate')} *</label><div class="date-row"><div class="date-picker-btn ${formData.eventDate ? 'has-value' : ''}" onclick="openDatePicker()">${formData.eventDate || t('datePlaceholder')}</div><button class="determine-later-btn ${formData.eventDate === detLater ? 'active' : ''}" onclick="toggleDetermineLater()">${t('determineLater')}</button></div></div>
-                <div class="form-group"><label class="form-label">${t('peopleCount')} *</label><div class="options-grid">${t('peopleCounts').map(opt => `<button class="option-btn ${formData.peopleCount === opt ? 'selected' : ''}" onclick="selectPeopleCount('${opt.replace(/'/g, "\\'")}')">${opt}</button>`).join('')}</div>${formData.peopleCount === other ? `<input class="form-input" placeholder="${t('peopleCountOtherPlaceholder')}" value="${formData.peopleCountOther}" oninput="formData.peopleCountOther = this.value" style="margin-top:10px">` : ''}</div>
-                <div class="form-group"><label class="form-label">${t('buffetTime')} *</label><div class="options-grid">${t('buffetTimes').map(opt => `<button class="option-btn ${formData.buffetTime === opt ? 'selected' : ''}" onclick="formData.buffetTime = '${opt.replace(/'/g, "\\'")}'; renderModalForm()">${opt}</button>`).join('')}</div></div>
-                <div class="form-group"><label class="form-label">${t('budget')} <span class="optional">${t('optional')}</span></label><input class="form-input" value="${formData.budget}" oninput="formData.budget = this.value"></div>
-                <div class="form-group"><label class="form-label">${t('phone')} *</label><input class="form-input" placeholder="968XXXXXXXX" value="${formData.phoneNumber}" oninput="formData.phoneNumber = this.value"></div>
+                
+                <div class="form-group">
+                    <label class="form-label">${t('name')} *</label>
+                    <input class="form-input" maxlength="30" placeholder="${t('namePlaceholder')}" value="${formData.fullName.replace(/"/g, '&quot;')}" oninput="formData.fullName = this.value">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">${t('eventTypeLabel')} *</label>
+                    <div class="options-grid">
+                        ${t('eventTypes').map(opt => `<button class="option-btn ${formData.eventType === opt ? 'selected' : ''}" onclick="selectEventType('${opt.replace(/'/g, "\\'")}')">${opt}</button>`).join('')}
+                    </div>
+                    ${formData.eventType === other ? `<input class="form-input" maxlength="50" placeholder="${t('eventTypeOtherPlaceholder')}" value="${formData.eventTypeOther.replace(/"/g, '&quot;')}" oninput="formData.eventTypeOther = this.value" style="margin-top:10px">` : ''}
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">${t('eventDate')} *</label>
+                    <div class="date-row">
+                        <div class="date-picker-btn ${hasDate}" onclick="openDatePicker()">
+                            <span>${dateText}</span>
+                            <span class="calendar-icon">📅</span>
+                        </div>
+                        <button class="determine-later-btn ${formData.eventDate === detLater ? 'active' : ''}" onclick="toggleDetermineLater()">${t('determineLater')}</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">${t('peopleCount')} *</label>
+                    <div class="options-grid">
+                        ${t('peopleCounts').map(opt => `<button class="option-btn ${formData.peopleCount === opt ? 'selected' : ''}" onclick="selectPeopleCount('${opt.replace(/'/g, "\\'")}')">${opt}</button>`).join('')}
+                    </div>
+                    ${formData.peopleCount === other ? `<input class="form-input" maxlength="5" placeholder="${t('peopleCountOtherPlaceholder')}" value="${formData.peopleCountOther}" oninput="this.value = this.value.replace(/[^0-9]/g, ''); formData.peopleCountOther = this.value" style="margin-top:10px">` : ''}
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">${t('buffetTime')} *</label>
+                    <div class="options-grid">
+                        ${t('buffetTimes').map(opt => `<button class="option-btn ${formData.buffetTime === opt ? 'selected' : ''}" onclick="formData.buffetTime = '${opt.replace(/'/g, "\\'")}'; renderModalForm()">${opt}</button>`).join('')}
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">${t('budget')} <span class="optional">${t('optional')}</span></label>
+                    <input class="form-input" maxlength="30" value="${formData.budget.replace(/"/g, '&quot;')}" oninput="formData.budget = this.value">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">${t('phone')} *</label>
+                    <input class="form-input" maxlength="15" placeholder="${t('phonePlaceholder')}" value="${formData.phoneNumber}" oninput="this.value = this.value.replace(/[^0-9+]/g, ''); formData.phoneNumber = this.value">
+                </div>
+                
                 <button class="submit-btn" onclick="handleSubmit()" ${loading ? 'disabled' : ''}>${loading ? '<span class="spinner"></span>' : t('send')}</button>
                 <button class="cancel-btn" onclick="closeModal()">${t('cancel')}</button>
             `;
@@ -1506,9 +1561,21 @@
 
         function selectEventType(opt) { formData.eventType = opt; formData.eventTypeOther = ''; renderModalForm(); }
         function selectPeopleCount(opt) { formData.peopleCount = opt; formData.peopleCountOther = ''; renderModalForm(); }
-        function openDatePicker() { const d = document.getElementById('hiddenDateInput'); d.min = new Date().toISOString().split('T')[0]; d.showPicker ? d.showPicker() : d.click(); }
+        
+        function openDatePicker() {
+            const hiddenInput = document.getElementById('hiddenDateInput');
+            hiddenInput.min = new Date().toISOString().split('T')[0];
+            // محاولة فتح التقويم مباشرة
+            if (hiddenInput.showPicker) {
+                hiddenInput.showPicker();
+            } else {
+                hiddenInput.focus();
+                hiddenInput.click();
+            }
+        }
+        
         function toggleDetermineLater() { const v = t('determineLaterValue'); formData.eventDate = formData.eventDate === v ? '' : v; renderModalForm(); }
-        function showToast(msg, type = '') { const t = document.getElementById('toast'); t.textContent = msg; t.className = 'toast show ' + type; setTimeout(() => t.classList.remove('show'), 4000); }
+        function showToast(msg, type = '') { const toastEl = document.getElementById('toast'); toastEl.textContent = msg; toastEl.className = 'toast show ' + type; setTimeout(() => toastEl.classList.remove('show'), 4000); }
         function validatePhone(p) { return /^[+]?[0-9]{8,15}$/.test(p); }
 
         async function handleSubmit() {
