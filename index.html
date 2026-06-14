@@ -1083,7 +1083,6 @@
             border-color: var(--gold);
         }
 
-        /* أيقونة التقويم */
         .calendar-icon {
             font-size: 20px;
             margin-left: 8px;
@@ -1211,9 +1210,10 @@
         .hidden-date-input {
             position: absolute;
             opacity: 0;
-            width: 0;
-            height: 0;
-            pointer-events: none;
+            width: 1px;
+            height: 1px;
+            pointer-events: auto;
+            z-index: -1;
         }
 
         .image-preloader {
@@ -1372,11 +1372,11 @@
                 eventTypes: ['حفلة زفاف(عرس)', 'عيد ميلاد', 'اجتماع', 'عزومة عامة', 'أخرى'],
                 peopleCounts: ['20-40 شخص', '40-60 شخص', '60-100 شخص', 'أخرى'],
                 buffetTimes: ['فطور', 'غداء', 'عشاء'],
-                modalTitle: 'طلب عرض سعر', name: 'الاسم', namePlaceholder: 'أدخل اسمك (حد أقصى 30 حرف)',
-                eventTypeLabel: 'نوع المناسبة', eventTypeOtherPlaceholder: 'اكتب نوع المناسبة (حد أقصى 50 حرف)',
+                modalTitle: 'طلب عرض سعر', name: 'الاسم', namePlaceholder: 'أدخل اسمك',
+                eventTypeLabel: 'نوع المناسبة', eventTypeOtherPlaceholder: 'اكتب نوع المناسبة',
                 eventDate: 'تاريخ المناسبة', datePlaceholder: 'اختر التاريخ من هنا', determineLater: 'تحديد لاحقاً',
-                determineLaterValue: 'تحديد لاحقاً', peopleCount: 'عدد الأشخاص', peopleCountOtherPlaceholder: 'اكتب عدد الأشخاص (أرقام فقط)',
-                buffetTime: 'وقت البوفيه', budget: 'الميزانية التقريبية', phone: 'رقم التواصل (واتساب)',
+                determineLaterValue: 'تحديد لاحقاً', peopleCount: 'عدد الأشخاص', peopleCountOtherPlaceholder: 'اكتب عدد الأشخاص',
+                buffetTime: 'وقت البوفيه', budget: 'الميزانية التقريبية', phone: 'رقم التواصل ',
                 send: 'إرسال الطلب', cancel: 'إلغاء', other: 'أخرى', optional: '(اختياري)',
                 success: '✅ تم استلام طلبك بنجاح، سيتم التواصل معك قريباً',
                 error: '❌ حدث خطأ، حاول مرة أخرى', nameRequired: 'الرجاء إدخال الاسم',
@@ -1385,7 +1385,7 @@
                 peopleRequired: 'الرجاء اختيار عدد الأشخاص', peopleOtherRequired: 'الرجاء كتابة عدد الأشخاص (أرقام فقط)',
                 timeRequired: 'الرجاء اختيار وقت البوفيه', phoneRequired: 'الرجاء إدخال رقم التواصل',
                 phoneInvalid: 'رقم الجوال غير صحيح (8-15 رقم فقط)', pastDate: 'لا يمكن اختيار تاريخ مضى',
-                budgetNotSpecified: 'غير محدد', phonePlaceholder: 'مثال: 96812345678'
+                budgetNotSpecified: 'غير محدد', phonePlaceholder: 'أدخل رقم للتواصل'
             },
             en: {
                 brandSub: 'Hospitality Excellence', pulse: '✨ Your occasion deserves the best ✨',
@@ -1414,11 +1414,11 @@
                 eventTypes: ['Wedding', 'Birthday', 'Meeting', 'General Gathering', 'Other'],
                 peopleCounts: ['20-40 People', '40-60 People', '60-100 People', 'Other'],
                 buffetTimes: ['Breakfast', 'Lunch', 'Dinner'],
-                modalTitle: 'Request a Quote', name: 'Name', namePlaceholder: 'Enter your name (max 30 chars)',
-                eventTypeLabel: 'Event Type', eventTypeOtherPlaceholder: 'Enter event type (max 50 chars)',
+                modalTitle: 'Request a Quote', name: 'Name', namePlaceholder: 'Enter your name',
+                eventTypeLabel: 'Event Type', eventTypeOtherPlaceholder: 'Enter event type',
                 eventDate: 'Event Date', datePlaceholder: 'Select date', determineLater: 'Decide Later',
-                determineLaterValue: 'To be determined', peopleCount: 'Number of People', peopleCountOtherPlaceholder: 'Enter number (digits only)',
-                buffetTime: 'Buffet Time', budget: 'Approximate Budget', phone: 'WhatsApp Number',
+                determineLaterValue: 'To be determined', peopleCount: 'Number of People', peopleCountOtherPlaceholder: 'Enter number',
+                buffetTime: 'Buffet Time', budget: 'Approximate Budget', phone: ' phone Number',
                 send: 'Submit', cancel: 'Cancel', other: 'Other', optional: '(Optional)',
                 success: '✅ Request received, we will contact you soon',
                 error: '❌ An error occurred', nameRequired: 'Please enter your name',
@@ -1427,7 +1427,7 @@
                 peopleRequired: 'Please select number of people', peopleOtherRequired: 'Please enter number (digits only)',
                 timeRequired: 'Please select buffet time', phoneRequired: 'Please enter phone number',
                 phoneInvalid: 'Invalid phone number', budgetNotSpecified: 'Not specified',
-                phonePlaceholder: 'Ex: 96812345678'
+                phonePlaceholder: 'Enter  number'
             }
         };
 
@@ -1446,8 +1446,26 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             initApp();
-            document.getElementById('hiddenDateInput').addEventListener('change', function(e) {
-                if (e.target.value) { formData.eventDate = e.target.value; renderModalForm(); }
+            
+            const hiddenInput = document.getElementById('hiddenDateInput');
+            
+            hiddenInput.addEventListener('change', function(e) {
+                if (e.target.value) { 
+                    formData.eventDate = e.target.value; 
+                    renderModalForm(); 
+                }
+            });
+            
+            hiddenInput.addEventListener('click', function(e) {
+                if (hiddenInput.showPicker) {
+                    try { hiddenInput.showPicker(); } catch(err) {}
+                }
+            });
+            
+            hiddenInput.addEventListener('focus', function(e) {
+                if (hiddenInput.showPicker) {
+                    try { hiddenInput.showPicker(); } catch(err) {}
+                }
             });
         });
 
@@ -1565,9 +1583,9 @@
         function openDatePicker() {
             const hiddenInput = document.getElementById('hiddenDateInput');
             hiddenInput.min = new Date().toISOString().split('T')[0];
-            // محاولة فتح التقويم مباشرة
+            
             if (hiddenInput.showPicker) {
-                hiddenInput.showPicker();
+                try { hiddenInput.showPicker(); } catch(err) { hiddenInput.click(); }
             } else {
                 hiddenInput.focus();
                 hiddenInput.click();
