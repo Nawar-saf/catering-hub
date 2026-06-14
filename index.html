@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>GULF CATERING HUB | فخامة الضيافة</title>
     
     <!-- Firebase SDK -->
@@ -10,7 +10,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Playfair+Display:wght@400;600;700;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -33,6 +33,13 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
         body {
             font-family: 'Cairo', sans-serif;
             background-color: var(--black);
@@ -44,11 +51,7 @@
 
         body.en {
             direction: ltr;
-            font-family: 'Playfair Display', 'Cairo', serif;
-        }
-
-        body.en .cairo-text {
-            font-family: 'Cairo', sans-serif;
+            font-family: 'Cairo', 'Playfair Display', serif;
         }
 
         /* Splash Screen */
@@ -64,7 +67,7 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
         }
 
         .splash-screen.hidden {
@@ -75,7 +78,7 @@
         .splash-logo {
             width: 120px;
             height: 120px;
-            margin-bottom: 20px;
+            object-fit: contain;
             animation: pulse 1.5s infinite;
         }
 
@@ -85,6 +88,8 @@
             font-weight: 700;
             letter-spacing: 3px;
             text-shadow: 0 0 20px rgba(197, 160, 89, 0.5);
+            text-align: center;
+            margin-top: 20px;
         }
 
         .splash-subtitle {
@@ -115,25 +120,48 @@
 
         /* Main Container */
         .main-container {
-            max-width: 480px;
+            width: 100%;
+            max-width: 100%;
             margin: 0 auto;
             background-color: var(--black);
             min-height: 100vh;
-            position: relative;
         }
 
         /* Header */
         .header {
-            height: 220px;
             position: relative;
-            overflow: hidden;
-            background-image: url('https://images.unsplash.com/photo-1555244162-803834f70033?w=1200&q=80');
-            background-size: cover;
-            background-position: center;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
         }
+        
+        .header-video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+        
+        .header-bg-fallback {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://images.unsplash.com/photo-1555244162-803834f70033?w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+    filter: blur(1.5px);        /* إضافة الغباش */
+    transform: scale(1.05);   /* إخفاء حواف التمويه */
+}
 
         .header-overlay {
             position: absolute;
@@ -141,7 +169,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(197,160,89,0.3) 50%, rgba(0,0,0,0.6) 100%);
+            background: linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(197,160,89,0.25) 50%, rgba(0,0,0,0.85) 100%);
             z-index: 1;
         }
 
@@ -150,38 +178,45 @@
             z-index: 2;
             text-align: center;
             width: 100%;
-            padding: 20px;
-            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.7) 100%);
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            padding: 30px 20px;
+            animation: fadeInUpBig 1s ease-out;
+        }
+
+        @keyframes fadeInUpBig {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .language-switcher {
             position: absolute;
-            top: 12px;
-            left: 12px;
+            top: 20px;
+            left: 20px;
             display: flex;
-            gap: 6px;
+            gap: 10px;
             z-index: 100;
         }
 
         body.en .language-switcher {
             left: auto;
-            right: 12px;
+            right: 20px;
         }
 
         .lang-btn {
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(197,160,89,0.4);
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(197,160,89,0.5);
             color: var(--gold);
-            padding: 4px 10px;
-            border-radius: 16px;
+            padding: 8px 18px;
+            border-radius: 40px;
             cursor: pointer;
-            font-size: 11px;
-            font-weight: 500;
+            font-size: 14px;
+            font-weight: 600;
             transition: all 0.3s ease;
             font-family: 'Cairo', sans-serif;
         }
@@ -195,56 +230,243 @@
         .lang-btn:hover {
             background: var(--gold);
             color: var(--black);
+            transform: scale(1.05);
         }
 
-        .brand-row {
+        /* Logo Section */
+        .logo-section {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         .brand-logo {
-            width: 75px;
-            height: 80px;
+            width: 120px;
+            height: 125px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 20px rgba(197,160,89,0.5));
+            transition: transform 0.3s ease;
         }
 
-        .brand-name {
-            color: var(--gold);
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-shadow: 0 1px 1px #000, 0 0 5px rgba(0,0,0,0.8);
+        .brand-logo:hover {
+            transform: scale(1.05);
+        }
+
+        @media (min-width: 768px) {
+            .brand-logo {
+                width: 150px;
+                height: 155px;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* العنوان - نفس الخط للعربي والإنجليزي، لون بني ذهبي غامق */
+        
+.project-title {
+    font-family: 'Playfair Display', 'Cairo', serif;
+    font-size: 84px;
+    font-weight: 800;
+    letter-spacing: 6px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    position: relative;
+    display: inline-block;
+    color: #d4af37;
+    
+    /* تأثير ذهبي ملكي فاخر مثل الشعار */
+    text-shadow: 
+        0 1px 0 rgba(255, 255, 255, 0.2),
+        0 2px 0 #00000030,
+        0 3px 0 #00000040,
+        0 4px 0 #00000050,
+        0 5px 0 #00000060,
+        0 0 20px rgba(212, 175, 55, 0.6),
+        0 0 40px rgba(212, 175, 55, 0.3),
+        0 8px 12px rgba(0,0,0,0.4);
+    
+    /* لمسة ذهبية إضافية */
+    background: linear-gradient(135deg, #d4af37 0%, #f5e6a0 30%, #d4af37 60%, #b8860b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: #d4af37;
+}
+
+/* خط ذهبي ملكي تحت العنوان */
+.project-title::after {
+    content: '';
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #d4af37, #f5e6a0, #d4af37, transparent);
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
+}
+
+body.en .project-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 84px;
+    letter-spacing: 10px;
+    background: linear-gradient(135deg, #d4af37 0%, #f5e6a0 30%, #d4af37 60%, #b8860b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: #d4af37;
+    text-shadow: 
+        0 1px 0 rgba(255, 255, 255, 0.2),
+        0 2px 0 #00000030,
+        0 3px 0 #00000040,
+        0 4px 0 #00000050,
+        0 5px 0 #00000060,
+        0 0 20px rgba(212, 175, 55, 0.6),
+        0 0 40px rgba(212, 175, 55, 0.3),
+        0 8px 12px rgba(0,0,0,0.4);
+}
+
+body.en .project-title::after {
+    width: 220px;
+}
+
+@media (max-width: 768px) {
+    .project-title {
+        font-size: 52px;
+        letter-spacing: 4px;
+        background: linear-gradient(135deg, #d4af37 0%, #f5e6a0 30%, #d4af37 60%, #b8860b 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        text-shadow: 
+            0 1px 0 rgba(255, 255, 255, 0.15),
+            0 2px 0 #00000030,
+            0 3px 0 #00000040,
+            0 4px 0 #00000050,
+            0 0 12px rgba(212, 175, 55, 0.5),
+            0 0 25px rgba(212, 175, 55, 0.25),
+            0 6px 12px rgba(0,0,0,0.4);
+    }
+    body.en .project-title {
+        font-size: 52px;
+        letter-spacing: 6px;
+    }
+    .project-title::after {
+        width: 140px;
+        bottom: -14px;
+    }
+    body.en .project-title::after {
+        width: 170px;
+    }
+}
+        .project-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold-light), var(--gold), var(--gold-light), transparent);
+            border-radius: 3px;
         }
 
         .brand-sub {
             color: var(--gold-light);
-            font-size: 14px;
+            font-size: 18px;
             font-weight: 700;
-            letter-spacing: 1px;
-            margin-top: 5px;
+            letter-spacing: 3px;
+            margin-top: 20px;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        @media (min-width: 768px) {
+            .brand-sub {
+                font-size: 22px;
+                letter-spacing: 4px;
+                margin-top: 25px;
+            }
         }
 
         .divider-line {
-            width: 50px;
-            height: 1px;
-            background: var(--gold);
-            margin: 8px auto;
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+            margin: 20px auto;
+        }
+
+        @media (min-width: 768px) {
+            .divider-line {
+                width: 120px;
+                margin: 25px auto;
+            }
         }
 
         .pulse-text {
             color: var(--gold-light);
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 700;
             letter-spacing: 1px;
-            text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
             animation: pulseText 2s infinite;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 50px;
+            margin-top: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .pulse-text {
+                font-size: 20px;
+                padding: 12px 35px;
+            }
         }
 
         @keyframes pulseText {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            cursor: pointer;
+            animation: bounce 2s infinite;
+            background: rgba(0,0,0,0.5);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--gold);
+            transition: all 0.3s ease;
+        }
+
+        .scroll-down:hover {
+            background: var(--gold);
+            transform: translateX(-50%) scale(1.1);
+        }
+
+        .scroll-down svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--gold);
+        }
+
+        .scroll-down:hover svg {
+            fill: var(--black);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
         }
 
         /* Content Area */
@@ -253,7 +475,9 @@
             background-image: url('https://images.pexels.com/photos/20551987/pexels-photo-20551987.jpeg?auto=compress&cs=tinysrgb&w=1200');
             background-size: cover;
             background-attachment: fixed;
-            min-height: calc(100vh - 220px);
+            min-height: 400px;
+            margin: 0;
+            padding: 0;
         }
 
         .content-overlay {
@@ -270,24 +494,47 @@
             position: relative;
             z-index: 1;
             padding: 20px 0;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .content-inner {
+                padding: 40px 20px;
+            }
         }
 
         /* Question Cards */
         .questions-section {
             padding: 20px 15px;
+            display: grid;
+            gap: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .questions-section {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                padding: 30px 40px;
+                gap: 20px;
+            }
         }
 
         .question-card {
             background: linear-gradient(135deg, rgba(26,15,5,0.96) 0%, rgba(42,26,10,0.96) 100%);
             border: 1px solid rgba(197,160,89,0.5);
             border-radius: 20px;
-            padding: 20px;
-            margin: 8px 5px;
+            padding: 25px;
             display: flex;
             align-items: flex-start;
             gap: 15px;
             animation: fadeInUp 0.6s ease forwards;
             opacity: 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .question-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(197,160,89,0.2);
         }
 
         .question-card:nth-child(1) { animation-delay: 0.1s; }
@@ -308,9 +555,15 @@
         }
 
         .question-icon {
-            font-size: 32px;
+            font-size: 40px;
             flex-shrink: 0;
             margin-top: 3px;
+        }
+
+        @media (min-width: 768px) {
+            .question-icon {
+                font-size: 50px;
+            }
         }
 
         body.en .question-card {
@@ -323,10 +576,16 @@
 
         .question-title {
             color: var(--gold-light);
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
-            margin-bottom: 6px;
+            margin-bottom: 10px;
             text-align: right;
+        }
+
+        @media (min-width: 768px) {
+            .question-title {
+                font-size: 22px;
+            }
         }
 
         body.en .question-title {
@@ -335,9 +594,16 @@
 
         .question-desc {
             color: var(--white);
-            font-size: 14px;
-            line-height: 22px;
+            font-size: 15px;
+            line-height: 26px;
             text-align: right;
+        }
+
+        @media (min-width: 768px) {
+            .question-desc {
+                font-size: 16px;
+                line-height: 28px;
+            }
         }
 
         body.en .question-desc {
@@ -346,20 +612,51 @@
 
         /* How It Works */
         .how-it-works {
-            padding: 20px 15px;
+            padding: 40px 15px;
+        }
+
+        @media (min-width: 768px) {
+            .how-it-works {
+                padding: 60px 40px;
+            }
         }
 
         .section-title {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 700;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             color: var(--gold);
             text-shadow: 0 0 10px rgba(0,0,0,0.8);
         }
 
+        @media (min-width: 768px) {
+            .section-title {
+                font-size: 42px;
+                margin-bottom: 50px;
+            }
+        }
+
+        .steps-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .steps-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .steps-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
         .step-card {
-            margin: 12px 5px;
+            margin: 0;
             border-radius: 24px;
             padding: 24px;
             animation: fadeInUp 0.8s ease forwards;
@@ -369,7 +666,6 @@
         .step-card:nth-child(2) { animation-delay: 0.1s; }
         .step-card:nth-child(3) { animation-delay: 0.2s; }
         .step-card:nth-child(4) { animation-delay: 0.3s; }
-        .step-card:nth-child(5) { animation-delay: 0.4s; }
 
         .step-card.primary {
             background: linear-gradient(135deg, rgba(197,160,89,0.93) 0%, rgba(139,105,20,0.93) 50%, rgba(197,160,89,0.93) 100%);
@@ -380,13 +676,18 @@
         }
 
         .step-card.primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 0 30px rgba(197,160,89,0.8);
+            transform: translateY(-5px);
+            box-shadow: 0 0 40px rgba(197,160,89,0.8);
         }
 
         .step-card.secondary {
             background: linear-gradient(135deg, rgba(42,26,10,0.96) 0%, rgba(26,10,0,0.96) 100%);
             border: 1px solid rgba(197,160,89,0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .step-card.secondary:hover {
+            transform: translateY(-3px);
         }
 
         .step-header {
@@ -475,14 +776,14 @@
         }
 
         .step-cta {
-            margin-top: 20px;
+            margin-top: 25px;
             text-align: center;
         }
 
         .cta-button {
             background: linear-gradient(90deg, var(--white), var(--gold-light));
             color: var(--gold-dark);
-            padding: 12px 35px;
+            padding: 14px 40px;
             border-radius: 40px;
             border: none;
             font-weight: 700;
@@ -497,29 +798,56 @@
             box-shadow: 0 5px 20px rgba(255,215,0,0.4);
         }
 
-        /* Why Us */
+        /* Why Us - improved for English */
         .why-us-section {
             margin: 30px 15px;
-            padding: 30px 20px;
+            padding: 40px 30px;
             background: rgba(26, 15, 5, 0.94);
             border-radius: 30px;
             border: 1px solid rgba(197,160,89,0.5);
         }
 
+        @media (min-width: 768px) {
+            .why-us-section {
+                margin: 40px;
+                padding: 50px 40px;
+            }
+        }
+
         .features-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        @media (min-width: 640px) {
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
         }
 
         .feature-item {
             background: linear-gradient(135deg, rgba(58,37,16,0.96) 0%, rgba(42,26,10,0.96) 100%);
             border: 1px solid rgba(197,160,89,0.5);
             border-radius: 20px;
-            padding: 20px;
+            padding: 25px 15px;
             text-align: center;
             animation: fadeIn 0.6s ease forwards;
             opacity: 0;
+            transition: transform 0.3s ease;
+            height: 100%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
         }
 
         .feature-item:nth-child(1) { animation-delay: 0.1s; }
@@ -534,47 +862,68 @@
         }
 
         .feature-icon {
-            font-size: 40px;
-            margin-bottom: 12px;
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .feature-icon {
+                font-size: 55px;
+            }
         }
 
         .feature-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--gold);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .feature-title {
+                font-size: 22px;
+            }
         }
 
         .feature-desc {
-            font-size: 12px;
+            font-size: 14px;
             color: var(--white);
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        @media (min-width: 768px) {
+            .feature-desc {
+                font-size: 15px;
+            }
         }
 
         /* Footer */
         .footer {
             text-align: center;
-            padding: 40px 20px;
+            padding: 50px 20px;
             border-top: 1px solid rgba(197,160,89,0.2);
             background: rgba(10,5,0,0.85);
             margin-top: 20px;
         }
 
         .footer-logo {
-            width: 60px;
-            height: 60px;
-            margin-bottom: 15px;
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            margin-bottom: 20px;
         }
 
         .footer-brand {
             color: var(--gold);
-            font-size: 12px;
-            letter-spacing: 4px;
+            font-size: 14px;
+            letter-spacing: 5px;
         }
 
         .footer-copy {
             color: #aa9977;
-            font-size: 10px;
-            margin-top: 15px;
+            font-size: 11px;
+            margin-top: 20px;
         }
 
         /* Modal */
@@ -584,7 +933,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.8);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -602,10 +951,10 @@
         .modal-content {
             background: var(--white);
             width: 90%;
-            max-width: 450px;
+            max-width: 550px;
             max-height: 85vh;
             border-radius: 30px;
-            padding: 20px;
+            padding: 30px;
             overflow-y: auto;
             transform: translateY(50px);
             transition: transform 0.3s ease;
@@ -616,23 +965,24 @@
         }
 
         .modal-title {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 700;
             text-align: center;
             color: var(--gold);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .form-label {
             color: var(--text-dark);
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             display: block;
             text-align: right;
+            font-size: 15px;
         }
 
         body.en .form-label {
@@ -649,10 +999,10 @@
             width: 100%;
             background: var(--gray-light);
             color: var(--text-dark);
-            border: 1px solid #ddd;
+            border: 2px solid #e0e0e0;
             border-radius: 12px;
-            padding: 12px;
-            font-size: 14px;
+            padding: 14px;
+            font-size: 15px;
             text-align: right;
             font-family: 'Cairo', sans-serif;
             transition: border-color 0.3s ease;
@@ -671,24 +1021,26 @@
         .options-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
         }
 
         .option-btn {
             background: #f0f0f0;
             color: #555;
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 2px solid transparent;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 14px;
             font-family: 'Cairo', sans-serif;
             transition: all 0.3s ease;
+            font-weight: 500;
         }
 
         .option-btn.selected {
             background: var(--gold);
             color: var(--white);
+            border-color: var(--gold-dark);
         }
 
         .option-btn:hover {
@@ -698,7 +1050,7 @@
 
         .date-row {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
         }
 
@@ -709,17 +1061,18 @@
         .date-picker-btn {
             flex: 1;
             background: var(--gray-light);
-            border: 1px solid #ddd;
+            border: 2px solid #e0e0e0;
             border-radius: 12px;
-            padding: 12px;
+            padding: 14px;
             cursor: pointer;
             text-align: right;
             color: #aaa;
-            min-height: 48px;
+            min-height: 50px;
             display: flex;
             align-items: center;
             font-family: 'Cairo', sans-serif;
             transition: border-color 0.3s ease;
+            font-size: 15px;
         }
 
         body.en .date-picker-btn {
@@ -737,14 +1090,14 @@
         .determine-later-btn {
             background: #f0f0f0;
             color: #555;
-            border: none;
+            border: 2px solid transparent;
             border-radius: 12px;
-            padding: 12px 14px;
+            padding: 14px 18px;
             cursor: pointer;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 14px;
             white-space: nowrap;
-            min-height: 48px;
+            min-height: 50px;
             font-family: 'Cairo', sans-serif;
             transition: all 0.3s ease;
         }
@@ -752,6 +1105,7 @@
         .determine-later-btn.active {
             background: var(--gold);
             color: var(--white);
+            border-color: var(--gold-dark);
         }
 
         .determine-later-btn:hover {
@@ -763,7 +1117,7 @@
             width: 100%;
             background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
             color: var(--black);
-            padding: 14px;
+            padding: 16px;
             border-radius: 30px;
             border: none;
             font-weight: 700;
@@ -771,6 +1125,7 @@
             cursor: pointer;
             font-family: 'Cairo', sans-serif;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-top: 10px;
         }
 
         .submit-btn:hover {
@@ -788,9 +1143,9 @@
             display: block;
             text-align: center;
             color: var(--gold);
-            margin-top: 12px;
+            margin-top: 15px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 15px;
             background: none;
             border: none;
             width: 100%;
@@ -801,7 +1156,6 @@
             text-decoration: underline;
         }
 
-        /* Loading Spinner */
         .spinner {
             display: inline-block;
             width: 20px;
@@ -812,15 +1166,14 @@
             animation: spin 0.8s linear infinite;
         }
 
-        /* Toast Notification */
         .toast {
             position: fixed;
-            top: 20px;
+            top: 30px;
             left: 50%;
             transform: translateX(-50%);
             background: var(--gold);
             color: var(--black);
-            padding: 15px 25px;
+            padding: 18px 30px;
             border-radius: 30px;
             font-weight: 700;
             z-index: 2000;
@@ -829,7 +1182,8 @@
             transition: all 0.3s ease;
             text-align: center;
             max-width: 90%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            font-size: 16px;
         }
 
         .toast.show {
@@ -847,7 +1201,6 @@
             color: white;
         }
 
-        /* Hidden date input */
         .hidden-date-input {
             position: absolute;
             opacity: 0;
@@ -856,9 +1209,17 @@
             pointer-events: none;
         }
 
-        /* Scrollbar */
+        .image-preloader {
+            position: absolute;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+        }
+
         ::-webkit-scrollbar {
-            width: 5px;
+            width: 8px;
         }
 
         ::-webkit-scrollbar-track {
@@ -870,91 +1231,71 @@
             border-radius: 10px;
         }
 
-        /* Responsive */
-        @media (max-width: 480px) {
-            .brand-name {
-                font-size: 16px;
-            }
-            .section-title {
-                font-size: 24px;
-            }
-            .step-title {
-                font-size: 20px;
-            }
-            .step-card.primary .step-title {
-                font-size: 22px;
-            }
-            .features-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .main-container {
-                border-left: 1px solid rgba(197,160,89,0.2);
-                border-right: 1px solid rgba(197,160,89,0.2);
-            }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold-light);
         }
     </style>
 </head>
-<body class="">
+<body>
 
-    <!-- Splash Screen -->
+    <div class="image-preloader">
+        <img src="https://i.postimg.cc/CK0FMh3Y/1000508313.png" alt="preload">
+    </div>
+
     <div class="splash-screen" id="splashScreen">
-        <img src="https://i.postimg.cc/CK0FMh3Y/1000508313.png" alt="Logo" class="splash-logo">
+        <img src="https://i.postimg.cc/CK0FMh3Y/1000508313.png" alt="Logo" class="splash-logo" id="splashLogo">
         <div class="splash-title">GULF CATERING HUB</div>
         <div class="splash-subtitle">فخامة الضيافة</div>
         <div class="splash-loader"></div>
     </div>
 
-    <!-- Toast -->
     <div class="toast" id="toast"></div>
 
-    <!-- Main Container -->
     <div class="main-container" id="mainContainer" style="display: none;">
         
-        <!-- Header -->
-        <div class="header">
+        <header class="header">
+            <video class="header-video-bg" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1555244162-803834f70033?w=1920&q=80">
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-serving-food-at-a-buffet-32884-large.mp4" type="video/mp4">
+            </video>
+            <div class="header-bg-fallback"></div>
             <div class="header-overlay"></div>
-            <div class="header-content">
-                <!-- Language Switcher -->
-                <div class="language-switcher">
-                    <button class="lang-btn active" onclick="switchLanguage('ar')" id="btnAr">🇸🇦 عربي</button>
-                    <button class="lang-btn" onclick="switchLanguage('en')" id="btnEn">🇬🇧 EN</button>
-                </div>
+            
+            <div class="language-switcher">
+                <button class="lang-btn active" onclick="switchLanguage('ar')" id="btnAr">🇸🇦 عربي</button>
+                <button class="lang-btn" onclick="switchLanguage('en')" id="btnEn">🇬🇧 EN</button>
+            </div>
 
-                <div class="brand-row">
+            <div class="header-content">
+                <div class="logo-section">
                     <img src="https://i.postimg.cc/CK0FMh3Y/1000508313.png" alt="Logo" class="brand-logo">
-                    <span class="brand-name">GULF CATERING HUB</span>
+                    <div class="project-title">Gulf Catering Hub</div>
                 </div>
                 <div class="brand-sub" id="brandSub">فخامة الضيافة</div>
                 <div class="divider-line"></div>
                 <div class="pulse-text" id="pulseText">✨ لأن مناسبتك تستحق الأفضل ✨</div>
             </div>
-        </div>
 
-        <!-- Content Area -->
-        <div class="content-area">
+            <div class="scroll-down" onclick="document.getElementById('contentStart').scrollIntoView({behavior: 'smooth'})">
+                <svg viewBox="0 0 24 24"><path d="M12 16L6 10H18L12 16Z"/></svg>
+            </div>
+        </header>
+
+        <div class="content-area" id="contentStart">
             <div class="content-overlay"></div>
             <div class="content-inner">
                 
-                <!-- Questions Section -->
                 <div class="questions-section" id="questionsSection"></div>
 
-                <!-- How It Works -->
                 <div class="how-it-works">
                     <div class="section-title" id="howItWorksTitle">كيف نعمل؟</div>
-                    <div id="stepsSection"></div>
+                    <div class="steps-grid" id="stepsSection"></div>
                 </div>
 
-                <!-- Why Us -->
                 <div class="why-us-section">
                     <div class="section-title" id="whyUsTitle">لماذا نحن؟</div>
                     <div class="features-grid" id="featuresGrid"></div>
                 </div>
 
-                <!-- Footer -->
                 <div class="footer">
                     <img src="https://i.postimg.cc/CK0FMh3Y/1000508313.png" alt="Logo" class="footer-logo">
                     <div class="footer-brand">GULF CATERING HUB</div>
@@ -964,18 +1305,13 @@
         </div>
     </div>
 
-    <!-- Modal -->
     <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-content" id="modalContent">
-            <!-- Form will be rendered here dynamically -->
-        </div>
+        <div class="modal-content" id="modalContent"></div>
     </div>
 
-    <!-- Hidden date input for date picker -->
     <input type="date" class="hidden-date-input" id="hiddenDateInput">
 
     <script>
-        // Firebase Initialization
         const firebaseConfig = {
             apiKey: "AIzaSyAX2hWjzgrX02HU8QZQ0MHq75zX5wd-Rd0",
             authDomain: "gulf-ec022.firebaseapp.com",
@@ -988,29 +1324,21 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // State
         let currentLanguage = 'ar';
         let modalVisible = false;
         let loading = false;
+        let appReady = false;
+        let minimumSplashTime = 2000;
+        let splashStartTime = Date.now();
 
-        // Form data
         let formData = {
-            fullName: '',
-            eventType: '',
-            eventTypeOther: '',
-            eventDate: '',
-            peopleCount: '',
-            peopleCountOther: '',
-            buffetTime: '',
-            budget: '',
-            phoneNumber: ''
+            fullName: '', eventType: '', eventTypeOther: '', eventDate: '',
+            peopleCount: '', peopleCountOther: '', buffetTime: '', budget: '', phoneNumber: ''
         };
 
-        // Translations
         const translations = {
             ar: {
-                brandSub: 'فخامة الضيافة',
-                pulse: '✨ لأن مناسبتك تستحق الأفضل ✨',
+                brandSub: 'فخامة الضيافة', pulse: '✨ لأن مناسبتك تستحق الأفضل ✨',
                 questions: [
                     { icon: '🎉', q: 'عندك مناسبة قريبة؟', d: 'زواج، تخرج، عيد ميلاد، عزومة، أو أي لحظة تستحق الاحتفال؟' },
                     { icon: '🤝', q: 'عندك اجتماع أو فعالية؟', d: 'اجتماع شركة، ندوة، ورشة عمل، أو لقاء عملاء مهم؟' },
@@ -1036,479 +1364,180 @@
                 eventTypes: ['حفلة زفاف(عرس)', 'عيد ميلاد', 'اجتماع', 'عزومة عامة', 'أخرى'],
                 peopleCounts: ['20-40 شخص', '40-60 شخص', '60-100 شخص', 'أخرى'],
                 buffetTimes: ['فطور', 'غداء', 'عشاء'],
-                modalTitle: 'طلب عرض سعر',
-                name: 'الاسم',
-                namePlaceholder: 'أدخل اسمك',
-                eventType: 'نوع المناسبة',
-                eventTypeOtherPlaceholder: 'اكتب نوع المناسبة',
-                eventDate: 'تاريخ المناسبة',
-                datePlaceholder: 'اختر التاريخ من هنا',
-                determineLater: 'تحديد لاحقاً',
-                determineLaterValue: 'تحديد لاحقاً',
-                peopleCount: 'عدد الأشخاص',
-                peopleCountOtherPlaceholder: 'اكتب عدد الأشخاص',
-                buffetTime: 'وقت البوفيه',
-                budget: 'الميزانية التقريبية',
-                phone: 'رقم التواصل (واتساب)',
-                send: 'إرسال الطلب',
-                cancel: 'إلغاء',
-                other: 'أخرى',
-                optional: '(اختياري)',
+                modalTitle: 'طلب عرض سعر', name: 'الاسم', namePlaceholder: 'أدخل اسمك',
+                eventTypeLabel: 'نوع المناسبة', eventTypeOtherPlaceholder: 'اكتب نوع المناسبة',
+                eventDate: 'تاريخ المناسبة', datePlaceholder: 'اختر التاريخ من هنا', determineLater: 'تحديد لاحقاً',
+                determineLaterValue: 'تحديد لاحقاً', peopleCount: 'عدد الأشخاص', peopleCountOtherPlaceholder: 'اكتب عدد الأشخاص',
+                buffetTime: 'وقت البوفيه', budget: 'الميزانية التقريبية', phone: 'رقم التواصل (واتساب)',
+                send: 'إرسال الطلب', cancel: 'إلغاء', other: 'أخرى', optional: '(اختياري)',
                 success: '✅ تم استلام طلبك بنجاح، سيتم التواصل معك قريباً',
-                error: '❌ حدث خطأ، حاول مرة أخرى',
-                nameRequired: 'الرجاء إدخال الاسم',
-                eventRequired: 'الرجاء اختيار نوع المناسبة',
-                eventOtherRequired: 'الرجاء كتابة نوع المناسبة',
+                error: '❌ حدث خطأ، حاول مرة أخرى', nameRequired: 'الرجاء إدخال الاسم',
+                eventRequired: 'الرجاء اختيار نوع المناسبة', eventOtherRequired: 'الرجاء كتابة نوع المناسبة',
                 dateRequired: 'الرجاء إدخال تاريخ المناسبة أو اختيار تحديد لاحقاً',
-                peopleRequired: 'الرجاء اختيار عدد الأشخاص',
-                peopleOtherRequired: 'الرجاء كتابة عدد الأشخاص',
-                timeRequired: 'الرجاء اختيار وقت البوفيه',
-                phoneRequired: 'الرجاء إدخال رقم التواصل',
-                phoneInvalid: 'رقم الجوال غير صحيح (8-15 رقم فقط)',
-                pastDate: 'لا يمكن اختيار تاريخ مضى',
-                budgetNotSpecified: 'غير محدد',
-                alertTitle: 'تنبيه',
-                successTitle: 'تم الإرسال',
-                errorTitle: 'خطأ'
+                peopleRequired: 'الرجاء اختيار عدد الأشخاص', peopleOtherRequired: 'الرجاء كتابة عدد الأشخاص',
+                timeRequired: 'الرجاء اختيار وقت البوفيه', phoneRequired: 'الرجاء إدخال رقم التواصل',
+                phoneInvalid: 'رقم الجوال غير صحيح (8-15 رقم فقط)', pastDate: 'لا يمكن اختيار تاريخ مضى',
+                budgetNotSpecified: 'غير محدد'
             },
             en: {
-                brandSub: 'Hospitality Excellence',
-                pulse: '✨ Your occasion deserves the best ✨',
+                brandSub: 'Hospitality Excellence', pulse: '✨ Your occasion deserves the best ✨',
                 questions: [
                     { icon: '🎉', q: 'Have an occasion soon?', d: 'Wedding, graduation, birthday, gathering, or any moment worth celebrating?' },
                     { icon: '🤝', q: 'Have a meeting or event?', d: 'Company meeting, seminar, workshop, or important client meeting?' },
-                    { icon: '🍽️', q: 'Need premium catering that gives you peace of mind?', d: 'We offer the best buffet options from top kitchens at competitive prices.' },
-                    { icon: '✨', q: 'Want something that suits your guests and elevates your occasion?', d: 'Let us handle the details while you enjoy your precious moments.' },
-                    { icon: '📋', q: 'Confused where to start and whom to choose?', d: 'Send the details and leave the rest to us.' }
+                    { icon: '🍽️', q: 'Need premium catering?', d: 'We offer the best buffet options from top kitchens at competitive prices.' },
+                    { icon: '✨', q: 'Want something that suits your guests?', d: 'Let us handle the details while you enjoy your precious moments.' },
+                    { icon: '📋', q: 'Confused where to start?', d: 'Send the details and leave the rest to us.' }
                 ],
                 howItWorks: 'How We Work?',
                 steps: [
-                    { num: '01', title: 'Send Your Request', desc: 'Specify your occasion details precisely, and we will immediately analyze your needs to provide the best options.' },
-                    { num: '02', title: 'Price Offers', desc: 'We save you the trouble of searching for the best prices and services. We will send you the top 3 price offers carefully filtered to suit your budget.' },
-                    { num: '03', title: 'Choose Confidently', desc: 'After choosing the right package, we guarantee the best preparation readiness.' },
-                    { num: '04', title: 'Enjoy Your Hospitality', desc: 'After choosing the right offer, we guarantee quality execution and full commitment to deliver an experience worthy of you and your guests.' }
+                    { num: '01', title: 'Send Request', desc: 'Specify your occasion details precisely, we will analyze your needs.' },
+                    { num: '02', title: 'Price Offers', desc: 'We will send you the top 3 price offers carefully filtered to suit your budget.' },
+                    { num: '03', title: 'Choose', desc: 'After choosing the right package, we guarantee the best preparation.' },
+                    { num: '04', title: 'Enjoy', desc: 'We guarantee quality execution and full commitment.' }
                 ],
                 whyUs: 'Why Us?',
                 features: [
-                    { icon: '👑', title: 'Trust', desc: 'Dealings based on transparency and professionalism' },
-                    { icon: '🚀', title: 'Speed', desc: 'We reach you wherever you are as fast as possible' },
-                    { icon: '⭐', title: 'Quality', desc: 'Highest quality standards in preparations' },
-                    { icon: '🍽️', title: 'Delicious Dishes', desc: 'From top chefs and finest kitchens' },
+                    { icon: '👑', title: 'Trust', desc: 'Transparent & professional dealings' },
+                    { icon: '🚀', title: 'Speed', desc: 'We reach you wherever you are' },
+                    { icon: '⭐', title: 'Quality', desc: 'Highest quality standards' },
+                    { icon: '🍽️', title: 'Delicious Dishes', desc: 'From top chefs & finest kitchens' },
                     { icon: '💰', title: 'Competitive Prices', desc: 'Exclusive offers for all budgets' }
                 ],
                 eventTypes: ['Wedding', 'Birthday', 'Meeting', 'General Gathering', 'Other'],
                 peopleCounts: ['20-40 People', '40-60 People', '60-100 People', 'Other'],
                 buffetTimes: ['Breakfast', 'Lunch', 'Dinner'],
-                modalTitle: 'Request a Quote',
-                name: 'Name',
-                namePlaceholder: 'Enter your name',
-                eventType: 'Event Type',
-                eventTypeOtherPlaceholder: 'Enter event type',
-                eventDate: 'Event Date',
-                datePlaceholder: 'Select date here',
-                determineLater: 'Decide Later',
-                determineLaterValue: 'To be determined',
-                peopleCount: 'Number of People',
-                peopleCountOtherPlaceholder: 'Enter number of people',
-                buffetTime: 'Buffet Time',
-                budget: 'Approximate Budget',
-                phone: 'WhatsApp Number',
-                send: 'Submit Request',
-                cancel: 'Cancel',
-                other: 'Other',
-                optional: '(Optional)',
-                success: '✅ Your request has been received, we will contact you soon',
-                error: '❌ An error occurred, please try again',
-                nameRequired: 'Please enter your name',
-                eventRequired: 'Please select event type',
-                eventOtherRequired: 'Please enter event type',
-                dateRequired: 'Please enter event date or select Decide Later',
-                peopleRequired: 'Please select number of people',
-                peopleOtherRequired: 'Please enter number of people',
-                timeRequired: 'Please select buffet time',
-                phoneRequired: 'Please enter phone number',
-                phoneInvalid: 'Invalid phone number (8-15 digits only)',
-                pastDate: 'Cannot select a past date',
-                budgetNotSpecified: 'Not specified',
-                alertTitle: 'Notice',
-                successTitle: 'Sent',
-                errorTitle: 'Error'
+                modalTitle: 'Request a Quote', name: 'Name', namePlaceholder: 'Enter your name',
+                eventTypeLabel: 'Event Type', eventTypeOtherPlaceholder: 'Enter event type',
+                eventDate: 'Event Date', datePlaceholder: 'Select date', determineLater: 'Decide Later',
+                determineLaterValue: 'To be determined', peopleCount: 'Number of People', peopleCountOtherPlaceholder: 'Enter number',
+                buffetTime: 'Buffet Time', budget: 'Approximate Budget', phone: 'WhatsApp Number',
+                send: 'Submit', cancel: 'Cancel', other: 'Other', optional: '(Optional)',
+                success: '✅ Request received, we will contact you soon',
+                error: '❌ An error occurred', nameRequired: 'Please enter your name',
+                eventRequired: 'Please select event type', eventOtherRequired: 'Please enter event type',
+                dateRequired: 'Please enter event date', pastDate: 'Cannot select a past date',
+                peopleRequired: 'Please select number of people', peopleOtherRequired: 'Please enter number',
+                timeRequired: 'Please select buffet time', phoneRequired: 'Please enter phone number',
+                phoneInvalid: 'Invalid phone number', budgetNotSpecified: 'Not specified'
             }
         };
 
-        function t(key) {
-            return translations[currentLanguage][key] || key;
-        }
+        function t(key) { return translations[currentLanguage][key] || key; }
 
-        // Initialize App
-        document.addEventListener('DOMContentLoaded', function() {
-            // Show splash screen for 2 seconds
+        function initApp() {
+            const elapsed = Date.now() - splashStartTime;
+            const remainingTime = Math.max(0, minimumSplashTime - elapsed);
             setTimeout(function() {
                 document.getElementById('splashScreen').classList.add('hidden');
                 document.getElementById('mainContainer').style.display = 'block';
+                appReady = true;
                 renderAll();
-            }, 2000);
+            }, remainingTime);
+        }
 
-            // Date input listener
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
             document.getElementById('hiddenDateInput').addEventListener('change', function(e) {
-                if (e.target.value) {
-                    formData.eventDate = e.target.value;
-                    renderModalForm();
-                }
+                if (e.target.value) { formData.eventDate = e.target.value; renderModalForm(); }
             });
         });
 
-        // Switch Language
         function switchLanguage(lang) {
             currentLanguage = lang;
-            
-            // Update body class
-            if (lang === 'en') {
-                document.body.classList.add('en');
-                document.body.dir = 'ltr';
-                document.body.lang = 'en';
-            } else {
-                document.body.classList.remove('en');
-                document.body.dir = 'rtl';
-                document.body.lang = 'ar';
-            }
-
-            // Update buttons
+            document.body.classList.toggle('en', lang === 'en');
+            document.body.dir = lang === 'en' ? 'ltr' : 'rtl';
             document.getElementById('btnAr').classList.toggle('active', lang === 'ar');
             document.getElementById('btnEn').classList.toggle('active', lang === 'en');
-
-            // Reset form data when switching language
             resetForm();
-            
-            // Re-render everything
             renderAll();
         }
 
         function resetForm() {
-            formData = {
-                fullName: '',
-                eventType: '',
-                eventTypeOther: '',
-                eventDate: '',
-                peopleCount: '',
-                peopleCountOther: '',
-                buffetTime: '',
-                budget: '',
-                phoneNumber: ''
-            };
+            formData = { fullName: '', eventType: '', eventTypeOther: '', eventDate: '', peopleCount: '', peopleCountOther: '', buffetTime: '', budget: '', phoneNumber: '' };
         }
 
-        // Render All
         function renderAll() {
-            renderHeader();
-            renderQuestions();
-            renderSteps();
-            renderFeatures();
-            if (modalVisible) {
-                renderModalForm();
-            }
-        }
-
-        function renderHeader() {
+            if (!appReady) return;
             document.getElementById('brandSub').textContent = t('brandSub');
             document.getElementById('pulseText').textContent = t('pulse');
             document.getElementById('howItWorksTitle').textContent = t('howItWorks');
             document.getElementById('whyUsTitle').textContent = t('whyUs');
-        }
-
-        function renderQuestions() {
-            const container = document.getElementById('questionsSection');
-            const questions = t('questions');
             
-            container.innerHTML = questions.map(q => `
+            document.getElementById('questionsSection').innerHTML = t('questions').map(q => `
                 <div class="question-card">
                     <div class="question-icon">${q.icon}</div>
-                    <div class="question-text">
-                        <div class="question-title">${q.q}</div>
-                        <div class="question-desc">${q.d}</div>
-                    </div>
+                    <div class="question-text"><div class="question-title">${q.q}</div><div class="question-desc">${q.d}</div></div>
                 </div>
             `).join('');
-        }
-
-        function renderSteps() {
-            const container = document.getElementById('stepsSection');
-            const steps = t('steps');
             
-            container.innerHTML = steps.map((step, index) => `
-                <div class="step-card ${index === 0 ? 'primary' : 'secondary'}">
-                    <div class="step-header">
-                        <div class="step-number">${step.num}</div>
-                        <div class="step-title">${step.title}</div>
-                    </div>
-                    <div class="step-desc">${step.desc}</div>
-                    ${index === 0 ? `
-                        <div class="step-cta">
-                            <button class="cta-button" onclick="openModal()">📝 ${currentLanguage === 'ar' ? 'اضغط هنا لطلب عرض السعر' : 'Click here to request a quote'}</button>
-                        </div>
-                    ` : ''}
+            document.getElementById('stepsSection').innerHTML = t('steps').map((s, i) => `
+                <div class="step-card ${i === 0 ? 'primary' : 'secondary'}">
+                    <div class="step-header"><div class="step-number">${s.num}</div><div class="step-title">${s.title}</div></div>
+                    <div class="step-desc">${s.desc}</div>
+                    ${i === 0 ? `<div class="step-cta"><button class="cta-button" onclick="openModal()">📝 ${currentLanguage === 'ar' ? 'اضغط هنا لطلب عرض السعر' : 'Request a Quote'}</button></div>` : ''}
                 </div>
             `).join('');
-        }
-
-        function renderFeatures() {
-            const container = document.getElementById('featuresGrid');
-            const features = t('features');
             
-            container.innerHTML = features.map(f => `
-                <div class="feature-item">
-                    <div class="feature-icon">${f.icon}</div>
-                    <div class="feature-title">${f.title}</div>
-                    <div class="feature-desc">${f.desc}</div>
-                </div>
+            document.getElementById('featuresGrid').innerHTML = t('features').map(f => `
+                <div class="feature-item"><div class="feature-icon">${f.icon}</div><div class="feature-title">${f.title}</div><div class="feature-desc">${f.desc}</div></div>
             `).join('');
+            
+            if (modalVisible) renderModalForm();
         }
 
-        // Modal Functions
-        function openModal() {
-            modalVisible = true;
-            document.getElementById('modalOverlay').classList.add('active');
-            resetForm();
-            renderModalForm();
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            modalVisible = false;
-            document.getElementById('modalOverlay').classList.remove('active');
-            document.body.style.overflow = '';
-        }
+        function openModal() { modalVisible = true; document.getElementById('modalOverlay').classList.add('active'); resetForm(); renderModalForm(); document.body.style.overflow = 'hidden'; }
+        function closeModal() { modalVisible = false; document.getElementById('modalOverlay').classList.remove('active'); document.body.style.overflow = ''; }
 
         function renderModalForm() {
-            const container = document.getElementById('modalContent');
-            const otherOption = t('other');
-            const determineLaterValue = t('determineLaterValue');
-
-            container.innerHTML = `
+            const other = t('other'), detLater = t('determineLaterValue');
+            document.getElementById('modalContent').innerHTML = `
                 <div class="modal-title">${t('modalTitle')}</div>
-                
-                <div class="form-group">
-                    <label class="form-label">${t('name')} *</label>
-                    <input type="text" class="form-input" placeholder="${t('namePlaceholder')}" value="${escapeHtml(formData.fullName)}" oninput="formData.fullName = this.value" id="inputName">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">${t('eventType')} *</label>
-                    <div class="options-grid">
-                        ${t('eventTypes').map(option => `
-                            <button class="option-btn ${formData.eventType === option ? 'selected' : ''}" onclick="selectEventType('${escapeHtml(option)}')">${option}</button>
-                        `).join('')}
-                    </div>
-                    ${formData.eventType === otherOption ? `
-                        <input type="text" class="form-input" placeholder="${t('eventTypeOtherPlaceholder')}" value="${escapeHtml(formData.eventTypeOther)}" oninput="formData.eventTypeOther = this.value" style="margin-top: 8px;">
-                    ` : ''}
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">${t('eventDate')} *</label>
-                    <div class="date-row">
-                        <div class="date-picker-btn ${formData.eventDate ? 'has-value' : ''}" onclick="openDatePicker()">
-                            ${formData.eventDate || t('datePlaceholder')}
-                        </div>
-                        <button class="determine-later-btn ${formData.eventDate === determineLaterValue ? 'active' : ''}" onclick="toggleDetermineLater()">
-                            ${t('determineLater')}
-                        </button>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">${t('peopleCount')} *</label>
-                    <div class="options-grid">
-                        ${t('peopleCounts').map(option => `
-                            <button class="option-btn ${formData.peopleCount === option ? 'selected' : ''}" onclick="selectPeopleCount('${escapeHtml(option)}')">${option}</button>
-                        `).join('')}
-                    </div>
-                    ${formData.peopleCount === otherOption ? `
-                        <input type="text" class="form-input" placeholder="${t('peopleCountOtherPlaceholder')}" value="${escapeHtml(formData.peopleCountOther)}" oninput="formData.peopleCountOther = this.value" style="margin-top: 8px;">
-                    ` : ''}
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">${t('buffetTime')} *</label>
-                    <div class="options-grid">
-                        ${t('buffetTimes').map(option => `
-                            <button class="option-btn ${formData.buffetTime === option ? 'selected' : ''}" onclick="selectBuffetTime('${escapeHtml(option)}')">${option}</button>
-                        `).join('')}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">${t('budget')} <span class="optional">${t('optional')}</span></label>
-                    <input type="text" class="form-input" placeholder="" value="${escapeHtml(formData.budget)}" oninput="formData.budget = this.value">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">${t('phone')} *</label>
-                    <input type="tel" class="form-input" placeholder="968XXXXXXXX" value="${escapeHtml(formData.phoneNumber)}" oninput="formData.phoneNumber = this.value">
-                </div>
-
-                <button class="submit-btn" onclick="handleSubmit()" ${loading ? 'disabled' : ''}>
-                    ${loading ? '<span class="spinner"></span>' : t('send')}
-                </button>
+                <div class="form-group"><label class="form-label">${t('name')} *</label><input class="form-input" placeholder="${t('namePlaceholder')}" value="${formData.fullName}" oninput="formData.fullName = this.value"></div>
+                <div class="form-group"><label class="form-label">${t('eventTypeLabel')} *</label><div class="options-grid">${t('eventTypes').map(opt => `<button class="option-btn ${formData.eventType === opt ? 'selected' : ''}" onclick="selectEventType('${opt.replace(/'/g, "\\'")}')">${opt}</button>`).join('')}</div>${formData.eventType === other ? `<input class="form-input" placeholder="${t('eventTypeOtherPlaceholder')}" value="${formData.eventTypeOther}" oninput="formData.eventTypeOther = this.value" style="margin-top:10px">` : ''}</div>
+                <div class="form-group"><label class="form-label">${t('eventDate')} *</label><div class="date-row"><div class="date-picker-btn ${formData.eventDate ? 'has-value' : ''}" onclick="openDatePicker()">${formData.eventDate || t('datePlaceholder')}</div><button class="determine-later-btn ${formData.eventDate === detLater ? 'active' : ''}" onclick="toggleDetermineLater()">${t('determineLater')}</button></div></div>
+                <div class="form-group"><label class="form-label">${t('peopleCount')} *</label><div class="options-grid">${t('peopleCounts').map(opt => `<button class="option-btn ${formData.peopleCount === opt ? 'selected' : ''}" onclick="selectPeopleCount('${opt.replace(/'/g, "\\'")}')">${opt}</button>`).join('')}</div>${formData.peopleCount === other ? `<input class="form-input" placeholder="${t('peopleCountOtherPlaceholder')}" value="${formData.peopleCountOther}" oninput="formData.peopleCountOther = this.value" style="margin-top:10px">` : ''}</div>
+                <div class="form-group"><label class="form-label">${t('buffetTime')} *</label><div class="options-grid">${t('buffetTimes').map(opt => `<button class="option-btn ${formData.buffetTime === opt ? 'selected' : ''}" onclick="formData.buffetTime = '${opt.replace(/'/g, "\\'")}'; renderModalForm()">${opt}</button>`).join('')}</div></div>
+                <div class="form-group"><label class="form-label">${t('budget')} <span class="optional">${t('optional')}</span></label><input class="form-input" value="${formData.budget}" oninput="formData.budget = this.value"></div>
+                <div class="form-group"><label class="form-label">${t('phone')} *</label><input class="form-input" placeholder="968XXXXXXXX" value="${formData.phoneNumber}" oninput="formData.phoneNumber = this.value"></div>
+                <button class="submit-btn" onclick="handleSubmit()" ${loading ? 'disabled' : ''}>${loading ? '<span class="spinner"></span>' : t('send')}</button>
                 <button class="cancel-btn" onclick="closeModal()">${t('cancel')}</button>
             `;
         }
 
-        function selectEventType(option) {
-            formData.eventType = option;
-            formData.eventTypeOther = '';
-            renderModalForm();
-        }
+        function selectEventType(opt) { formData.eventType = opt; formData.eventTypeOther = ''; renderModalForm(); }
+        function selectPeopleCount(opt) { formData.peopleCount = opt; formData.peopleCountOther = ''; renderModalForm(); }
+        function openDatePicker() { const d = document.getElementById('hiddenDateInput'); d.min = new Date().toISOString().split('T')[0]; d.showPicker ? d.showPicker() : d.click(); }
+        function toggleDetermineLater() { const v = t('determineLaterValue'); formData.eventDate = formData.eventDate === v ? '' : v; renderModalForm(); }
+        function showToast(msg, type = '') { const t = document.getElementById('toast'); t.textContent = msg; t.className = 'toast show ' + type; setTimeout(() => t.classList.remove('show'), 4000); }
+        function validatePhone(p) { return /^[+]?[0-9]{8,15}$/.test(p); }
 
-        function selectPeopleCount(option) {
-            formData.peopleCount = option;
-            formData.peopleCountOther = '';
-            renderModalForm();
-        }
-
-        function selectBuffetTime(option) {
-            formData.buffetTime = option;
-            renderModalForm();
-        }
-
-        function openDatePicker() {
-            const dateInput = document.getElementById('hiddenDateInput');
-            // Set min date to today
-            const today = new Date().toISOString().split('T')[0];
-            dateInput.min = today;
-            dateInput.showPicker ? dateInput.showPicker() : dateInput.click();
-        }
-
-        function toggleDetermineLater() {
-            const determineLaterValue = t('determineLaterValue');
-            if (formData.eventDate === determineLaterValue) {
-                formData.eventDate = '';
-            } else {
-                formData.eventDate = determineLaterValue;
-            }
-            renderModalForm();
-        }
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // Validation
-        function validatePhoneNumber(phone) {
-            return /^[+]?[0-9]{8,15}$/.test(phone);
-        }
-
-        function validateEventDate(dateString) {
-            const determineLaterValue = t('determineLaterValue');
-            if (dateString === determineLaterValue) return true;
-            if (!dateString) return false;
-            const selectedDate = new Date(dateString);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            return selectedDate >= today;
-        }
-
-        // Toast
-        function showToast(message, type = '') {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = 'toast show ' + type;
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 4000);
-        }
-
-        // Submit
         async function handleSubmit() {
-            const otherOption = t('other');
-            const determineLaterValue = t('determineLaterValue');
+            const other = t('other'), detLater = t('determineLaterValue');
+            if (!formData.fullName.trim()) return showToast(t('nameRequired'), 'error');
+            if (!formData.eventType) return showToast(t('eventRequired'), 'error');
+            if (formData.eventType === other && !formData.eventTypeOther.trim()) return showToast(t('eventOtherRequired'), 'error');
+            if (!formData.eventDate) return showToast(t('dateRequired'), 'error');
+            if (formData.eventDate !== detLater && new Date(formData.eventDate) < new Date().setHours(0,0,0,0)) return showToast(t('pastDate'), 'error');
+            if (!formData.peopleCount) return showToast(t('peopleRequired'), 'error');
+            if (formData.peopleCount === other && !formData.peopleCountOther.trim()) return showToast(t('peopleOtherRequired'), 'error');
+            if (!formData.buffetTime) return showToast(t('timeRequired'), 'error');
+            if (!formData.phoneNumber.trim()) return showToast(t('phoneRequired'), 'error');
+            if (!validatePhone(formData.phoneNumber.trim())) return showToast(t('phoneInvalid'), 'error');
 
-            // Validations
-            if (!formData.fullName.trim()) {
-                showToast(t('nameRequired'), 'error');
-                return;
-            }
-            if (!formData.eventType) {
-                showToast(t('eventRequired'), 'error');
-                return;
-            }
-            if (formData.eventType === otherOption && !formData.eventTypeOther.trim()) {
-                showToast(t('eventOtherRequired'), 'error');
-                return;
-            }
-            if (!formData.eventDate) {
-                showToast(t('dateRequired'), 'error');
-                return;
-            }
-            if (!validateEventDate(formData.eventDate)) {
-                showToast(t('pastDate'), 'error');
-                return;
-            }
-            if (!formData.peopleCount) {
-                showToast(t('peopleRequired'), 'error');
-                return;
-            }
-            if (formData.peopleCount === otherOption && !formData.peopleCountOther.trim()) {
-                showToast(t('peopleOtherRequired'), 'error');
-                return;
-            }
-            if (!formData.buffetTime) {
-                showToast(t('timeRequired'), 'error');
-                return;
-            }
-            if (!formData.phoneNumber.trim()) {
-                showToast(t('phoneRequired'), 'error');
-                return;
-            }
-            if (!validatePhoneNumber(formData.phoneNumber.trim())) {
-                showToast(t('phoneInvalid'), 'error');
-                return;
-            }
-
-            loading = true;
-            renderModalForm();
-
+            loading = true; renderModalForm();
             try {
                 await db.collection('orders').add({
-                    fullName: formData.fullName.trim(),
-                    eventType: formData.eventType === otherOption ? formData.eventTypeOther.trim() : formData.eventType,
-                    eventDate: formData.eventDate.trim(),
-                    peopleCount: formData.peopleCount === otherOption ? formData.peopleCountOther.trim() : formData.peopleCount,
-                    buffetTime: formData.buffetTime,
-                    budget: formData.budget.trim() || t('budgetNotSpecified'),
-                    phoneNumber: formData.phoneNumber.trim(),
-                    status: 'جديد',
-                    createdAt: new Date().toISOString()
+                    fullName: formData.fullName.trim(), eventType: formData.eventType === other ? formData.eventTypeOther.trim() : formData.eventType,
+                    eventDate: formData.eventDate.trim(), peopleCount: formData.peopleCount === other ? formData.peopleCountOther.trim() : formData.peopleCount,
+                    buffetTime: formData.buffetTime, budget: formData.budget.trim() || t('budgetNotSpecified'),
+                    phoneNumber: formData.phoneNumber.trim(), status: 'جديد', createdAt: new Date().toISOString()
                 });
-
-                showToast(t('success'), 'success');
-                resetForm();
-                closeModal();
-            } catch (error) {
-                console.error('Error adding document: ', error);
-                showToast(t('error'), 'error');
-            } finally {
-                loading = false;
-                renderModalForm();
-            }
+                showToast(t('success'), 'success'); resetForm(); closeModal();
+            } catch(e) { showToast(t('error'), 'error'); }
+            finally { loading = false; renderModalForm(); }
         }
 
-        // Close modal when clicking overlay
-        document.getElementById('modalOverlay').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
-        });
-
-        // Prevent body scroll when modal is open on mobile
-        document.addEventListener('touchmove', function(e) {
-            if (modalVisible && !document.getElementById('modalContent').contains(e.target)) {
-                e.preventDefault();
-            }
-        }, { passive: false });
+        document.getElementById('modalOverlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal(); });
     </script>
 </body>
 </html>
