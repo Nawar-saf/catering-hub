@@ -130,6 +130,8 @@
         /* Header */
         .header {
             position: relative;
+            width: 100%;
+            height: 100vh; /* افتراضي: ملء الشاشة بالكامل للموبايل */
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -139,6 +141,14 @@
             padding: 0;
         }
         
+        /* 🔥 التعديل المطلوب: على شاشات الكمبيوتر (أكبر من 992px) يصبح الارتفاع 50% فقط من الشاشة */
+        @media (min-width: 992px) {
+            .header {
+                height: 50vh;
+                min-height: 50vh;
+            }
+        }
+
         .header-video-bg {
             position: absolute;
             top: 0;
@@ -150,18 +160,18 @@
         }
         
         .header-bg-fallback {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('https://images.unsplash.com/photo-1555244162-803834f70033?w=1920&q=80');
-    background-size: cover;
-    background-position: center;
-    z-index: 0;
-    filter: blur(1.5px);        /* إضافة الغباش */
-    transform: scale(1.05);   /* إخفاء حواف التمويه */
-}
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1555244162-803834f70033?w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+            filter: blur(1.5px);
+            transform: scale(1.05);
+        }
 
         .header-overlay {
             position: absolute;
@@ -263,112 +273,93 @@
             }
         }
 
-        /* العنوان - نفس الخط للعربي والإنجليزي، لون بني ذهبي غامق */
-        
-.project-title {
-    font-family: 'Playfair Display', 'Cairo', serif;
-    font-size: 84px;
-    font-weight: 800;
-    letter-spacing: 6px;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    position: relative;
-    display: inline-block;
-    color: #d4af37;
-    
-    /* تأثير ذهبي ملكي فاخر مثل الشعار */
-    text-shadow: 
-        0 1px 0 rgba(255, 255, 255, 0.2),
-        0 2px 0 #00000030,
-        0 3px 0 #00000040,
-        0 4px 0 #00000050,
-        0 5px 0 #00000060,
-        0 0 20px rgba(212, 175, 55, 0.6),
-        0 0 40px rgba(212, 175, 55, 0.3),
-        0 8px 12px rgba(0,0,0,0.4);
-    
-    /* لمسة ذهبية إضافية */
-    background: linear-gradient(135deg, #d4af37 0%, #f5e6a0 30%, #d4af37 60%, #b8860b 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: #d4af37;
-}
+        /* العنوان */
+        .project-title {
+            font-family: 'Playfair Display', 'Cairo', serif;
+            font-size: 84px;
+            font-weight: 800;
+            letter-spacing: 6px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+            color: #d4af37;
+            text-shadow: 
+                0 1px 0 rgba(255, 255, 255, 0.2),
+                0 2px 0 #00000030,
+                0 3px 0 #00000040,
+                0 4px 0 #00000050,
+                0 5px 0 #00000060,
+                0 0 20px rgba(212, 175, 55, 0.6),
+                0 0 40px rgba(212, 175, 55, 0.3),
+                0 8px 12px rgba(0,0,0,0.4);
+            background: linear-gradient(135deg, #d4af37 0%, #f5e6a0 30%, #d4af37 60%, #b8860b 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
 
-/* خط ذهبي ملكي تحت العنوان */
-.project-title::after {
-    content: '';
-    position: absolute;
-    bottom: -18px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 180px;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, #d4af37, #f5e6a0, #d4af37, transparent);
-    border-radius: 2px;
-    box-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
-}
-
-body.en .project-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 84px;
-    letter-spacing: 10px;
-    background: linear-gradient(135deg, #d4af37 0%, #f5e6a0 30%, #d4af37 60%, #b8860b 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: #d4af37;
-    text-shadow: 
-        0 1px 0 rgba(255, 255, 255, 0.2),
-        0 2px 0 #00000030,
-        0 3px 0 #00000040,
-        0 4px 0 #00000050,
-        0 5px 0 #00000060,
-        0 0 20px rgba(212, 175, 55, 0.6),
-        0 0 40px rgba(212, 175, 55, 0.3),
-        0 8px 12px rgba(0,0,0,0.4);
-}
-
-body.en .project-title::after {
-    width: 220px;
-}
-
-@media (max-width: 768px) {
-    .project-title {
-        font-size: 52px;
-        letter-spacing: 4px;
-        background: linear-gradient(135deg, #d4af37 0%, #f5e6a0 30%, #d4af37 60%, #b8860b 100%);
-        -webkit-background-clip: text;
-        background-clip: text;
-        text-shadow: 
-            0 1px 0 rgba(255, 255, 255, 0.15),
-            0 2px 0 #00000030,
-            0 3px 0 #00000040,
-            0 4px 0 #00000050,
-            0 0 12px rgba(212, 175, 55, 0.5),
-            0 0 25px rgba(212, 175, 55, 0.25),
-            0 6px 12px rgba(0,0,0,0.4);
-    }
-    body.en .project-title {
-        font-size: 52px;
-        letter-spacing: 6px;
-    }
-    .project-title::after {
-        width: 140px;
-        bottom: -14px;
-    }
-    body.en .project-title::after {
-        width: 170px;
-    }
-}
         .project-title::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: -18px;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
+            width: 180px;
             height: 3px;
-            background: linear-gradient(90deg, transparent, var(--gold-light), var(--gold), var(--gold-light), transparent);
-            border-radius: 3px;
+            background: linear-gradient(90deg, transparent, #d4af37, #f5e6a0, #d4af37, transparent);
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
+        }
+
+        body.en .project-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 84px;
+            letter-spacing: 10px;
+            background: linear-gradient(135deg, #d4af37 0%, #f5e6a0 30%, #d4af37 60%, #b8860b 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-shadow: 
+                0 1px 0 rgba(255, 255, 255, 0.2),
+                0 2px 0 #00000030,
+                0 3px 0 #00000040,
+                0 4px 0 #00000050,
+                0 5px 0 #00000060,
+                0 0 20px rgba(212, 175, 55, 0.6),
+                0 0 40px rgba(212, 175, 55, 0.3),
+                0 8px 12px rgba(0,0,0,0.4);
+        }
+
+        body.en .project-title::after {
+            width: 220px;
+        }
+
+        @media (max-width: 768px) {
+            .project-title {
+                font-size: 52px;
+                letter-spacing: 4px;
+                background: linear-gradient(135deg, #d4af37 0%, #f5e6a0 30%, #d4af37 60%, #b8860b 100%);
+                -webkit-background-clip: text;
+                background-clip: text;
+                text-shadow: 
+                    0 1px 0 rgba(255, 255, 255, 0.15),
+                    0 2px 0 #00000030,
+                    0 3px 0 #00000040,
+                    0 4px 0 #00000050,
+                    0 0 12px rgba(212, 175, 55, 0.5),
+                    0 0 25px rgba(212, 175, 55, 0.25),
+                    0 6px 12px rgba(0,0,0,0.4);
+            }
+            body.en .project-title {
+                font-size: 52px;
+                letter-spacing: 6px;
+            }
+            .project-title::after {
+                width: 140px;
+                bottom: -14px;
+            }
+            body.en .project-title::after {
+                width: 170px;
+            }
         }
 
         .brand-sub {
@@ -798,7 +789,7 @@ body.en .project-title::after {
             box-shadow: 0 5px 20px rgba(255,215,0,0.4);
         }
 
-        /* Why Us - improved for English */
+        /* Why Us */
         .why-us-section {
             margin: 30px 15px;
             padding: 40px 30px;
@@ -1234,6 +1225,7 @@ body.en .project-title::after {
         ::-webkit-scrollbar-thumb:hover {
             background: var(--gold-light);
         }
+      
     </style>
 </head>
 <body>
