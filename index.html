@@ -141,11 +141,11 @@
             padding: 0;
         }
         
-        /* 🔥 التعديل المطلوب: على شاشات الكمبيوتر (أكبر من 992px) يصبح الارتفاع 50% فقط من الشاشة */
+        /* 🔥 على شاشات الكمبيوتر (أكبر من 992px) يصبح الارتفاع 60% من الشاشة */
         @media (min-width: 992px) {
             .header {
-                height: 50vh;
-                min-height: 50vh;
+                height: 60vh;
+                min-height: 60vh;
             }
         }
 
@@ -420,6 +420,7 @@
             50% { transform: scale(1.05); opacity: 0.9; }
         }
 
+        /* سهم التمرير للأسفل - يظهر فقط على الموبايل */
         .scroll-down {
             position: absolute;
             bottom: 30px;
@@ -438,6 +439,13 @@
             backdrop-filter: blur(5px);
             border: 1px solid var(--gold);
             transition: all 0.3s ease;
+        }
+
+        /* 🔥 إخفاء السهم على شاشات الكمبيوتر */
+        @media (min-width: 992px) {
+            .scroll-down {
+                display: none;
+            }
         }
 
         .scroll-down:hover {
