@@ -411,41 +411,230 @@
         function showToast(msg,type=''){const toastEl=document.getElementById('toast');toastEl.textContent=msg;toastEl.className='toast show '+type;setTimeout(()=>toastEl.classList.remove('show'),4000);}
         function validatePhone(p){return /^[+]?[0-9]{8,15}$/.test(p);}
         async function handleSubmit(){
-            const other=t('other'), detLater=t('determineLaterValue');
-            if(!formData.fullName.trim()) return showToast(t('nameRequired'),'error');
-            if(!formData.eventType) return showToast(t('eventRequired'),'error');
-            if(formData.eventType===other && !formData.eventTypeOther.trim()) return showToast(t('eventOtherRequired'),'error');
-            if(!formData.eventDate) return showToast(t('dateRequired'),'error');
-            if(formData.eventDate!==detLater && new Date(formData.eventDate) < new Date().setHours(0,0,0,0)) return showToast(t('pastDate'),'error');
-            if(!formData.peopleCount) return showToast(t('peopleRequired'),'error');
-            if(formData.peopleCount===other && !formData.peopleCountOther.trim()) return showToast(t('peopleOtherRequired'),'error');
-            if(!formData.buffetTime) return showToast(t('timeRequired'),'error');
-            if(!formData.phoneNumber.trim()) return showToast(t('phoneRequired'),'error');
-            if(!validatePhone(formData.phoneNumber.trim())) return showToast(t('phoneInvalid'),'error');
-            loading=true;renderModalForm();
-            try{
-                const finalEventType=formData.eventType===other?formData.eventTypeOther.trim():formData.eventType;
-                const finalPeopleCount=formData.peopleCount===other?formData.peopleCountOther.trim():formData.peopleCount;
-                const {error}=await supabaseClient.from('requests').insert([{
-                    name:formData.fullName.trim(),
-                    full_name:formData.fullName.trim(),
-                    event_type:finalEventType,
-                    event_type_other:formData.eventTypeOther.trim(),
-                    event_date:formData.eventDate===detLater?'تحديد لاحقاً':formData.eventDate,
-                    details:formData.eventDate,
-                    people_count:finalPeopleCount,
-                    people_count_other:formData.peopleCountOther.trim(),
-                    buffet_time:formData.buffetTime,
-                    budget:formData.budget.trim()||t('budgetNotSpecified'),
-                    phone:formData.phoneNumber.trim(),
-                    phone_number:formData.phoneNumber.trim(),
-                    status:'جديد'
-                }]);
-                if(error) throw error;
-                showToast(t('success'),'success');resetForm();closeModal();
-            }catch(e){console.error(e);showToast(t('error')+': '+e.message,'error');}
-            finally{loading=false;renderModalForm();}
+    const other=t('other'), detLater=t('determineLaterValue');
+
+    if(!formData.fullName.trim())
+        return showToast(t('nameRequired'),'error');
+
+    if(!formData.eventType)
+        return showToast(t('eventRequired'),'error');
+
+    if(formData.eventType===other && !formData.eventTypeOther.trim())
+        return showToast(t('eventOtherRequired'),'error');
+
+    if(!formData.eventDate)
+        return showToast(t('dateRequired'),'error');
+
+    if(
+        formData.eventDate!==detLater &&
+        new Date(formData.eventDate) < new Date().setHours(0,0,0,0)
+    )
+        return showToast(t('pastDate'),'error');
+
+    if(!formData.peopleCount)
+        return showToast(t('peopleRequired'),'error');
+
+    if(formData.peopleCount===other && !formData.peopleCountOther.trim())
+        return showToast(t('peopleOtherRequired'),'error');
+
+    if(!formData.buffetTime)
+        return showToast(t('timeRequired'),'error');
+
+    if(!formData.phoneNumber.trim())
+        return showToast(t('phoneRequired'),'error');
+
+    if(!validatePhone(formData.phoneNumber.trim()))
+        return showToast(t('phoneInvalid'),'error');
+
+
+    loading=true;
+    renderModalForm();
+
+    try{
+
+        const finalEventType =
+            formData.eventType===other
+                ? formData.eventTypeOther.trim()
+                : formData.eventType;
+
+        const finalPeopleCount =
+            formData.peopleCount===other
+                ? formData.peopleCountOther.trim()
+                : formData.peopleCount;
+
+
+        // ============================
+        // 1. حفظ الطلب في Supabase
+        // ============================
+
+        const {error}=await supabaseClient
+            .from('requests')
+            .insert([{
+
+                name:formData.fullName.trim(),
+
+                full_name:formData.fullName.trim(),
+
+                event_type:finalEventType,
+
+                event_type_other:
+                    formData.eventTypeOther.trim(),
+
+                event_date:
+                    formData.eventDate===detLater
+                        ? 'تحديد لاحقاً'
+                        : formData.eventDate,
+
+                details:formData.eventDate,
+
+                people_count:finalPeopleCount,
+
+                people_count_other:
+                    formData.peopleCountOther.trim(),
+
+                buffet_time:
+                    formData.buffetTime,
+
+                budget:
+                    formData.budget.trim()
+                    || t('budgetNotSpecified'),
+
+                phone:
+                    formData.phoneNumber.trim(),
+
+                phone_number:
+                    formData.phoneNumber.trim(),
+
+                status:'جديد'
+
+            }]);
+
+
+        if(error) throw error;
+
+
+        // ============================
+        // 2. إرسال نسخة إلى الإيميل
+        //    عبر FormSubmit
+        // ============================
+
+        const emailData = new FormData();
+
+        emailData.append(
+            'الاسم',
+            formData.fullName.trim()
+        );
+
+        emailData.append(
+            'رقم التواصل',
+            formData.phoneNumber.trim()
+        );
+
+        emailData.append(
+            'نوع المناسبة',
+            finalEventType
+        );
+
+        emailData.append(
+            'تاريخ المناسبة',
+            formData.eventDate===detLater
+                ? 'تحديد لاحقاً'
+                : formData.eventDate
+        );
+
+        emailData.append(
+            'عدد الأشخاص',
+            finalPeopleCount
+        );
+
+        emailData.append(
+            'وقت البوفيه',
+            formData.buffetTime
+        );
+
+        emailData.append(
+            'الميزانية',
+            formData.budget.trim()
+            || 'غير محدد'
+        );
+
+
+        // عنوان الرسالة
+        emailData.append(
+            '_subject',
+            'طلب جديد - Gulf Catering Hub'
+        );
+
+
+        // شكل مرتب للبيانات
+        emailData.append(
+            '_template',
+            'table'
+        );
+
+
+        // بدون Captcha من FormSubmit
+        emailData.append(
+            '_captcha',
+            'false'
+        );
+
+
+        const emailResponse = await fetch(
+            'https://formsubmit.co/ajax/support@gulfcateringhub.com',
+            {
+                method:'POST',
+
+                headers:{
+                    'Accept':'application/json'
+                },
+
+                body:emailData
+            }
+        );
+
+
+        // إذا فشل الإيميل
+        // الطلب يبقى محفوظ في Supabase
+        if(!emailResponse.ok){
+
+            console.error(
+                'FormSubmit email failed'
+            );
+
         }
+
+
+        // ============================
+        // 3. نجاح الطلب
+        // ============================
+
+        showToast(
+            t('success'),
+            'success'
+        );
+
+        resetForm();
+        closeModal();
+
+
+    }catch(e){
+
+        console.error(e);
+
+        showToast(
+            t('error')+': '+e.message,
+            'error'
+        );
+
+    }finally{
+
+        loading=false;
+
+        renderModalForm();
+
+    }
+}
         document.getElementById('modalOverlay').addEventListener('click',(e)=>{if(e.target===e.currentTarget) closeModal();});
     </script>
 </body>
