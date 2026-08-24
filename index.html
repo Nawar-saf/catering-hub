@@ -442,19 +442,6 @@
                     status:'جديد'
                 }]);
                 if(error) throw error;
-
-                // إرسال الإيميل فوراً بعد نجاح الحفظ
-                await supabaseClient.functions.invoke('send-email', {
-                    body: {
-                        record: {
-                            name: formData.fullName.trim(),
-                            phone: formData.phoneNumber.trim(),
-                            budget: formData.budget.trim() || 'غير محدد',
-                            details: `نوع المناسبة: ${finalEventType} | عدد الأشخاص: ${finalPeopleCount} | الوقت: ${formData.buffetTime} | التاريخ: ${formData.eventDate}`
-                        }
-                    }
-                });
-
                 showToast(t('success'),'success');resetForm();closeModal();
             }catch(e){console.error(e);showToast(t('error')+': '+e.message,'error');}
             finally{loading=false;renderModalForm();}
