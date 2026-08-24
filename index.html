@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>GULF CATERING HUB</title>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <!-- Supabase SDK - بدل Firebase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Playfair+Display:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -1318,17 +1317,10 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAX2hWjzgrX02HU8QZQ0MHq75zX5wd-Rd0",
-            authDomain: "gulf-ec022.firebaseapp.com",
-            projectId: "gulf-ec022",
-            storageBucket: "gulf-ec022.firebasestorage.app",
-            messagingSenderId: "638894252333",
-            appId: "1:638894252333:web:84a64ec117a275ddb4b3a4"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        // ====== SUPABASE CONFIG - نفس مشروعك ======
+        const SUPABASE_URL = "https://yyeqzyvveecmgpoppfhz.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5ZXF6eXZ2ZWVjbWdwb3BwZmh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1NzU4NjksImV4cCI6MjEwMzE1MTg2OX0.ufLK7RKUz46VPZPVPTaQwn18uFTE7Zn2Gi6gHcjNX7M";
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let currentLanguage = 'ar';
         let modalVisible = false;
@@ -1338,7 +1330,7 @@
         let splashStartTime = Date.now();
 
         let formData = {
-            fullName: '', eventTypeOther: '', eventDate: '',
+            fullName: '', eventType: '', eventTypeOther: '', eventDate: '',
             peopleCount: '', peopleCountOther: '', buffetTime: '', budget: '', phoneNumber: ''
         };
 
@@ -1433,7 +1425,6 @@
 
         function t(key) { return translations[currentLanguage][key] || key; }
 
-        // دالة تحديث عرض التاريخ في الزر فقط بدون إعادة بناء المودال
         function updateDateDisplay() {
             const dateText = formData.eventDate || t('datePlaceholder');
             const dateBtn = document.querySelector('.date-picker-btn');
@@ -1454,16 +1445,13 @@
             if (datePickerInstance) {
                 datePickerInstance.destroy();
             }
-
             const hiddenInput = document.getElementById('hiddenDateInput');
-
             datePickerInstance = flatpickr(hiddenInput, {
                 locale: currentLanguage === 'ar' ? 'ar' : 'en',
                 minDate: 'today',
                 dateFormat: 'Y-m-d',
                 onChange: function(selectedDates, dateStr) {
                     formData.eventDate = dateStr;
-                    // تحديث العرض فقط بدون إعادة بناء المودال
                     updateDateDisplay();
                 }
             });
@@ -1497,7 +1485,7 @@
         }
 
         function resetForm() {
-            formData = { fullName: '', eventTypeOther: '', eventDate: '', peopleCount: '', peopleCountOther: '', buffetTime: '', budget: '', phoneNumber: '' };
+            formData = { fullName: '', eventType: '', eventTypeOther: '', eventDate: '', peopleCount: '', peopleCountOther: '', buffetTime: '', budget: '', phoneNumber: '' };
         }
 
         function renderAll() {
@@ -1534,7 +1522,6 @@
             document.getElementById('modalOverlay').classList.add('active'); 
             resetForm(); 
             renderModalForm(); 
-            // إعادة تهيئة Flatpickr عند فتح المودال
             initFlatpickr();
             document.body.style.overflow = 'hidden'; 
         }
@@ -1611,11 +1598,11 @@
         function selectPeopleCount(opt) { formData.peopleCount = opt; formData.peopleCountOther = ''; renderModalForm(); }
 
         function openDatePicker() {
-    const hiddenInput = document.getElementById('hiddenDateInput');
-    if (datePickerInstance) {
-        hiddenInput.focus();
-        datePickerInstance.open();
-    }
+            const hiddenInput = document.getElementById('hiddenDateInput');
+            if (datePickerInstance) {
+                hiddenInput.focus();
+                datePickerInstance.open();
+            }
         }
 
         function toggleDetermineLater() { 
@@ -1633,6 +1620,7 @@
         
         function validatePhone(p) { return /^[+]?[0-9]{8,15}$/.test(p); }
 
+        // ====== التعديل الوحيد المهم هنا - بدل Firebase الى Supabase ======
         async function handleSubmit() {
             const other = t('other'), detLater = t('determineLaterValue');
             if (!formData.fullName.trim()) return showToast(t('nameRequired'), 'error');
@@ -1648,14 +1636,37 @@
 
             loading = true; renderModalForm();
             try {
-                await db.collection('orders').add({
-                    fullName: formData.fullName.trim(), eventType: formData.eventType === other ? formData.eventTypeOther.trim() : formData.eventType,
-                    eventDate: formData.eventDate.trim(), peopleCount: formData.peopleCount === other ? formData.peopleCountOther.trim() : formData.peopleCount,
-                    buffetTime: formData.buffetTime, budget: formData.budget.trim() || t('budgetNotSpecified'),
-                    phoneNumber: formData.phoneNumber.trim(), status: 'جديد', createdAt: new Date().toISOString()
-                });
-                showToast(t('success'), 'success'); resetForm(); closeModal();
-            } catch(e) { showToast(t('error'), 'error'); }
+                const finalEventType = formData.eventType === other ? formData.eventTypeOther.trim() : formData.eventType;
+                const finalPeopleCount = formData.peopleCount === other ? formData.peopleCountOther.trim() : formData.peopleCount;
+
+                const { data, error } = await supabaseClient
+                    .from('requests')
+                    .insert([{
+                        name: formData.fullName.trim(),
+                        full_name: formData.fullName.trim(),
+                        event_type: finalEventType,
+                        event_type_other: formData.eventTypeOther.trim(),
+                        event_date: formData.eventDate === detLater ? null : formData.eventDate,
+                        details: formData.eventDate, // نحفظ التاريخ بالنص ايضا للمرونة
+                        people_count: finalPeopleCount,
+                        people_count_other: formData.peopleCountOther.trim(),
+                        buffet_time: formData.buffetTime,
+                        budget: formData.budget.trim() || t('budgetNotSpecified'),
+                        phone: formData.phoneNumber.trim(),
+                        phone_number: formData.phoneNumber.trim(),
+                        status: 'جديد',
+                        created_at: new Date().toISOString()
+                    }]);
+
+                if (error) throw error;
+
+                showToast(t('success'), 'success'); 
+                resetForm(); 
+                closeModal();
+            } catch(e) { 
+                console.error(e);
+                showToast(t('error') + ': ' + e.message, 'error'); 
+            }
             finally { loading = false; renderModalForm(); }
         }
 
