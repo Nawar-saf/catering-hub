@@ -16,11 +16,16 @@
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
 
-      OneSignalDeferred.push(async function (OneSignal) {
-        await OneSignal.init({
-          appId: "1b359f57-2858-481f-b5a0-56253c46776d",
-        });
-      });
+     OneSignalDeferred.push(async function(OneSignal) {
+
+    await OneSignal.init({
+        appId: "1b359f57-2858-481f-b5a0-56253c46776d",
+        notifyButton: {
+            enable: true
+        }
+    });
+
+});
     </script>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
