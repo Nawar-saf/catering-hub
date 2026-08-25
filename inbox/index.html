@@ -26,6 +26,9 @@
     });
 
 });
+      OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.User.PushSubscription.optIn();
+});
     </script>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
