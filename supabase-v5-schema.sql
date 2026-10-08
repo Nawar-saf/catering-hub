@@ -382,10 +382,10 @@ begin
     where p.id=new.package_id and p.active=true and p.review_status='approved' and cp.status='approved'
   ) then raise exception 'package is not available'; end if;
   new.provider_id := null;
-  new.status := 'pending_approval';
+  new.status := case when exists(select 1 from public.companies c where c.id=new.company_id and c.owner_user_id=auth.uid()) then 'approved' else 'pending_approval' end;
   new.requested_by := auth.uid();
-  new.approved_by := null;
-  new.approved_at := null;
+  new.approved_by := case when new.status='approved' then auth.uid() else null end;
+  new.approved_at := case when new.status='approved' then now() else null end;
   new.assigned_at := null;
   new.provider_responded_at := null;
   new.completed_at := null;
