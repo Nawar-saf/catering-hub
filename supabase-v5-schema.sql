@@ -599,3 +599,11 @@ end; $$;
 drop trigger if exists guard_catering_package_update_trg on public.catering_packages;
 create trigger guard_catering_package_update_trg before update on public.catering_packages for each row execute function private.guard_catering_package_update();
 revoke all on function private.guard_catering_provider_update(),private.guard_catering_package_update() from public,anon,authenticated;
+
+-- Indexes for high-volume company ordering and supplier lookup.
+create index if not exists companies_preferred_provider_idx on public.companies(preferred_provider_id);
+create index if not exists company_orders_approved_by_idx on public.company_orders(approved_by);
+create index if not exists company_orders_branch_idx on public.company_orders(branch_id);
+create index if not exists company_orders_package_idx on public.company_orders(package_id);
+create index if not exists company_orders_requested_by_idx on public.company_orders(requested_by);
+create index if not exists recurring_meal_plans_branch_idx on public.recurring_meal_plans(branch_id);
