@@ -574,3 +574,28 @@ notify pgrst, 'reload schema';
 
 -- Existing platform event trigger must not be callable from the Data API.
 revoke execute on function public.rls_auto_enable() from public, anon, authenticated;
+
+-- Guard supplier approval and package publication even when API clients bypass the UI.
+create or replace function private.guard_catering_provider_update()
+returns trigger language plpgsql security invoker set search_path=pg_catalog,public as $$
+begin
+ if private.is_admin() then return new; end if;
+ if auth.uid() is distinct from old.owner_user_id or private.my_role() is distinct from 'provider' then raise exception 'not provider owner'; end if;
+ if new.id is distinct from old.id or new.owner_user_id is distinct from old.owner_user_id or new.status is distinct from old.status or new.created_at is distinct from old.created_at then raise exception 'provider protected fields cannot be changed'; end if;
+ return new;
+end; $$;
+drop trigger if exists guard_catering_provider_update_trg on public.catering_providers;
+create trigger guard_catering_provider_update_trg before update on public.catering_providers for each row execute function private.guard_catering_provider_update();
+create or replace function private.guard_catering_package_update()
+returns trigger language plpgsql security invoker set search_path=pg_catalog,public as $$
+begin
+ if private.is_admin() then return new; end if;
+ if private.my_role() is distinct from 'provider' or old.provider_id is distinct from private.my_provider_id() then raise exception 'not package owner'; end if;
+ if new.id is distinct from old.id or new.provider_id is distinct from old.provider_id or new.created_at is distinct from old.created_at then raise exception 'package ownership cannot be changed'; end if;
+ if old.review_status is distinct from 'draft' or old.active is distinct from false then raise exception 'submitted packages can only be changed by administration'; end if;
+ if new.active is distinct from false or new.review_status not in ('draft','pending_review') then raise exception 'provider cannot approve or activate a package'; end if;
+ return new;
+end; $$;
+drop trigger if exists guard_catering_package_update_trg on public.catering_packages;
+create trigger guard_catering_package_update_trg before update on public.catering_packages for each row execute function private.guard_catering_package_update();
+revoke all on function private.guard_catering_provider_update(),private.guard_catering_package_update() from public,anon,authenticated;
