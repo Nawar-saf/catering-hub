@@ -607,3 +607,34 @@ create index if not exists company_orders_branch_idx on public.company_orders(br
 create index if not exists company_orders_package_idx on public.company_orders(package_id);
 create index if not exists company_orders_requested_by_idx on public.company_orders(requested_by);
 create index if not exists recurring_meal_plans_branch_idx on public.recurring_meal_plans(branch_id);
+
+-- Verified suppliers publish and pause packages immediately; initial supplier verification remains mandatory.
+drop trigger if exists guard_catering_package_update_trg on public.catering_packages;
+drop function if exists private.guard_catering_package_update();
+create or replace function private.guard_package_insert()
+returns trigger language plpgsql security definer set search_path=pg_catalog,public as $$
+begin
+ if private.is_admin() then return new; end if;
+ if private.my_role() is distinct from 'provider' or new.provider_id is distinct from private.my_provider_id() then raise exception 'not package owner'; end if;
+ if exists(select 1 from public.catering_providers p where p.id=new.provider_id and p.status='approved') then new.active:=true;new.review_status:='approved';
+ else new.active:=false;new.review_status:='draft';end if;
+ return new;
+end; $$;
+create or replace function private.guard_package_update()
+returns trigger language plpgsql security definer set search_path=pg_catalog,public as $$
+declare provider_approved boolean;
+begin
+ new.id:=old.id;new.created_at:=old.created_at;
+ if private.is_admin() then return new; end if;
+ if old.provider_id is distinct from private.my_provider_id() or private.my_role() is distinct from 'provider' then raise exception 'not package owner'; end if;
+ new.provider_id:=old.provider_id;
+ select (p.status='approved') into provider_approved from public.catering_providers p where p.id=old.provider_id;
+ if coalesce(provider_approved,false) then new.review_status:='approved';new.active:=coalesce(new.active,false);
+ else new.review_status:='draft';new.active:=false;end if;
+ return new;
+end; $$;
+drop policy if exists packages_provider_insert on public.catering_packages;
+create policy packages_provider_insert on public.catering_packages for insert to authenticated with check (
+ private.is_admin() or (private.my_role()='provider' and provider_id=private.my_provider_id()
+ and ((active=true and review_status='approved' and exists(select 1 from public.catering_providers p where p.id=provider_id and p.status='approved')) or (active=false and review_status='draft')))
+);
