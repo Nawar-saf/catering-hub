@@ -5,7 +5,7 @@ Corporate catering marketplace and procurement platform for custom RFQs, verifie
 ## Production architecture
 
 - Static web app on `gulfcateringhub.com`
-- Supabase Auth + Postgres + RLS + private Storage
+- Supabase Auth + Postgres + RLS + private/public Storage
 - Supabase Edge Functions for public submissions, company-team invitations and provider outreach
 - Brevo for branded invitation emails
 - Browser clients use a Supabase publishable key; authorization is enforced in Postgres
@@ -14,14 +14,14 @@ Corporate catering marketplace and procurement platform for custom RFQs, verifie
 
 `Company publishes requirement → verified eligible providers discover it → providers submit competing quotes → company compares verified providers and offers → company selects → executable order → tracked fulfillment → invoice / payment / review`
 
-Companies may also use private invite-only sourcing.
+Companies may also select one provider and send a **direct private RFQ** without operations manually routing it.
 
 ## Public experience
 
 - `/marketplace.html` is customer-first: companies publish RFQs and compare verified providers.
-- `/providers.html` lists approved marketplace providers.
-- `/provider.html?id=<provider_uuid>` is a sanitized public provider profile.
-- `/partner.html` explains the provider application and verification process.
+- `/providers.html` lists approved marketplace providers with availability, branding and trust signals.
+- `/provider.html?id=<provider_uuid>` is a sanitized provider storefront with brand media, commercial terms, packages and a direct-RFQ action.
+- `/partner.html` explains provider application and verification.
 - Provider login / onboarding is deliberately secondary and linked from partner/footer surfaces rather than presented as a primary customer navigation action.
 
 ## Commercial model
@@ -35,9 +35,13 @@ Open Marketplace deals currently use a **5% provider success fee**. Registration
 - Company roles: Requester, Approver, Finance, Admin
 - Team invitations
 - Open Marketplace or Invite-only RFQs
+- Direct RFQ to a selected verified provider
 - RFQ location prefill from branch data
 - Multiple quote comparison with verified-provider trust information
 - Accepted quote → executable order
+- Supplier directory with preferred-provider selection
+- Repeat an earlier order either with the same provider or by reopening it to the Marketplace
+- Customer change/cancellation requests that require provider response before applying
 - Recurring employee meal plans
 - Purchase orders, invoice approval and payment records
 - Spend / savings / provider reporting
@@ -80,21 +84,44 @@ See `DATABASE_V18.md`.
 After approval, partners can:
 
 - maintain operating profile and service areas
+- set `available`, `busy` or `paused` marketplace state
+- add blackout windows for dates when capacity is unavailable
 - pause / resume receiving new marketplace opportunities
+- manage a public logo and cover image
+- publish commercial expectations: minimum order, change cutoff, cancellation policy, setup notes, dietary capabilities and languages
 - create package drafts and send them for review
 - publish approved packages
 - discover eligible RFQs
+- receive direct private RFQ invitations from companies
 - filter opportunities by source/type/quote state
 - submit and revise commercial quotes
 - see the current Marketplace success-fee disclosure
 - manage assigned orders
+- approve or reject customer order-change/cancellation requests
 - update fulfillment stages: confirmed, preparing, ready, out for delivery, arrived, delivered
 - acknowledge POs and submit invoices
 - review payments and Marketplace fees
 - monitor performance / SLA and company reviews
 - use the shared support center
 
-Marketplace eligibility uses approval, explicit availability, RFQ state/deadline, service geography, capacity and lead time.
+Marketplace eligibility uses verified approval, explicit availability, blackout dates, RFQ state/deadline, service geography, capacity and lead time.
+
+## Provider availability
+
+The canonical operational check is `private.provider_available_for_event(provider_id, event_date)`.
+
+It combines:
+
+- approved status
+- active legal verification
+- availability state
+- base lead time
+- temporary busy lead-time buffer
+- blackout dates
+
+The same availability logic is reused by open-marketplace discovery, provider notifications, admin matching and direct RFQs.
+
+See `DATABASE_V21.md`.
 
 ## Fulfillment tracking
 
@@ -107,6 +134,37 @@ Company tracking: `/company/orders.html`
 Provider execution: `/provider/orders.html`
 
 See `DATABASE_V19.md`.
+
+## Order changes and repeat business
+
+Accepted orders can receive a structured customer change/cancellation request instead of moving coordination to WhatsApp.
+
+`Company request → provider review → accept/reject → controlled order update → company notification`
+
+Only one pending request is allowed per order. Provider acceptance applies supported date/headcount/notes changes or an accepted cancellation through a protected workflow.
+
+Completed/accepted orders can also be repeated. Repeating creates a **new RFQ** with a new date/deadline instead of reusing historical price or availability.
+
+See `DATABASE_V23.md`.
+
+## Provider storefront / public trust
+
+Approved providers can maintain public brand assets and standardized commercial information. Public profiles can expose:
+
+- logo and cover image
+- display name and verified state
+- service areas / cuisines
+- capacity / lead time / availability
+- aggregate rating and completed orders
+- minimum order value
+- general change cutoff
+- cancellation / setup notes
+- dietary capabilities and service languages
+- active packages
+
+Legal documents, bank data, IDs and private operational records remain private.
+
+See `DATABASE_V22.md`.
 
 ## Support / disputes
 
@@ -127,17 +185,11 @@ Primary Marketplace flow:
 
 `Company RFQ → eligibility (verified approval + availability + deadline + geography + capacity + lead time) → opportunity discovery / alert → quote → comparison → selected quote → order → success-fee ledger`
 
-Private sourcing:
+Direct/private sourcing:
 
-`Company RFQ → selected provider invites → quote → comparison → selected quote → order`
+`Company selects provider → atomic private RFQ + invite → provider quote → accepted quote → order`
 
 Providers cannot read competing provider quotes. Quote acceptance is atomic and produces a traceable linked order.
-
-## Public provider trust boundary
-
-Only approved providers are mirrored into `public_provider_profiles`. The public projection contains marketplace-safe data such as display name, service areas, cuisines, capacity, lead time, aggregate rating, completed orders, performance score and marketplace availability.
-
-Legal documents, banking details, owner account details and private operational records never belong in the public profile table.
 
 ## Procurement
 
@@ -166,12 +218,16 @@ Payment records are balance-checked. Company role permissions are enforced in Po
 ## Security
 
 - RLS on exposed business tables
-- private provider document bucket
+- private provider legal-document bucket
+- public provider media isolated in a separate owner-write bucket
 - provider approval enforced by database verification gate
+- expired verification excluded from public provider reads and opportunity eligibility
 - provider quote isolation
 - public provider data separated from private account/legal records
 - marketplace fee creation server-side
 - fulfillment transitions enforced by protected RPC
+- order-change application restricted to a private workflow marker
+- direct-RFQ public RPC is SECURITY INVOKER; privileged transaction logic stays private
 - company finance/team actions role-gated in Postgres
 - support records tenant-scoped
 - printable records use authenticated sessions and normal RLS
@@ -195,16 +251,19 @@ Supabase Auth leaked-password protection is still recommended before broader pro
 - `DATABASE_V17.md` — branch-aware marketplace geography
 - `DATABASE_V18.md` — verified provider legal onboarding + private documents
 - `DATABASE_V19.md` — fulfillment tracking + support center
+- `DATABASE_V21.md` — provider availability, blackout dates and atomic direct RFQs
+- `DATABASE_V22.md` — provider public branding and commercial terms
+- `DATABASE_V23.md` — order change requests and repeat ordering
 
 ## Current go-to-market priority
 
-The launch-critical product path is now substantially built. The main bottleneck is marketplace liquidity: onboard real verified providers first, then acquire corporate buyers and monitor quote depth, time-to-first-quote, selection conversion, successful fulfillment, GMV and fee collection.
+The launch-critical product path is substantially built. The main bottleneck is marketplace liquidity: onboard real verified providers first, then acquire corporate buyers and monitor quote depth, time-to-first-quote, selection conversion, successful fulfillment, repeat-order rate, GMV and fee collection.
 
 ## Next product layers after live usage
 
 - automated collection of Marketplace fees through a payment gateway
 - email / push delivery for urgent opportunities and execution changes
-- provider blackout dates / richer availability calendar
+- structured geospatial service zones after enough provider density exists
 - direct RFQ clarification threads between buyer and provider
 - deeper spend / SLA / savings exports
 - promotions / sponsored placement only after organic marketplace liquidity exists
