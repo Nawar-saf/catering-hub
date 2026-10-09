@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://www.gulfcateringhub.com/</loc><lastmod>2026-10-09</lastmod><priority>1.00</priority></url>
-  <url><loc>https://www.gulfcateringhub.com/marketplace.html</loc><lastmod>2026-10-09</lastmod><priority>0.90</priority></url>
-  <url><loc>https://www.gulfcateringhub.com/providers.html</loc><lastmod>2026-10-09</lastmod><priority>0.80</priority></url>
+  <url><loc>https://www.gulfcateringhub.com/marketplace.html</loc><lastmod>2026-10-09</lastmod><priority>0.95</priority></url>
+  <url><loc>https://www.gulfcateringhub.com/providers.html</loc><lastmod>2026-10-09</lastmod><priority>0.85</priority></url>
+  <url><loc>https://www.gulfcateringhub.com/corporate-catering-muscat.html</loc><lastmod>2026-10-09</lastmod><priority>0.85</priority></url>
+  <url><loc>https://www.gulfcateringhub.com/employee-meals-muscat.html</loc><lastmod>2026-10-09</lastmod><priority>0.80</priority></url>
+  <url><loc>https://www.gulfcateringhub.com/event-catering-muscat.html</loc><lastmod>2026-10-09</lastmod><priority>0.80</priority></url>
+  <url><loc>https://www.gulfcateringhub.com/catering-opportunities-oman.html</loc><lastmod>2026-10-09</lastmod><priority>0.85</priority></url>
   <url><loc>https://www.gulfcateringhub.com/privacy.html</loc><lastmod>2026-10-09</lastmod><priority>0.30</priority></url>
   <url><loc>https://www.gulfcateringhub.com/terms.html</loc><lastmod>2026-10-09</lastmod><priority>0.30</priority></url>
 </urlset>
