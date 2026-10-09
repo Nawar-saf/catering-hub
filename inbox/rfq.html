@@ -7,78 +7,19 @@
 <style>.ops{display:grid;gap:12px}.rfqbox{border:1px solid var(--line);border-radius:16px;padding:16px}.rfqhead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.actions{display:flex;gap:7px;flex-wrap:wrap}.minirow{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center}.providerchips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}@media(max-width:700px){.rfqhead,.minirow{display:grid;grid-template-columns:1fr}}</style>
 </head><body>
 <header class="topbar"><div class="wrap"><nav><a class="brand" href="../"><img src="../apple-touch-icon.png" alt=""><span>Gulf Catering Hub â€” Ø§Ù„Ø¥Ø¯Ø§Ø±Ø©</span></a><div class="nav-actions"><a class="ghost" href="./">Ù„ÙˆØ­Ø© Ø§Ù„Ø¹Ù…Ù„ÙŠØ§Øª</a><button class="ghost" onclick="logout()">Ø®Ø±ÙˆØ¬</button></div></nav></div></header>
-<main class="app" style="display:block"><div class="wrap"><div class="hello"><div><h1>Ø¥Ø¯Ø§Ø±Ø© Ø·Ù„Ø¨Ø§Øª Ø¹Ø±ÙˆØ¶ Ø§Ù„Ø£Ø³Ø¹Ø§Ø±</h1><p>Ù…Ø·Ø§Ø¨Ù‚Ø© Ø§Ù„Ø·Ù„Ø¨Ø§Øª Ù…Ø¹ Ø§Ù„Ù…Ø²ÙˆØ¯ÙŠÙ†ØŒ Ù…ØªØ§Ø¨Ø¹Ø© Ø§Ù„Ø¯Ø¹ÙˆØ§Øª ÙˆØ§Ù„Ø¹Ø±ÙˆØ¶ØŒ ÙˆØ§Ù„ØªØ¯Ø®Ù„ Ø¹Ù†Ø¯ Ø§Ù„Ø­Ø§Ø¬Ø©.</p></div><button class="ghost" onclick="loadAll()">ØªØ­Ø¯Ù¶*ÏØ]ÛÙ]‚ÙXİ[ÛˆÛ\ÜÏHœÙXİ[Ûˆ]ˆÛ\ÜÏHÛÛ˜\ˆ”‘”H\[[™OÚÜ[ˆÛ\ÜÏH›]]YˆYHœİ]È¸ %ÜÜ[Ù]]ˆÛ\ÜÏH›ÜÈˆYHœ™œRÜİ]ˆÛ\ÜÏH™[\H¶+6)ö,vcH6)öa6*¶+vavb¶a‹‹Ù]Ù]ÜÙXİ[Û]ˆÛ\ÜÏH›\ÙÈˆYHœYÙS\ÙÈÙ]Ù]ÛXZ[‚ØÜš\Ü˜ÏH‹‹‹Ø\ÜÙ]ËØÛÛ[[Û‹šœÈÜØÜš\‚ØÜš\‚›]™œ\ÏV×K[š]\ÏV×K][İ\ÏV×K›İšY\œÏV×NÂ˜ÛÛœİÏ^Ù˜Y‰öav,öb6+ö*IËÜ[‰öav`v*¶b6+IË][İ\×Ü™XÙZ]™Y‰öb6-va6*ˆ6.v,vb6-‰ËÙ[XİY‰ö*¶aH6)ö+¶*¶b¶)ö,H6.v,v-‰ËÛÜÙY‰öav.¶a6`‰ËØ[˜Ù[Y‰öava6.¶b‰ßNÂ˜\Ş[˜È[˜İ[ÛˆÙÛİ]
-
-^Ø]ØZ]ĞÒ™‹˜]]œÚYÛ“İ]
-
-NÛØØ][Û‹š™YIË‹ÉßB˜\Ş[˜È[˜İ[Ûˆ›Ûİ
-
-^ØÛÛœİÙ]Nİ\Ù\Ÿ_OX]ØZ]ĞÒ™‹˜]]™Ù]\Ù\Š
-NÚYŠ]\Ù\Š^ÛØØ][Û‹š™YIË‹ÉÎÜ™]\›ŸXÛÛœİÙ]NœOX]ØZ]ĞÒ™‹™œ›ÛJ	İ\Ù\—Ü›Ùš[\ÉÊKœÙ[Xİ
-	Ü›ÛIÊK™\J	ÚY	Ë\Ù\‹šY
-K›X^X™TÚ[™ÛJ
-NÚYŠ\œ›ÛHOOIØYZ[‰Ê^ÛØØ][Û‹š™YIË‹ÉÎÜ™]\›ŸX]ØZ]ØY[
-
-_B˜\Ş[˜È[˜İ[ÛˆØY[
-
-^İ^ØÛÛœİÜ‹KKOX]ØZ]›ÛZ\ÙK˜[
-ÑĞÒ™‹™œ›ÛJ	Ü™œ\ÉÊKœÙ[Xİ
-	Ê‹ÛÛ\[šY\Ê˜[YJKÛÛ\[WØœ˜[˜Ú\Ê˜[YJIÊK›Ü™\Š	ØÜ™X]YØ]	ËØ\ØÙ[™[™Î™˜[Ù_JK›[Z]
-L
-KĞÒ™‹™œ›ÛJ	Ü™œWÜ›İšY\—Ú[š]\ÉÊKœÙ[Xİ
-	Ê‰ÊK›Ü™\Š	Ú[š]YØ]	ËØ\ØÙ[™[™Î™˜[Ù_JK›[Z]
-L
-KĞÒ™‹™œ›ÛJ	Ü›İšY\—Ü][İ\ÉÊKœÙ[Xİ
-	Ê‰ÊK›Ü™\Š	ÜİX›Z]YØ]	ËØ\ØÙ[™[™Î™˜[Ù_JK›[Z]
-L
-KĞÒ™‹™œ›ÛJ	ØØ]\š[™×Ü›İšY\œÉÊKœÙ[Xİ
-	ÚY˜[YKİ]\ËÙ\šXÙWØ\™X\ËX^ØØ\XÚ]KXYİ[YWÚİ\œÉÊK™\J	Üİ]\ÉË	Ø\›İ™Y	ÊK›Ü™\Š	Û˜[YIÊWJNÙ›ÜŠÛÛœİÙˆÜ‹KKJZYŠ™\œ›ÜŠ]›İÈ™\œ›ÜÜ™œ\Ï\‹™]_×NÚ[š]\ÏZK™]_×NÜ][İ\Ï\K™]_×NÜ›İšY\œÏ\™]_×NÜ™[™\Š
-_XØ]Ú
-J^ØÛÛœÛÛK™\œ›ÜŠJNÙØİ[Y[™Ù][[Y[RY
-	Ü™œRÜİ	ÊKš[›™\’SIÏ]ˆÛ\ÜÏH™[\H¶*¶.v,6,H6*¶+vavb¶a6)öa6`‘”KÙ]‰ß_B™[˜İ[Ûˆ™[™\Š
-^ÙØİ[Y[™Ù][[Y[RY
-	Üİ]ÉÊK^ÛÛ[X	ÑĞÒ›[X™\Š™œ\Ë™š[\ŠO–ÉÛÜ[‰Ë	Ü][İ\×Ü™XÙZ]™Y	×Kš[˜ÛY\Êœİ]\ÊJK›[™İ
-_H6av`v*¶b6+H0­È	ÑĞÒ›[X™\Š][İ\Ë™š[\ŠOœİ]\ÏOOIÜİX›Z]Y	ÊK›[™İ
-_H6.v,v-ˆ6*6)öa¶*¶.6)ö,H6`¶,v)ö,XÙØİ[Y[™Ù][[Y[RY
-	Ü™œRÜİ	ÊKš[›™\’S\™œ\Ë›X\
-›Ş
-Kš›Ú[Š	ÉÊ_	Ï]ˆÛ\ÜÏH™[\H¶a6)È6*¶b6+6+È6-öa6*6)ö*ˆ6.v,vb6-ˆ6(ö,ö.v)ö,H6*6.v+ËÙ]‰ßB™[˜İ[Ûˆ›Ş
-Š^ØÛÛœİ[œÏZ[š]\Ë™š[\ŠOœ™œWÚYOO\‹šY
-K\Ï\][İ\Ë™š[\ŠOœ™œWÚYOO\‹šY
-KİX›Z]Y\\Ë™š[\ŠOœİ]\ÏOOIÜİX›Z]Y	ÊKÙ[XİY\\Ë™š[™
-Oœİ]\ÏOOIØXØÙ\Y	ÊK˜[Y\ÏZ[œË›X\
-OOœ›İšY\œË™š[™
-OœšYOOZKœ›İšY\—ÚY
-OË›˜[Y_Kœ›İšY\—ÚYœÛXÙJ
-JNÜ™]\›ˆ]ˆÛ\ÜÏHœ™œX›Ş]ˆÛ\ÜÏHœ™œZXY]‰ÑĞÒ™\ØÊ‹˜ÛÛ\[šY\ÏË›˜[Y_	ö-6,v`ö*IÊ_H8 %	ÑĞÒ™\ØÊ‹]J_OØ]ˆÛ\ÜÏH›Y]H‰ÑĞÒ™]][YJ‹™]™[Ù]J_H0­È	ÑĞÒ›[X™\Š‹œ[ÜWØÛİ[
-_H6-6+¶-H0­È	ÑĞÒ™\ØÊ‹›ØØ][ÛŠ_Oœ¶)öa6avaöa6*Nˆ	ÑĞÒ™]][YJ‹œ][İWÙXY[™J_H0­È6)öa6avb¶,¶)öa¶b¶*Nˆ	Ü‹˜YÙ]O[[ÑĞÒ›[Û™^J‹˜YÙ]	Ø\‰ËJN‰ö.¶b¶,H6av+v+ö+ö*IßOœ‰ÑĞÒ™\ØÊ‹œ™\]Z\™[Y[ÏË››İ\ß	ÉÊ_OÙ]Ù]]ˆÛ\ÜÏH˜Xİ[ÛœÈÜ[ˆÛ\ÜÏHœİ]\ÈİIÜ‹œİ]\ßH‰ÔÖÜ‹œİ]\×_‹œİ]\ßOÜÜ[‰ÖÉÛÜ[‰Ë	Ü][İ\×Ü™XÙZ]™Y	×Kš[˜ÛY\Ê‹œİ]\ÊOØ]ÛˆÛ\ÜÏHœš[X\HˆÛ˜ÛXÚÏH˜]]ÓX]Ú
-	ÉÜ‹šYIÊH¶av-ö)ö*6`¶*H6*¶a6`¶)ö)¶b¶*OØ]Û˜‰ÉßIÜ‹œİ]\ÏOOIÜÙ[XİY	ÏØ]ÛˆÛ\ÜÏH™ÚÜİˆÛ˜ÛXÚÏH˜ÛÜÙT™œJ	ÉÜ‹šYIÊH¶)v.¶a6)ö`Ø]Û˜‰ÉßOÙ]Ù]]ˆÛ\ÜÏH›Z[š\›İÈˆİ[OH›X\™Ú[‹]ÜŒLœÙ[XİYH›X[X[IÜ‹šYHÜ[Ûˆ˜[YOHˆ¶+ö.vb6*H6av,¶b6+È6b¶+öb6b¶bö)ÏÛÜ[Û‰Ü›İšY\œË™š[\ŠOˆZ[œËœÛÛYJOOšKœ›İšY\—ÚYOO\šY
-JK›X\
-O˜Ü[Ûˆ˜[YOH‰ÜšYH‰ÑĞÒ™\ØÊ›˜[YJ_OÛÜ[Û˜
-Kš›Ú[Š	ÉÊ_OÜÙ[Xİ]ÛˆÛ\ÜÏH™ÚÜİˆÛ˜ÛXÚÏH›X[X[[š]J	ÉÜ‹šYIÊH¶+ö.vb6*OØ]ÛÜ[ˆÛ\ÜÏH›]]Y‰ÑĞÒ›[X™\Š[œË›[™İ
-_H6+ö.vb6)ö*ˆ0­È	ÑĞÒ›[X™\ŠİX›Z]Y›[™İ
-_H6.v,vb6-‰ÜÙ[XİYØ0­È6)öa6av+¶*¶)ö,H	ÑĞÒ›[Û™^JÙ[XİYİ[	Ø\‰ËJ_X‰ÉßOÜÜ[Ù]‰Û˜[Y\Ë›[™İØ]ˆÛ\ÜÏHœ›İšY\˜Ú\È‰Û˜[Y\Ë›X\
-O˜Ü[ˆÛ\ÜÏHœİ]\Èİ]šY]ÙY‰ÑĞÒ™\ØÊŠ_OÜÜ[˜
-Kš›Ú[Š	ÉÊ_OÙ]˜‰ÉßOÙ]˜B˜\Ş[˜È[˜İ[Ûˆ]]ÓX]Ú
-Y
-^İ^ØÛÛœİÙ]K\œ›ÜŸOX]ØZ]ĞÒ™‹œœÊ	ÛX]ÚÜ™œWÜ›İšY\œÉËÜÜ™œWÚYšYÛ[Z]_JNÚYŠ\œ›ÜŠ]›İÈ\œ›ÜÑĞÒ›\ÙÊ	ÜYÙS\ÙÉË]OØ6*¶av*ˆ6+ö.vb6*H	ÑĞÒ›[X™\Š]J_H6av,¶b6+Ëöav,¶b6+öb¶aˆ6+6+ö+Ë˜‰öa6)È6b¶b6+6+È6av,¶b6+È6+6+öb¶+È6av-ö)ö*6`ˆ6+v)öa6b¶bö)Ë‰ËYJNØ]ØZ]ØY[
-
-_XØ]Ú
-J^ØÛÛœÛÛK™\œ›ÜŠJNÑĞÒ›\ÙÊ	ÜYÙS\ÙÉËĞÒ™Ù[™\šXÑ\œ›ÜŠJJ__B˜\Ş[˜È[˜İ[ÛˆX[X[[š]JY
-^ØÛÛœİ›İšY\—ÚYYØİ[Y[™Ù][[Y[RY
-	ÛX[X[IÊÚY
-K˜[YNÚYŠ\›İšY\—ÚY
-\™]\›ˆĞÒ›\ÙÊ	ÜYÙS\ÙÉË	ö)ö+¶*¶,H6av,¶b6+öbö)È6(öb6a6bö)Ë‰ÊNØÛÛœİ\™œ\Ë™š[™
-OšYOOZY
-Nİ^ØÛÛœİÙ\œ›ÜŸOX]ØZ]ĞÒ™‹™œ›ÛJ	Ü™œWÜ›İšY\—Ú[š]\ÉÊKš[œÙ\
-Ü™œWÚYšY›İšY\—ÚYX]ÚÜØÛÜ™NŒ^\™\×Ø]œ‹œ][İWÙXY[™_JNÚYŠ\œ›ÜŠ]›İÈ\œ›ÜÑĞÒ›\ÙÊ	ÜYÙS\ÙÉË	ö*¶aH6)v,v,ö)öa6)öa6+ö.vb6*H6a6a6av,¶b6+Ë‰ËYJNØ]ØZ]ØY[
-
-_XØ]Ú
-J^ØÛÛœÛÛK™\œ›ÜŠJNÑĞÒ›\ÙÊ	ÜYÙS\ÙÉËĞÒ™Ù[™\šXÑ\œ›ÜŠJJ__B˜\Ş[˜È[˜İ[ÛˆÛÜÙT™œJY
-^İ^ØÛÛœİÙ\œ›ÜŸOX]ØZ]ĞÒ™‹™œ›ÛJ	Ü™œ\ÉÊK\]JÜİ]\Î‰ØÛÜÙY	ßJK™\J	ÚY	ËY
-NÚYŠ\œ›ÜŠ]›İÈ\œ›ÜØ]ØZ]ØY[
-
-_XØ]Ú
-J^ÑĞÒ›\ÙÊ	ÜYÙS\ÙÉËĞÒ™Ù[™\šXÑ\œ›ÜŠJJ__B˜›Ûİ
-
-NÂÜØÜš\Ø›ÙOÚ[‚
+<main class="app" style="display:block"><div class="wrap"><div class="hello"><div><h1>Ø¥Ø¯Ø§Ø±Ø© Ø·Ù„Ø¨Ø§Øª Ø¹Ø±ÙˆØ¶ Ø§Ù„Ø£Ø³Ø¹Ø§Ø±</h1><p>Ù…Ø·Ø§Ø¨Ù‚Ø© Ø§Ù„Ø·Ù„Ø¨Ø§Øª Ù…Ø¹ Ø§Ù„Ù…Ø²ÙˆØ¯ÙŠÙ†ØŒ Ù…ØªØ§Ø¨Ø¹Ø© Ø§Ù„Ø¯Ø¹ÙˆØ§Øª ÙˆØ§Ù„Ø¹Ø±ÙˆØ¶ØŒ ÙˆØ§Ù„ØªØ¯Ø®Ù„ Ø¹Ù†Ø¯ Ø§Ù„Ø­Ø§Ø¬Ø©.</p></div><button class="ghost" onclick="loadAll()">ØªØ­Ø¯ÙŠØ«</button></div>
+<section class="section"><div class="toolbar"><h2>RFQ Pipeline</h2><span class="muted" id="stats">â€”</span></div><div class="ops" id="rfqHost"><div class="empty">Ø¬Ø§Ø±Ù Ø§Ù„ØªØ­Ù…ÙŠÙ„...</div></div></section><div class="msg" id="pageMsg"></div></div></main>
+<script src="../assets/common.js"></script>
+<script>
+let rfqs=[],invites=[],quotes=[],providers=[];
+const S={draft:'Ù…Ø³ÙˆØ¯Ø©',open:'Ù…ÙØªÙˆØ­',quotes_received:'ÙˆØµÙ„Øª Ø¹Ø±ÙˆØ¶',selected:'ØªÙ… Ø§Ø®ØªÙŠØ§Ø± Ø¹Ø±Ø¶',closed:'Ù…ØºÙ„Ù‚',cancelled:'Ù…Ù„ØºÙŠ'};
+async function logout(){await GCH.db.auth.signOut();location.href='./'}
+async function boot(){const {data:{user}}=await GCH.db.auth.getUser();if(!user){location.href='./';return}const {data:p}=await GCH.db.from('user_profiles').select('role').eq('id',user.id).maybeSingle();if(!p||p.role!=='admin'){location.href='./';return}await loadAll()}
+async function loadAll(){try{const [r,i,q,p]=await Promise.all([GCH.db.from('rfqs').select('*,companies(name),company_branches(name)').order('created_at',{ascending:false}).limit(100),GCH.db.from('rfq_provider_invites').select('*').order('invited_at',{ascending:false}).limit(500),GCH.db.from('provider_quotes').select('*').order('submitted_at',{ascending:false}).limit(500),GCH.db.from('catering_providers').select('id,name,status,service_areas,max_capacity,lead_time_hours').eq('status','approved').order('name')]);for(const x of [r,i,q,p])if(x.error)throw x.error;rfqs=r.data||[];invites=i.data||[];quotes=q.data||[];providers=p.data||[];render()}catch(e){console.error(e);document.getElementById('rfqHost').innerHTML='<div class="empty">ØªØ¹Ø°Ø± ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ù€RFQ.</div>'}}
+function render(){document.getElementById('stats').textContent=`${GCH.number(rfqs.filter(x=>['open','quotes_received'].includes(x.status)).length)} Ù…ÙØªÙˆØ­ Â· ${GCH.number(quotes.filter(x=>x.status==='submitted').length)} Ø¹Ø±Ø¶ Ø¨Ø§Ù†ØªØ¸Ø§Ø± Ù‚Ø±Ø§Ø±`;document.getElementById('rfqHost').innerHTML=rfqs.map(box).join('')||'<div class="empty">Ù„Ø§ ØªÙˆØ¬Ø¯ Ø·Ù„Ø¨Ø§Øª Ø¹Ø±ÙˆØ¶ Ø£Ø³Ø¹Ø§Ø± Ø¨Ø¹Ø¯.</div>'}
+function box(r){const ins=invites.filter(x=>x.rfq_id===r.id),qs=quotes.filter(x=>x.rfq_id===r.id),submitted=qs.filter(x=>x.status==='submitted'),selected=qs.find(x=>x.status==='accepted'),names=ins.map(i=>providers.find(p=>p.id===i.provider_id)?.name||i.provider_id.slice(0,8));return `<div class="rfqbox"><div class="rfqhead"><div><b>${GCH.esc(r.companies?.name||'Ø´Ø±ÙƒØ©')} â€” ${GCH.esc(r.title)}</b><div class="meta">${GCH.datetime(r.event_date)} Â· ${GCH.number(r.people_count||0)} Ø´Ø®Øµ Â· ${GCH.esc(r.location)}<br>Ø§Ù„Ù…Ù‡Ù„Ø©: ${GCH.datetime(r.quote_deadline)} Â· Ø§Ù„Ù…ÙŠØ²Ø§Ù†ÙŠØ©: ${r.budget!=null?GCH.money(r.budget,'ar',1):'ØºÙŠØ± Ù…Ø­Ø¯Ø¯Ø©'}<br>${GCH.esc(r.requirements?.notes||'')}</div></div><div class="actions"><span class="status st-${r.status}">${S[r.status]||r.status}</span>${['open','quotes_received'].includes(r.status)?`<button class="primary" onclick="autoMatch('${r.id}')">Ù…Ø·Ø§Ø¨Ù‚Ø© ØªÙ„Ù‚Ø§Ø¦ÙŠØ©</button>`:''}${r.status==='selected'?`<button class="ghost" onclick="closeRfq('${r.id}')">Ø¥ØºÙ„Ø§Ù‚</button>`:''}</div></div><div class="minirow" style="margin-top:12px"><select id="manual-${r.id}"><option value="">Ø¯Ø¹ÙˆØ© Ù…Ø²ÙˆØ¯ ÙŠØ¯ÙˆÙŠÙ‹Ø§</option>${providers.filter(p=>!ins.some(i=>i.provider_id===p.id)).map(p=>`<option value="${p.id}">${GCH.esc(p.name)}</option>`).join('')}</select><button class="ghost" onclick="manualInvite('${r.id}')">Ø¯Ø¹ÙˆØ©</button><span class="muted">${GCH.number(ins.length)} Ø¯Ø¹ÙˆØ§Øª Â· ${GCH.number(submitted.length)} Ø¹Ø±ÙˆØ¶${selected?` Â· Ø§Ù„Ù…Ø®ØªØ§Ø± ${GCH.money(selected.total,'ar',1)}`:''}</span></div>${names.length?`<div class="providerchips">${names.map(n=>`<span class="status st-viewed">${GCH.esc(n)}</span>`).join('')}</div>`:''}</div>`}
+async function autoMatch(id){try{const {data,error}=await GCH.db.rpc('match_rfq_providers',{p_rfq_id:id,p_limit:5});if(error)throw error;GCH.msg('pageMsg',data?`ØªÙ…Øª Ø¯Ø¹ÙˆØ© ${GCH.number(data)} Ù…Ø²ÙˆØ¯/Ù…Ø²ÙˆØ¯ÙŠÙ† Ø¬Ø¯Ø¯.`:'Ù„Ø§ ÙŠÙˆØ¬Ø¯ Ù…Ø²ÙˆØ¯ Ø¬Ø¯ÙŠØ¯ Ù…Ø·Ø§Ø¨Ù‚ Ø­Ø§Ù„ÙŠÙ‹Ø§.',true);await loadAll()}catch(e){console.error(e);GCH.msg('pageMsg',GCH.genericError(e))}}
+async function manualInvite(id){const provider_id=document.getElementById('manual-'+id).value;if(!provider_id)return GCH.msg('pageMsg','Ø§Ø®ØªØ± Ù…Ø²ÙˆØ¯Ù‹Ø§ Ø£ÙˆÙ„Ù‹Ø§.');const r=rfqs.find(x=>x.id===id);try{const {error}=await GCH.db.from('rfq_provider_invites').insert({rfq_id:id,provider_id,match_score:0,expires_at:r.quote_deadline});if(error)throw error;GCH.msg('pageMsg','ØªÙ… Ø¥Ø±Ø³Ø§Ù„ Ø§Ù„Ø¯Ø¹ÙˆØ© Ù„Ù„Ù…Ø²ÙˆØ¯.',true);await loadAll()}catch(e){console.error(e);GCH.msg('pageMsg',GCH.genericError(e))}}
+async function closeRfq(id){try{const {error}=await GCH.db.from('rfqs').update({status:'closed'}).eq('id',id);if(error)throw error;await loadAll()}catch(e){GCH.msg('pageMsg',GCH.genericError(e))}}
+boot();
+</script></body></html>
