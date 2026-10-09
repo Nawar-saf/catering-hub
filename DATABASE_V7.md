@@ -7,6 +7,7 @@ Applied to the production Supabase project on 2026-10-09.
 - `20261009111547_rfq_quotes_core_v7`
 - `20261009111721_rfq_quotes_workflow_v7`
 - `20261009112134_rfq_advisor_indexes_v7`
+- `20261009114457_rfq_terminal_state_hardening_v7`
 
 ## New workflow
 
@@ -45,6 +46,12 @@ The initial matching engine considers:
 - provider lead time vs. event time.
 
 The function invites up to 10 eligible approved providers and defaults to 5.
+
+## State hardening
+
+- A submitted quote cannot be returned to draft; further submitted edits increment its revision.
+- Cancelling or closing an RFQ expires any remaining active provider invitations and non-selected quotes.
+- Accepted quote selection remains atomic with linked order creation.
 
 ## Production checks
 
