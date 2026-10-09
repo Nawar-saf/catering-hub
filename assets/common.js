@@ -12,7 +12,7 @@ const GCH={
   validPhone(v){const d=String(v||"").replace(/\D/g,"");return d.length>=8&&d.length<=15},
   msg(id,text,ok=false){const e=document.getElementById(id);if(!e)return;e.textContent=text;e.className="msg show "+(ok?"ok":"err")},
   clearMsg(id){const e=document.getElementById(id);if(e){e.textContent="";e.className="msg"}},
-  async publicRequest(body){const r=await fetch(`${GCH_URL}/functions/v1/public-request`,{method:"POST",headers:{"apikey":GCH_KEY,"Content-Type":"application/json"},body:JSON.stringify(body)});let data={};try{data=await r.json()}catch{}if(!r.ok){const err=new Error(data.error||"request_failed");err.code=data.error;err.status=r.status;throw err}return data},
+  async publicRequest(body){const r=await fetch(`${GCH_URL}/functions/v1/public-request`,{method:"POST",headers:{apikey:GCH_KEY,"Content-Type":"application/json"},body:JSON.stringify(body)});let data={};try{data=await r.json()}catch{}if(!r.ok){const err=new Error(data.error||"request_failed");err.code=data.error;err.status=r.status;throw err}return data},
   genericError(err){console.error(err);return"تعذر إتمام العملية حاليًا. يرجى المحاولة مرة أخرى."},
   async forgotPassword(email,redirectTo){return this.db.auth.resetPasswordForEmail(email,{redirectTo})},
   setBusy(btn,busy,busyText="جارٍ التنفيذ..."){if(!btn)return;if(busy){btn.dataset.oldText=btn.textContent;btn.disabled=true;btn.textContent=busyText}else{btn.disabled=false;btn.textContent=btn.dataset.oldText||btn.textContent}},
@@ -45,17 +45,36 @@ async function GCHAddProviderPublicProfileLink(){
 function GCHInjectMarketplaceFeeNotice(){
   const path=location.pathname.replace(/\/+$/,"/");if(!path.endsWith("/provider/rfq.html"))return;
   const actions=document.querySelector("#quoteModal .rfq-actions");if(!actions||document.getElementById("marketplaceFeeNotice"))return;
-  const note=document.createElement("div");note.id="marketplaceFeeNotice";note.className="notice";note.style.cssText="margin:12px 0;font-size:10px;line-height:1.8";note.innerHTML="<b>رسوم السوق:</b> تقديم العرض مجاني. إذا كان الطلب من السوق المفتوح وتم اختيار عرضك واكتمل الطلب، تُستحق عمولة Gulf Catering Hub الحالية بنسبة 5% من قيمة الصفقة. الدعوات الخاصة لا تُفرض عليها عمولة Marketplace حاليًا.";actions.parentNode.insertBefore(note,actions)
+  const note=document.createElement("div");note.id="marketplaceFeeNotice";note.className="notice";note.style.cssText="margin:12px 0;font-size:10px;line-height:1.8";note.innerHTML="<b>رسوم السوق:</b> تقديم العرض مجاني. إذا كان الطلب من السوق المفتوح وتم اختيار عرضك واكتمل الطلب، تُستحق عمولة Gulf Catering Hub الحالية بنسبة 5% من قيمة الصفقة.";actions.parentNode.insertBefore(note,actions)
 }
 
 function GCHAddOpsGrowthLink(){
   const path=location.pathname.replace(/\/+$/,"/");if(!path.includes("/inbox/"))return;
-  const nav=document.querySelector(".topbar .nav-actions");if(!nav||document.getElementById("opsGrowthLink")||path.endsWith("/inbox/growth.html"))return;
-  const a=document.createElement("a");a.id="opsGrowthLink";a.className="ghost";a.href="./growth.html";a.textContent="النمو";nav.prepend(a)
+  const nav=document.querySelector(".topbar .nav-actions");if(!nav)return;
+  if(!document.getElementById("opsProvidersLink")){const p=document.createElement("a");p.id="opsProvidersLink";p.className="ghost";p.href="./providers.html";p.textContent="اعتماد المزودين";nav.prepend(p)}
+  if(!document.getElementById("opsGrowthLink")&&!path.endsWith("/inbox/growth.html")){const a=document.createElement("a");a.id="opsGrowthLink";a.className="ghost";a.href="./growth.html";a.textContent="النمو";nav.prepend(a)}
+}
+
+function GCHPublicPartnerNavigation(){
+  const path=location.pathname.replace(/\/+$/,"/"),isHome=path==="/"||path.endsWith("/index.html");
+  if(isHome){
+    document.querySelectorAll('a[href="#providers"]').forEach(a=>a.remove());
+    const partnerSection=document.getElementById("providers");if(partnerSection)partnerSection.remove();
+    document.querySelectorAll('.provider-strip').forEach(x=>{const sec=x.closest('section');(sec||x).remove()});
+  }
+  const footer=document.querySelector("footer .footer-row")||document.querySelector("footer");
+  if(footer&&!document.getElementById("partnerFooterLinks")){
+    const box=document.createElement("div");box.id="partnerFooterLinks";box.innerHTML='<a href="./partner.html">انضم كشريك كيترنغ</a> · <a href="./provider/">دخول المزودين</a>';footer.appendChild(box)
+  }
+}
+
+function GCHMarkVerifiedPublicProvider(){
+  const path=location.pathname.replace(/\/+$/,"/");if(!path.endsWith("/provider.html"))return;
+  const title=document.querySelector("h1");if(title&&!document.getElementById("verifiedProviderBadge")){const s=document.createElement("span");s.id="verifiedProviderBadge";s.className="status st-approved";s.style.marginInlineStart="8px";s.textContent="مزود موثّق";title.appendChild(s)}
 }
 
 document.addEventListener("DOMContentLoaded",()=>{
   const path=location.pathname.replace(/\/+$/,"/"),isHome=path==="/"||path.endsWith("/index.html");
   if(isHome){const nav=document.querySelector(".nav-links");if(nav&&!nav.querySelector('[href="./marketplace.html"]')){const a=document.createElement("a");a.href="./marketplace.html";a.textContent="السوق";a.dataset.ar="السوق";a.dataset.en="Marketplace";nav.prepend(a)}if(nav&&!nav.querySelector('[href="./providers.html"]')){const a=document.createElement("a");a.href="./providers.html";a.textContent="المزودون";a.dataset.ar="المزودون";a.dataset.en="Providers";nav.appendChild(a)}const hero=document.querySelector(".hero-cta");if(hero&&!hero.querySelector('[href="./marketplace.html"]')){const a=document.createElement("a");a.href="./marketplace.html";a.className="ghost";a.textContent="استقبل عروض مزودين";a.dataset.ar="استقبل عروض مزودين";a.dataset.en="Get competing quotes";hero.appendChild(a)}const mobile=document.getElementById("mobileMenu");if(mobile&&!mobile.querySelector('[href="./marketplace.html"]')){const a=document.createElement("a");a.href="./marketplace.html";a.className="ghost";a.textContent="السوق";a.dataset.ar="السوق";a.dataset.en="Marketplace";mobile.prepend(a)}if(mobile&&!mobile.querySelector('[href="./providers.html"]')){const a=document.createElement("a");a.href="./providers.html";a.className="ghost";a.textContent="المزودون";a.dataset.ar="المزودون";a.dataset.en="Providers";mobile.prepend(a)}}
-  GCHRouteMarketplaceIntent();GCHAddProviderPublicProfileLink();GCHInjectMarketplaceFeeNotice();GCHAddOpsGrowthLink();
+  GCHPublicPartnerNavigation();GCHRouteMarketplaceIntent();GCHAddProviderPublicProfileLink();GCHInjectMarketplaceFeeNotice();GCHAddOpsGrowthLink();GCHMarkVerifiedPublicProvider();
 });
