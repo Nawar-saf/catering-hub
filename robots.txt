@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /inbox/
+Disallow: /company/
+Disallow: /provider/
+Disallow: /reset-password.html
+Sitemap: https://www.gulfcateringhub.com/sitemap.xml

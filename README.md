@@ -1,48 +1,71 @@
-# Gulf Catering Hub — V5
+# Gulf Catering Hub
 
-Static corporate catering MVP connected to Supabase.
+Corporate catering operating platform for company catering requests, ready packages and recurring employee meal programs.
 
-## Pages
-- `/`: approved supplier packages, custom catering enquiries, employee-meal enquiries.
-- `/company/`: company profile, branches, monthly spending summary, order approvals and recurring meal requests.
-- `/provider/`: supplier registration, supplier packages, instant publication for verified suppliers and assigned-order fulfillment.
-- `/inbox/`: operations login, public enquiries, provider verification/package oversight, assignments and recurring plans.
+## Production architecture
 
-## Deployment
-Publish the repository root on GitHub Pages. Paths are relative and support `/catering-hub/` hosting.
-The Supabase browser client is pinned to 2.117.2. Only the public anon key is included.
-The V5 schema has been applied to the existing project. Do not blindly rerun the bootstrap SQL against an unrelated database.
-Database migration history: `catering_v5_portals_and_access_control`, `restrict_internal_rls_event_trigger_execution`.
-Internal authorization functions live in the non-exposed `private` schema. RLS is enabled on all eight tables.
-The existing operations account retains administration access. Passwords were not changed.
-Customer/provider accounts register through their respective portals; email verification follows Supabase Auth configuration.
+- Static web app on `gulfcateringhub.com`
+- Supabase Auth + Postgres + RLS
+- `public-request` Edge Function for rate-limited public submissions
+- Public requests stored in `catering_requests`
+- Company orders stored in `company_orders`
+- Provider packages require admin review before publication
+- Public provider data is projected into `public_provider_profiles`; the base provider table is not anonymously readable.
 
-## Supported workflows
-Company owner request → automatic internal approval → operations assigns an approved provider → provider accepts/rejects → accepted order is completed.
-Verified provider package → immediate publication, with supplier-controlled pause/resume. New providers require initial verification.
-Employee meal plan → company request → operations activation or cancellation.
-Public enquiries remain in the operations inbox and are coordinated by the operations team.
+## Main product flows
 
-## Current scope
-- One owner login per company/provider; separate employee seats and delegated approval are not implemented.
-- Budgets are reporting values, not payment or spending-limit enforcement.
-- Recurring plans record the agreed program; they do not automatically dispatch daily orders.
-- No online payment or instant availability guarantee. Requests require confirmation.
-- No fabricated suppliers or packages; the marketplace starts empty until operations approves real offers.
-- The request helper extracts explicit guest counts/budgets locally; it does not call an AI model.
+### Public requests
+1. Ready package request
+2. Custom catering request
+3. Employee meal program request
 
-## Validation
-JavaScript syntax and DOM interaction checks cover the four pages.
-Rollback-only database tests exercise registration roles, tenant isolation, provider approval, package publication, order fulfillment, recurring-plan access and public-enquiry privacy.
-Existing requests and accounts are preserved; test accounts and rows are rolled back.
+Public forms call the `public-request` Edge Function. The browser does not insert directly into the legacy `requests` table.
 
-## Auth configuration follow-up
-Supabase's optional leaked-password protection is currently disabled. Review the feature and plan availability in the project Auth settings:
-https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection
+### Company portal
+- Explicit company onboarding
+- Branch management
+- Monthly budget
+- Approval modes: `none`, `threshold`, `always`
+- Company orders
+- Recurring employee meal plans
 
-## Operational roadmap
-1. Consolidate public enquiries and company orders in an operations workflow without breaking existing records.
-2. Add provider quotation and customer confirmation with an auditable status history.
-3. Add notifications for assignment, provider response and confirmed orders.
-4. Add optional company seats and delegated approval; owner requests remain automatic.
-5. Schedule recurring meal deliveries only after explicit start dates, service days and provider confirmation are captured.
+### Provider portal
+- Provider onboarding
+- Package drafts
+- Admin package review
+- Publish/pause approved packages
+- Assigned order accept/reject/complete flow
+
+### Operations
+- Structured public request queue
+- Company orders
+- Provider review
+- Package review
+- Recurring programs
+- Pagination for operational lists
+
+## Database
+
+Historical base schema: `supabase-v5-schema.sql`.
+
+Current production state includes the V6 migrations documented in `DATABASE_V6.md`. The follow-up advisor cleanup is checked in as `supabase-v6-advisor-cleanup.sql`. The canonical full hardening SQL is retained in Supabase migration history under `gch_production_hardening_v6`.
+
+## Edge Function
+
+Source: `supabase/functions/public-request/index.ts`
+
+The deployed function validates public requests, applies an IP-based request limit, validates package availability and writes to `catering_requests`.
+
+## Security notes
+
+- Browser code uses a Supabase publishable key. This key is intentionally public and relies on RLS.
+- Never place a Supabase secret/service-role key in frontend code.
+- Operations supports TOTP enrollment from the admin UI.
+- Enable Supabase leaked-password protection in Auth settings.
+- Configure custom SMTP before wider production onboarding so confirmation/recovery email is branded and reliable.
+- CAPTCHA can be layered on top of the public Edge Function later if abuse requires it; server-side rate limiting is already enforced.
+
+## Product next step
+
+The next major product layer is the RFQ / Quotes Engine:
+`Request → provider matching → quotes → comparison → selection → order → invoice/payment status → completion → rating`.
