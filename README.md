@@ -1,6 +1,6 @@
 # Gulf Catering Hub
 
-Corporate catering procurement and operations platform for ready packages, custom RFQs, recurring employee meals, approvals, purchase orders, invoices, payments, provider performance and operating audit trails.
+Corporate catering marketplace and procurement platform for ready packages, custom RFQs, recurring employee meals, approvals, purchase orders, invoices, payments, provider performance and operating audit trails.
 
 ## Production architecture
 
@@ -9,6 +9,16 @@ Corporate catering procurement and operations platform for ready packages, custo
 - Supabase Edge Functions for public submissions and company-team invitations
 - Brevo for branded company-team invitation emails
 - Browser clients use a Supabase publishable key; authorization is enforced in Postgres
+
+## Core marketplace model
+
+Gulf Catering Hub is now a two-sided marketplace:
+
+`Company publishes catering requirement → approved providers discover it → providers submit competing quotes → company compares offers → company selects provider → executable order is created`
+
+Companies can also use private invite-only sourcing when needed.
+
+The marketplace does not require operations staff to manually route every request. Provider approval and platform moderation remain in place.
 
 ## Main product flows
 
@@ -25,7 +35,8 @@ Public forms call the `public-request` Edge Function. The browser does not write
 - Company roles: Requester, Approver, Finance, Admin
 - Email-based team invitations with automatic account linking
 - Direct company orders
-- RFQ creation, multiple provider quotes and offer comparison
+- RFQ creation with two sourcing modes: Open Marketplace or Invite Only
+- Multiple provider quotes and offer comparison
 - Accepted quote → linked executable order
 - Recurring employee meal plans with dated delivery occurrences
 - Purchase orders (PO)
@@ -36,11 +47,14 @@ Public forms call the `public-request` Edge Function. The browser does not write
 - Printable PO and invoice operational records
 
 ### Provider portal
-- Provider onboarding and verification
+- Self-service provider signup and onboarding
+- Provider verification before marketplace access
 - Package drafts and admin review
 - Publish/pause approved packages
+- Marketplace Opportunities board for eligible open RFQs
+- Private RFQ invitations
+- Direct commercial quote submission without waiting for manual routing on marketplace RFQs
 - Assigned order accept/reject/complete flow
-- Invited RFQs and commercial quote submission
 - Purchase-order acknowledgement
 - Invoice submission and payment-status tracking
 - Performance Score / SLA dashboard
@@ -51,7 +65,7 @@ Public forms call the `public-request` Edge Function. The browser does not write
 ### Operations portal
 - Structured public request queue
 - Company orders
-- RFQ matching and provider invitations
+- Optional RFQ matching and provider invitations for invite-only sourcing
 - Provider and package review
 - Recurring programs
 - PO / invoice / payment oversight
@@ -62,11 +76,17 @@ Public forms call the `public-request` Edge Function. The browser does not write
 
 ## RFQ / Quotes Engine
 
-`Company RFQ → provider matching → provider invitations → submitted quotes → comparison → accepted quote → company order`
+Primary marketplace flow:
 
-Matching considers service area, provider capacity, lead time, preferred-provider weighting and provider performance. Providers cannot read competing providers' quotes. Quote acceptance is atomic and creates a traceable linked order.
+`Company RFQ → eligible approved providers → provider quotes → comparison → accepted quote → company_order`
 
-See `DATABASE_V7.md`.
+Private sourcing flow:
+
+`Company RFQ → provider matching/invites → provider quote → comparison → accepted quote → company_order`
+
+Marketplace eligibility currently checks provider approval, RFQ state/deadline, event timing and provider capacity. Providers cannot read competing providers' quotes. Quote acceptance is atomic and creates a traceable linked order.
+
+See `DATABASE_V7.md` and `DATABASE_V11.md`.
 
 ## Procurement and company roles
 
@@ -103,7 +123,9 @@ See `DATABASE_V10.md`.
 
 - Public provider data is separated from the base provider table.
 - Procurement/review/meal-operation/activity tables use RLS and minimum Data API grants.
-- Providers only read their own invitations, quotes, POs, invoices, payments, reviews, notifications and delivery operations.
+- Providers only read their own quotes, POs, invoices, payments, reviews, notifications and delivery operations.
+- Approved providers can read only marketplace RFQs currently eligible for them, or RFQs they were explicitly invited to.
+- Companies only read their own RFQs and submitted quotes on those RFQs.
 - Company finance/team actions are role-gated in Postgres, not only in the UI.
 - Printable documents use the current authenticated Supabase session and normal RLS.
 - Never place a Supabase secret/service-role key in frontend code.
@@ -117,9 +139,12 @@ See `DATABASE_V10.md`.
 - `DATABASE_V8.md` — company roles + procurement + finance tracking
 - `DATABASE_V9.md` — provider performance + ratings + recurring-meal operations
 - `DATABASE_V10.md` — activity timeline + in-app notifications + secured printable records
+- `DATABASE_V11.md` — open marketplace RFQs + self-service provider quoting
 
 ## Next product layers
 
+- Platform commission / transaction-fee ledger and payment-gateway integration
+- Marketplace liquidity analytics: time-to-first-quote, quote depth, win rate and provider response rate
 - Deeper spend, SLA and savings analytics with exports
 - Recurring-meal pause/exception calendars and delivery evidence attachments
 - Email/push delivery for selected in-app notification events
