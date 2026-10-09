@@ -12,13 +12,19 @@ Corporate catering marketplace and procurement platform for ready packages, cust
 
 ## Core marketplace model
 
-Gulf Catering Hub is now a two-sided marketplace:
+Gulf Catering Hub is a two-sided marketplace:
 
 `Company publishes catering requirement → approved providers discover it → providers submit competing quotes → company compares offers → company selects provider → executable order is created`
 
 Companies can also use private invite-only sourcing when needed.
 
 The marketplace does not require operations staff to manually route every request. Provider approval and platform moderation remain in place.
+
+## Commercial model
+
+Open-marketplace deals use an initial **5% provider success fee**. The fee is tracked automatically when a marketplace quote becomes an order, becomes due when the order is completed, and is waived if the order is cancelled/rejected before completion.
+
+Invite-only sourcing currently does not create a marketplace success fee.
 
 ## Main product flows
 
@@ -57,6 +63,7 @@ Public forms call the `public-request` Edge Function. The browser does not write
 - Assigned order accept/reject/complete flow
 - Purchase-order acknowledgement
 - Invoice submission and payment-status tracking
+- Marketplace success-fee ledger in the finance portal
 - Performance Score / SLA dashboard
 - Company reviews and recurring-meal delivery operations
 - In-app notifications and provider operating timeline
@@ -78,7 +85,7 @@ Public forms call the `public-request` Edge Function. The browser does not write
 
 Primary marketplace flow:
 
-`Company RFQ → eligible approved providers → provider quotes → comparison → accepted quote → company_order`
+`Company RFQ → eligible approved providers → provider quotes → comparison → accepted quote → company_order → marketplace success-fee ledger`
 
 Private sourcing flow:
 
@@ -86,7 +93,7 @@ Private sourcing flow:
 
 Marketplace eligibility currently checks provider approval, RFQ state/deadline, event timing and provider capacity. Providers cannot read competing providers' quotes. Quote acceptance is atomic and creates a traceable linked order.
 
-See `DATABASE_V7.md` and `DATABASE_V11.md`.
+See `DATABASE_V7.md`, `DATABASE_V11.md` and `DATABASE_V12.md`.
 
 ## Procurement and company roles
 
@@ -123,9 +130,10 @@ See `DATABASE_V10.md`.
 
 - Public provider data is separated from the base provider table.
 - Procurement/review/meal-operation/activity tables use RLS and minimum Data API grants.
-- Providers only read their own quotes, POs, invoices, payments, reviews, notifications and delivery operations.
+- Providers only read their own quotes, POs, invoices, payments, reviews, notifications, delivery operations and marketplace fee records.
 - Approved providers can read only marketplace RFQs currently eligible for them, or RFQs they were explicitly invited to.
 - Companies only read their own RFQs and submitted quotes on those RFQs.
+- Marketplace fee creation is server-side; providers cannot create/delete their own fee rows.
 - Company finance/team actions are role-gated in Postgres, not only in the UI.
 - Printable documents use the current authenticated Supabase session and normal RLS.
 - Never place a Supabase secret/service-role key in frontend code.
@@ -140,10 +148,12 @@ See `DATABASE_V10.md`.
 - `DATABASE_V9.md` — provider performance + ratings + recurring-meal operations
 - `DATABASE_V10.md` — activity timeline + in-app notifications + secured printable records
 - `DATABASE_V11.md` — open marketplace RFQs + self-service provider quoting
+- `DATABASE_V12.md` — marketplace success-fee ledger
 
 ## Next product layers
 
-- Platform commission / transaction-fee ledger and payment-gateway integration
+- Payment-gateway collection for marketplace fees
+- Operations UI for invoicing/marking marketplace fees paid
 - Marketplace liquidity analytics: time-to-first-quote, quote depth, win rate and provider response rate
 - Deeper spend, SLA and savings analytics with exports
 - Recurring-meal pause/exception calendars and delivery evidence attachments
