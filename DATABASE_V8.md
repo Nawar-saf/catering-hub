@@ -8,15 +8,16 @@ Applied to the production Supabase project on 2026-10-09.
 - `20261009121000_invoice_po_integrity_v8`
 - `20261009121620_procurement_v8_advisor_and_integrity_cleanup`
 - `20261009121712_procurement_v8_minimum_api_grants`
+- `20261009122035_company_role_boundaries_v8`
 
 ## Company team model
 
-`company_members` now supports invitation lifecycle and delegated roles:
+`company_members` supports invitation lifecycle and delegated roles:
 
 - `requester` — creates and follows requests.
 - `approver` — approves within an optional financial approval limit.
 - `finance` — manages invoice approvals and payment records.
-- `admin` — delegated company administration and team management.
+- `admin` — manages the team, company settings and branches.
 
 Invitations are keyed by company + normalized email. The `company-invite` Edge Function creates/refreshes the invitation and sends a branded Brevo email from `support@gulfcateringhub.com`.
 
@@ -45,15 +46,15 @@ When the invited user registers or signs in with the same email, `claim_company_
 ### `payment_records`
 
 - Company Finance/Admin/owner can record offline payments.
-- Admin can record operational payments through the admin portal.
-- The database rejects payments that would exceed invoice balance.
+- Platform admin can record operational payments through the admin portal.
+- The database rejects payments that would exceed invoice balance, including admin-entered payments.
 - Invoice status moves automatically to `partially_paid` or `paid`.
 
 ## Authorization
 
 Authorization is enforced in Postgres using RLS and guarded triggers.
 
-- Company team management: owner or delegated company `admin`.
+- Company settings/branches/team management: owner or delegated company `admin`.
 - PO issuance: owner, `approver`, `finance`, or company `admin`.
 - Invoice approval/payment: owner, `finance`, or company `admin`.
 - Providers only access procurement rows linked to their provider account.
@@ -70,7 +71,7 @@ Authenticated access is limited to:
 - `invoices`: SELECT / INSERT / UPDATE, with RLS.
 - `payment_records`: SELECT / INSERT, with RLS.
 
-`anon` has no table access to these objects.
+`anon` has no table access to these objects. Broad default privileges such as `TRUNCATE`, `TRIGGER` and `REFERENCES` were explicitly removed.
 
 All four tables have RLS enabled.
 
@@ -81,7 +82,7 @@ After V8:
 - Supabase Security Advisor reports no new database/RLS issues; the only remaining warning is the account-level `Leaked Password Protection Disabled` Auth setting.
 - All V8 missing-FK-index findings were resolved.
 - Performance Advisor can still report `unused_index` for new indexes until production traffic exercises them; these are intentionally retained.
-- `company-invite` is deployed ACTIVE with JWT verification enabled.
+- `company-invite` is deployed ACTIVE with JWT verification enabled and its source is tracked under `supabase/functions/company-invite/index.ts`.
 
 ## UI surfaces
 
