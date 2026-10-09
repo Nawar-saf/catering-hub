@@ -1,6 +1,6 @@
 # Gulf Catering Hub
 
-Corporate catering procurement and operations platform for ready packages, custom RFQs, recurring employee meals, approvals, purchase orders, invoices, payments and provider performance.
+Corporate catering procurement and operations platform for ready packages, custom RFQs, recurring employee meals, approvals, purchase orders, invoices, payments, provider performance and operating audit trails.
 
 ## Production architecture
 
@@ -32,6 +32,8 @@ Public forms call the `public-request` Edge Function. The browser does not write
 - Invoice approval/rejection
 - Offline payment recording and outstanding-balance tracking
 - Spend by provider/branch, RFQ savings estimate and completed-order review queue
+- In-app notifications and tenant-scoped operating timeline
+- Printable PO and invoice operational records
 
 ### Provider portal
 - Provider onboarding and verification
@@ -43,6 +45,8 @@ Public forms call the `public-request` Edge Function. The browser does not write
 - Invoice submission and payment-status tracking
 - Performance Score / SLA dashboard
 - Company reviews and recurring-meal delivery operations
+- In-app notifications and provider operating timeline
+- Printable PO and invoice operational records
 
 ### Operations portal
 - Structured public request queue
@@ -52,6 +56,7 @@ Public forms call the `public-request` Edge Function. The browser does not write
 - Recurring programs
 - PO / invoice / payment oversight
 - Provider leaderboard and meal-delivery exceptions
+- Operations-wide activity timeline and notification visibility
 - Pagination for operational lists
 - TOTP enrollment for admin accounts
 
@@ -73,15 +78,21 @@ See `DATABASE_V8.md`.
 
 ## Provider performance and meal operations
 
-V9 adds real operating feedback:
-
 `Completed order → company review → provider score → stronger RFQ ranking`
-
-and turns recurring plans into execution records:
 
 `Recurring plan → dated occurrence → provider delivery → company confirmation / exception`
 
 See `DATABASE_V9.md`.
+
+## Activity and notifications
+
+Important operating events are written to a tenant-scoped audit timeline and can generate in-app company/provider notifications.
+
+`Business event → activity event → targeted notification → user marks read`
+
+PO and invoice records can be opened through the secured `document.html` renderer and printed / saved as PDF using the browser.
+
+See `DATABASE_V10.md`.
 
 ## Edge Functions
 
@@ -91,9 +102,10 @@ See `DATABASE_V9.md`.
 ## Security notes
 
 - Public provider data is separated from the base provider table.
-- Procurement/review/meal-operation tables use RLS and minimum Data API grants.
-- Providers only read their own invitations, quotes, POs, invoices, payments, reviews and delivery operations.
+- Procurement/review/meal-operation/activity tables use RLS and minimum Data API grants.
+- Providers only read their own invitations, quotes, POs, invoices, payments, reviews, notifications and delivery operations.
 - Company finance/team actions are role-gated in Postgres, not only in the UI.
+- Printable documents use the current authenticated Supabase session and normal RLS.
 - Never place a Supabase secret/service-role key in frontend code.
 - Enable Supabase leaked-password protection in Auth settings before broader production onboarding.
 - Custom Auth SMTP is still recommended so account confirmation/recovery mail is fully branded; company-team invitations already use Brevo directly.
@@ -104,10 +116,12 @@ See `DATABASE_V9.md`.
 - `DATABASE_V7.md` — RFQ / Quotes Engine
 - `DATABASE_V8.md` — company roles + procurement + finance tracking
 - `DATABASE_V9.md` — provider performance + ratings + recurring-meal operations
+- `DATABASE_V10.md` — activity timeline + in-app notifications + secured printable records
 
 ## Next product layers
 
-- Event/audit timeline and notifications
-- Printable/exportable PO and invoice documents
-- Deeper spend, SLA and savings analytics
+- Deeper spend, SLA and savings analytics with exports
 - Recurring-meal pause/exception calendars and delivery evidence attachments
+- Email/push delivery for selected in-app notification events
+- Provider compliance/legal-document workflow
+- Real provider onboarding and real company acquisition; avoid adding fake production supply data
