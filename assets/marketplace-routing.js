@@ -15,7 +15,6 @@
       goCompanyRfq({gch_custom_intent:'1',gch_custom_notes:note||null});
     };
     window.openMeals=function(){
-      localStorage.setItem('gch_company_next','meals');
       location.href='./company/#employeeMeals';
     };
     window.openPackage=function(id){
@@ -32,10 +31,14 @@
     const packageId=localStorage.getItem('gch_package_intent');
     const custom=localStorage.getItem('gch_custom_intent')==='1';
     const customNotes=localStorage.getItem('gch_custom_notes')||'';
+    let directProvider=localStorage.getItem('gch_direct_provider');
+    const marketNotice=document.getElementById('marketSourceNotice');
+    if(directProvider&&marketNotice)marketNotice.classList.add('hidden');
     let pkg=null;
     if(packageId){
       const {data,error}=await GCH.db.from('catering_packages').select('id,provider_id,name,category_key,price_per_person,min_people,max_people,lead_time_hours,items,delivery_fee,minimum_spend').eq('id',packageId).eq('active',true).eq('review_status','approved').maybeSingle();
       if(!error)pkg=data;
+      if(pkg&&!directProvider){localStorage.setItem('gch_direct_provider',pkg.provider_id);directProvider=pkg.provider_id;if(marketNotice)marketNotice.classList.add('hidden')}
     }
     let tries=0;
     const timer=setInterval(()=>{
