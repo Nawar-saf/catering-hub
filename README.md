@@ -1,6 +1,6 @@
 # Gulf Catering Hub
 
-Corporate catering procurement and operations platform for ready packages, custom RFQs, recurring employee meals, approvals, purchase orders, invoices and payment tracking.
+Corporate catering procurement and operations platform for ready packages, custom RFQs, recurring employee meals, approvals, purchase orders, invoices, payments and provider performance.
 
 ## Production architecture
 
@@ -20,18 +20,18 @@ Corporate catering procurement and operations platform for ready packages, custo
 Public forms call the `public-request` Edge Function. The browser does not write directly to the legacy request table.
 
 ### Company portal
-- Explicit company onboarding
-- Branch management
+- Explicit company onboarding and branch management
 - Monthly budget and flexible approval modes: `none`, `threshold`, `always`
 - Company roles: Requester, Approver, Finance, Admin
 - Email-based team invitations with automatic account linking
 - Direct company orders
-- RFQ creation and quote comparison
+- RFQ creation, multiple provider quotes and offer comparison
 - Accepted quote → linked executable order
-- Recurring employee meal plans
+- Recurring employee meal plans with dated delivery occurrences
 - Purchase orders (PO)
 - Invoice approval/rejection
 - Offline payment recording and outstanding-balance tracking
+- Spend by provider/branch, RFQ savings estimate and completed-order review queue
 
 ### Provider portal
 - Provider onboarding and verification
@@ -41,6 +41,8 @@ Public forms call the `public-request` Edge Function. The browser does not write
 - Invited RFQs and commercial quote submission
 - Purchase-order acknowledgement
 - Invoice submission and payment-status tracking
+- Performance Score / SLA dashboard
+- Company reviews and recurring-meal delivery operations
 
 ### Operations portal
 - Structured public request queue
@@ -49,6 +51,7 @@ Public forms call the `public-request` Edge Function. The browser does not write
 - Provider and package review
 - Recurring programs
 - PO / invoice / payment oversight
+- Provider leaderboard and meal-delivery exceptions
 - Pagination for operational lists
 - TOTP enrollment for admin accounts
 
@@ -56,29 +59,29 @@ Public forms call the `public-request` Edge Function. The browser does not write
 
 `Company RFQ → provider matching → provider invitations → submitted quotes → comparison → accepted quote → company order`
 
-The matching engine considers service area, provider capacity, lead time and preferred-provider weighting. Providers cannot read competing providers' quotes. Quote acceptance is atomic and creates a traceable linked order.
+Matching considers service area, provider capacity, lead time, preferred-provider weighting and provider performance. Providers cannot read competing providers' quotes. Quote acceptance is atomic and creates a traceable linked order.
 
 See `DATABASE_V7.md`.
 
 ## Procurement and company roles
 
-V8 adds delegated company roles and a procurement layer:
-
 `Order / accepted quote → PO → provider invoice → company approval → payment records → paid / partially paid`
 
-Company payment terms determine invoice due dates. Payment inserts are balance-checked so recorded payments cannot exceed the invoice amount.
+Company payment terms determine invoice due dates. Payment inserts are balance-checked so recorded payments cannot exceed invoice amount.
 
 See `DATABASE_V8.md`.
 
-## Database
+## Provider performance and meal operations
 
-Historical base schema: `supabase-v5-schema.sql`.
+V9 adds real operating feedback:
 
-Production hardening and product evolution are retained in Supabase migration history and summarized in:
+`Completed order → company review → provider score → stronger RFQ ranking`
 
-- `DATABASE_V6.md` — production hardening
-- `DATABASE_V7.md` — RFQ / Quotes Engine
-- `DATABASE_V8.md` — team roles + procurement + finance tracking
+and turns recurring plans into execution records:
+
+`Recurring plan → dated occurrence → provider delivery → company confirmation / exception`
+
+See `DATABASE_V9.md`.
 
 ## Edge Functions
 
@@ -87,18 +90,24 @@ Production hardening and product evolution are retained in Supabase migration hi
 
 ## Security notes
 
-- Public provider data is exposed only through the limited public provider projection; the base provider table is not anonymously readable.
-- New procurement tables use RLS and minimum Data API grants.
-- Providers only read their own invitations, quotes, POs, invoices and related payments.
-- Company finance actions are role-gated in Postgres, not only in the UI.
+- Public provider data is separated from the base provider table.
+- Procurement/review/meal-operation tables use RLS and minimum Data API grants.
+- Providers only read their own invitations, quotes, POs, invoices, payments, reviews and delivery operations.
+- Company finance/team actions are role-gated in Postgres, not only in the UI.
 - Never place a Supabase secret/service-role key in frontend code.
 - Enable Supabase leaked-password protection in Auth settings before broader production onboarding.
-- Custom Auth SMTP is still recommended so account confirmation/recovery mail is fully branded; team invitations already use Brevo directly.
+- Custom Auth SMTP is still recommended so account confirmation/recovery mail is fully branded; company-team invitations already use Brevo directly.
+
+## Database evolution
+
+- `DATABASE_V6.md` — production hardening
+- `DATABASE_V7.md` — RFQ / Quotes Engine
+- `DATABASE_V8.md` — company roles + procurement + finance tracking
+- `DATABASE_V9.md` — provider performance + ratings + recurring-meal operations
 
 ## Next product layers
 
-- Provider SLA / performance scores and post-completion ratings
-- Recurring meal delivery occurrences and exception handling
-- Spend / savings / provider-performance reporting
-- Notifications and audit timeline
+- Event/audit timeline and notifications
 - Printable/exportable PO and invoice documents
+- Deeper spend, SLA and savings analytics
+- Recurring-meal pause/exception calendars and delivery evidence attachments
