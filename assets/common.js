@@ -66,6 +66,24 @@ async function GCHRouteMarketplaceIntent(){
   }
 }
 
+async function GCHAddProviderPublicProfileLink(){
+  const path=location.pathname.replace(/\/+$/,"/");
+  const providerPage=path.includes("/provider/");
+  if(!providerPage)return;
+  try{
+    const {data:{session}}=await GCH_DB.auth.getSession();if(!session)return;
+    const {data:p}=await GCH_DB.from("catering_providers").select("id,status").eq("owner_user_id",session.user.id).maybeSingle();
+    if(!p||p.status!=="approved")return;
+    const nav=document.querySelector(".topbar .nav-actions");
+    if(nav&&!document.getElementById("publicProviderProfileLink")){
+      const a=document.createElement("a");
+      a.id="publicProviderProfileLink";a.className="ghost";a.target="_blank";a.rel="noopener";
+      a.href=`../provider.html?id=${encodeURIComponent(p.id)}`;a.textContent="ملفي العام";
+      nav.prepend(a)
+    }
+  }catch(e){console.warn("provider public profile link",e)}
+}
+
 document.addEventListener("DOMContentLoaded",()=>{
   const path=location.pathname.replace(/\/+$/,"/");
   const isHome=path==="/"||path.endsWith("/index.html");
@@ -73,6 +91,9 @@ document.addEventListener("DOMContentLoaded",()=>{
     const nav=document.querySelector(".nav-links");
     if(nav&&!nav.querySelector('[href="./marketplace.html"]')){
       const a=document.createElement("a");a.href="./marketplace.html";a.textContent="السوق";a.dataset.ar="السوق";a.dataset.en="Marketplace";nav.prepend(a)
+    }
+    if(nav&&!nav.querySelector('[href="./providers.html"]')){
+      const a=document.createElement("a");a.href="./providers.html";a.textContent="المزودون";a.dataset.ar="المزودون";a.dataset.en="Providers";nav.appendChild(a)
     }
     const hero=document.querySelector(".hero-cta");
     if(hero&&!hero.querySelector('[href="./marketplace.html"]')){
@@ -82,6 +103,10 @@ document.addEventListener("DOMContentLoaded",()=>{
     if(mobile&&!mobile.querySelector('[href="./marketplace.html"]')){
       const a=document.createElement("a");a.href="./marketplace.html";a.className="ghost";a.textContent="السوق";a.dataset.ar="السوق";a.dataset.en="Marketplace";mobile.prepend(a)
     }
+    if(mobile&&!mobile.querySelector('[href="./providers.html"]')){
+      const a=document.createElement("a");a.href="./providers.html";a.className="ghost";a.textContent="المزودون";a.dataset.ar="المزودون";a.dataset.en="Providers";mobile.prepend(a)
+    }
   }
   GCHRouteMarketplaceIntent();
+  GCHAddProviderPublicProfileLink();
 });
