@@ -30,3 +30,21 @@ const GCH={
   setupMobile(){const btn=document.getElementById("mobileToggle"),menu=document.getElementById("mobileMenu");if(!btn||!menu)return;btn.addEventListener("click",()=>{menu.classList.toggle("open");btn.setAttribute("aria-expanded",menu.classList.contains("open")?"true":"false")});menu.querySelectorAll("a,button").forEach(x=>x.addEventListener("click",()=>menu.classList.remove("open")))}
 };
 window.GCH=GCH;
+
+document.addEventListener("DOMContentLoaded",()=>{
+  const path=location.pathname.replace(/\/+$/,"/");
+  const isHome=path==="/"||path.endsWith("/index.html");
+  if(!isHome)return;
+  const nav=document.querySelector(".nav-links");
+  if(nav&&!nav.querySelector('[href="./marketplace.html"]')){
+    const a=document.createElement("a");a.href="./marketplace.html";a.textContent="السوق";a.dataset.ar="السوق";a.dataset.en="Marketplace";nav.prepend(a)
+  }
+  const hero=document.querySelector(".hero-cta");
+  if(hero&&!hero.querySelector('[href="./marketplace.html"]')){
+    const a=document.createElement("a");a.href="./marketplace.html";a.className="ghost";a.textContent="استقبل عروض مزودين";a.dataset.ar="استقبل عروض مزودين";a.dataset.en="Get competing quotes";hero.appendChild(a)
+  }
+  const mobile=document.getElementById("mobileMenu");
+  if(mobile&&!mobile.querySelector('[href="./marketplace.html"]')){
+    const a=document.createElement("a");a.href="./marketplace.html";a.className="ghost";a.textContent="السوق";a.dataset.ar="السوق";a.dataset.en="Marketplace";mobile.prepend(a)
+  }
+});
