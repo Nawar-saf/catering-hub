@@ -51,7 +51,7 @@ async function GCHRouteMarketplaceIntent(){
       const {data:profile}=await GCH_DB.from("user_profiles").select("role").eq("id",uid).maybeSingle();
       if(companyIntent&&profile?.role==="company"){
         const {data:c}=await GCH_DB.from("companies").select("id").eq("owner_user_id",uid).maybeSingle();
-        if(c){localStorage.removeItem("gch_company_next");location.replace("./rfq.html");return}
+        if(c){localStorage.removeItem("gch_company_next");location.replace("./rfq.html?create=1");return}
       }
       if(providerIntent&&profile?.role==="provider"){
         const {data:p}=await GCH_DB.from("catering_providers").select("id,status").eq("owner_user_id",uid).maybeSingle();
