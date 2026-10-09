@@ -31,20 +31,57 @@ const GCH={
 };
 window.GCH=GCH;
 
+async function GCHRouteMarketplaceIntent(){
+  const path=location.pathname.replace(/\/+$/,"/");
+  const params=new URLSearchParams(location.search);
+  const companyRoot=path.endsWith("/company/")||path.endsWith("/company/index.html");
+  const providerRoot=path.endsWith("/provider/")||path.endsWith("/provider/index.html");
+  if(companyRoot&&params.get("next")==="rfq")localStorage.setItem("gch_company_next","rfq");
+  if(providerRoot&&params.get("next")==="rfq")localStorage.setItem("gch_provider_next","rfq");
+  const companyIntent=companyRoot&&localStorage.getItem("gch_company_next")==="rfq";
+  const providerIntent=providerRoot&&localStorage.getItem("gch_provider_next")==="rfq";
+  if(!companyIntent&&!providerIntent)return;
+  let checking=false,polls=0;
+  const route=async()=>{
+    if(checking)return;checking=true;
+    try{
+      const {data:{session}}=await GCH_DB.auth.getSession();
+      if(!session)return;
+      const uid=session.user.id;
+      const {data:profile}=await GCH_DB.from("user_profiles").select("role").eq("id",uid).maybeSingle();
+      if(companyIntent&&profile?.role==="company"){
+        const {data:c}=await GCH_DB.from("companies").select("id").eq("owner_user_id",uid).maybeSingle();
+        if(c){localStorage.removeItem("gch_company_next");location.replace("./rfq.html");return}
+      }
+      if(providerIntent&&profile?.role==="provider"){
+        const {data:p}=await GCH_DB.from("catering_providers").select("id,status").eq("owner_user_id",uid).maybeSingle();
+        if(p?.status==="approved"){localStorage.removeItem("gch_provider_next");location.replace("./rfq.html");return}
+      }
+    }catch(e){console.warn("route intent",e)}finally{checking=false}
+  };
+  await route();
+  GCH_DB.auth.onAuthStateChange((event,session)=>{if(session)queueMicrotask(route)});
+  if(companyIntent){
+    const timer=setInterval(async()=>{polls++;await route();if(polls>=600||!localStorage.getItem("gch_company_next"))clearInterval(timer)},1500)
+  }
+}
+
 document.addEventListener("DOMContentLoaded",()=>{
   const path=location.pathname.replace(/\/+$/,"/");
   const isHome=path==="/"||path.endsWith("/index.html");
-  if(!isHome)return;
-  const nav=document.querySelector(".nav-links");
-  if(nav&&!nav.querySelector('[href="./marketplace.html"]')){
-    const a=document.createElement("a");a.href="./marketplace.html";a.textContent="السوق";a.dataset.ar="السوق";a.dataset.en="Marketplace";nav.prepend(a)
+  if(isHome){
+    const nav=document.querySelector(".nav-links");
+    if(nav&&!nav.querySelector('[href="./marketplace.html"]')){
+      const a=document.createElement("a");a.href="./marketplace.html";a.textContent="السوق";a.dataset.ar="السوق";a.dataset.en="Marketplace";nav.prepend(a)
+    }
+    const hero=document.querySelector(".hero-cta");
+    if(hero&&!hero.querySelector('[href="./marketplace.html"]')){
+      const a=document.createElement("a");a.href="./marketplace.html";a.className="ghost";a.textContent="استقبل عروض مزودين";a.dataset.ar="استقبل عروض مزودين";a.dataset.en="Get competing quotes";hero.appendChild(a)
+    }
+    const mobile=document.getElementById("mobileMenu");
+    if(mobile&&!mobile.querySelector('[href="./marketplace.html"]')){
+      const a=document.createElement("a");a.href="./marketplace.html";a.className="ghost";a.textContent="السوق";a.dataset.ar="السوق";a.dataset.en="Marketplace";mobile.prepend(a)
+    }
   }
-  const hero=document.querySelector(".hero-cta");
-  if(hero&&!hero.querySelector('[href="./marketplace.html"]')){
-    const a=document.createElement("a");a.href="./marketplace.html";a.className="ghost";a.textContent="استقبل عروض مزودين";a.dataset.ar="استقبل عروض مزودين";a.dataset.en="Get competing quotes";hero.appendChild(a)
-  }
-  const mobile=document.getElementById("mobileMenu");
-  if(mobile&&!mobile.querySelector('[href="./marketplace.html"]')){
-    const a=document.createElement("a");a.href="./marketplace.html";a.className="ghost";a.textContent="السوق";a.dataset.ar="السوق";a.dataset.en="Marketplace";mobile.prepend(a)
-  }
+  GCHRouteMarketplaceIntent();
 });
