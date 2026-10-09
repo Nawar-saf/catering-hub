@@ -14,23 +14,31 @@ Corporate catering marketplace and procurement platform for ready packages, cust
 
 Gulf Catering Hub is a two-sided marketplace:
 
-`Company publishes catering requirement → approved providers discover it → providers submit competing quotes → company compares offers → company selects provider → executable order is created`
+`Company publishes catering requirement → approved eligible providers discover it → providers submit competing quotes → company compares offers → company selects provider → executable order is created`
 
 Companies can also use private invite-only sourcing when needed.
 
 The marketplace does not require operations staff to manually route every request. Provider approval and platform moderation remain in place.
 
-Public acquisition for the marketplace is available at `/marketplace.html` with separate company and provider entry paths. Marketplace CTAs preserve the user's intent through login / signup: an onboarded company is routed directly to the RFQ workspace, while an already-approved provider is routed directly to Marketplace Opportunities.
+Public marketplace acquisition is available at `/marketplace.html`. Approved suppliers are discoverable through `/providers.html`, with shareable marketplace profiles at `/provider.html?id=<provider_uuid>`. Marketplace CTAs preserve intent through login/signup: an onboarded company is routed directly to the RFQ composer, while an already-approved provider is routed directly to Marketplace Opportunities.
 
 ## Commercial model
 
-Open-marketplace deals use an initial **5% provider success fee**. The fee is tracked automatically when a marketplace quote becomes an order, becomes due when the order is completed, and is waived if the order is cancelled/rejected before completion.
+Open-marketplace deals use an initial **5% provider success fee**. Registration, opportunity browsing and quote submission are free. The fee is tracked automatically when a marketplace quote becomes an order, becomes due when the order is completed, and can be waived when the order is cancelled/rejected before completion.
 
 Invite-only sourcing currently does not create a marketplace success fee.
 
-Operations Finance includes platform GMV, outstanding success fees, collected fees and admin controls for moving fees through `accrued → invoiced → paid` or waiving them when appropriate.
+The fee is disclosed on the public marketplace page, in the terms, and in the provider quote workflow. Operations Finance includes platform GMV, outstanding success fees, collected fees and admin controls for moving fees through `accrued → invoiced → paid` or waiving them when appropriate.
 
 ## Main product flows
+
+### Public acquisition
+- Marketplace landing page for companies and providers
+- Searchable approved-provider directory
+- Shareable public provider profiles
+- Public ready packages from approved providers
+- Company CTAs route toward publishing an RFQ
+- Provider CTAs route toward provider onboarding / Marketplace Opportunities
 
 ### Public requests
 1. Ready package request
@@ -47,6 +55,8 @@ Public forms call the `public-request` Edge Function. The browser does not write
 - Direct company orders
 - RFQ creation with two sourcing modes: Open Marketplace or Invite Only
 - Marketplace acquisition intent is preserved across account signup / email confirmation / company onboarding
+- Marketplace intent opens the RFQ composer directly after onboarding
+- RFQ location is prefilled from the selected company branch where available
 - Multiple provider quotes and offer comparison
 - Accepted quote → linked executable order
 - Recurring employee meal plans with dated delivery occurrences
@@ -60,14 +70,17 @@ Public forms call the `public-request` Edge Function. The browser does not write
 ### Provider portal
 - Self-service provider signup and onboarding
 - Provider verification before marketplace access
+- Approved providers receive a public shareable marketplace profile
 - Package drafts and admin review
 - Publish/pause approved packages
 - Marketplace Opportunities board for eligible open RFQs
 - Opportunity search and filters by source, request type and quote state
-- Eligibility includes provider approval, capacity and minimum lead time
-- Automatic in-app opportunity alerts when new eligible marketplace RFQs are published
+- Marketplace eligibility checks approval, RFQ state, deadline, capacity, minimum lead time and geography
+- Geography considers both RFQ location text and linked company-branch city
+- Automatic in-app opportunity alerts for eligible marketplace RFQs
 - Private RFQ invitations
 - Direct commercial quote submission without waiting for manual routing on marketplace RFQs
+- 5% marketplace fee disclosure before quote submission
 - Assigned order accept/reject/complete flow
 - Purchase-order acknowledgement
 - Invoice submission and payment-status tracking
@@ -95,15 +108,23 @@ Public forms call the `public-request` Edge Function. The browser does not write
 
 Primary marketplace flow:
 
-`Company RFQ → eligibility (approval + deadline + capacity + lead time) → provider opportunity notification → provider quotes → comparison → accepted quote → company_order → marketplace success-fee ledger`
+`Company RFQ → eligibility (approval + status/deadline + capacity + lead time + geography) → provider opportunity notification/discovery → provider quotes → comparison → accepted quote → company_order → marketplace success-fee ledger`
 
 Private sourcing flow:
 
 `Company RFQ → provider matching/invites → provider quote → comparison → accepted quote → company_order`
 
-Marketplace eligibility currently checks provider approval, RFQ state/deadline, event timing, provider capacity and provider minimum lead time. Providers cannot read competing providers' quotes. Quote acceptance is atomic and creates a traceable linked order.
+Marketplace discovery, automatic notifications and admin matching reuse aligned eligibility rules. Providers cannot read competing providers' quotes. Quote acceptance is atomic and creates a traceable linked order.
 
-See `DATABASE_V7.md`, `DATABASE_V11.md`, `DATABASE_V12.md`, `DATABASE_V13.md` and `DATABASE_V14.md`.
+See `DATABASE_V7.md`, `DATABASE_V11.md`, `DATABASE_V12.md`, `DATABASE_V13.md`, `DATABASE_V14.md`, `DATABASE_V15.md` and `DATABASE_V17.md`.
+
+## Public provider marketplace profiles
+
+Approved providers are mirrored into a deliberately limited public table. Public profiles contain marketplace-safe information only: display name, service areas, cuisines, capacity, lead time and aggregate performance values.
+
+Suspending a provider removes the public profile automatically. Private provider account, phone, quote, billing and owner-user data are not exposed through the public profile table.
+
+See `DATABASE_V16.md`.
 
 ## Procurement and company roles
 
@@ -127,11 +148,11 @@ Important operating events are written to a tenant-scoped audit timeline and can
 
 `Business event → activity event → targeted notification → user marks read`
 
-New Open Marketplace RFQs automatically create targeted provider opportunity notifications only for providers that can satisfy the current capacity and lead-time rules.
+New Open Marketplace RFQs automatically create targeted provider opportunity notifications only for providers that satisfy the active marketplace eligibility rules.
 
 PO and invoice records can be opened through the secured `document.html` renderer and printed / saved as PDF using the browser.
 
-See `DATABASE_V10.md`, `DATABASE_V13.md` and `DATABASE_V14.md`.
+See `DATABASE_V10.md`, `DATABASE_V13.md`, `DATABASE_V14.md`, `DATABASE_V15.md` and `DATABASE_V17.md`.
 
 ## Edge Functions
 
@@ -146,6 +167,7 @@ See `DATABASE_V10.md`, `DATABASE_V13.md` and `DATABASE_V14.md`.
 - Approved providers can read only marketplace RFQs currently eligible for them, or RFQs they were explicitly invited to.
 - Companies only read their own RFQs and submitted quotes on those RFQs.
 - Marketplace fee creation is server-side; providers cannot create/delete their own fee rows.
+- Public provider profiles are read-only to anonymous visitors and populated by a server-side sync trigger from approved providers only.
 - Company finance/team actions are role-gated in Postgres, not only in the UI.
 - Printable documents use the current authenticated Supabase session and normal RLS.
 - Never place a Supabase secret/service-role key in frontend code.
@@ -163,13 +185,20 @@ See `DATABASE_V10.md`, `DATABASE_V13.md` and `DATABASE_V14.md`.
 - `DATABASE_V12.md` — marketplace success-fee ledger
 - `DATABASE_V13.md` — automatic marketplace opportunity notifications
 - `DATABASE_V14.md` — marketplace lead-time eligibility + fee relationship index hardening
+- `DATABASE_V15.md` — marketplace provider service-area filtering
+- `DATABASE_V16.md` — safe public provider marketplace profiles
+- `DATABASE_V17.md` — branch-aware marketplace geography and aligned matching
+
+## Current go-to-market priority
+
+The core marketplace transaction path is built. The next bottleneck is real marketplace liquidity: onboard legitimate catering providers and real corporate buyers, then measure quote depth, time-to-first-quote, RFQ-to-selection conversion, GMV and fee collection using the existing operations dashboards.
 
 ## Next product layers
 
-- Payment-gateway collection for marketplace fees
+- Payment-gateway collection for marketplace success fees
 - Email/push delivery for high-value opportunity alerts in addition to current in-app alerts
 - Provider compliance/legal-document workflow
-- Stronger marketplace matching by service area, cuisine and live provider availability
+- Cuisine, live availability and more structured geographic matching
 - Deeper spend, SLA and savings analytics with exports
 - Recurring-meal pause/exception calendars and delivery evidence attachments
 - Real provider onboarding and real company acquisition; avoid adding fake production supply data
