@@ -1,22 +1,48 @@
 let lang=localStorage.getItem("gch_lang")==="en"?"en":"ar",selectedNeed="meeting",activeFilter="all",packages=[],providers=new Map(),packageLoadFailed=false,smartDraft="";
-const needs=[["meeting","💼","اجتماع","Meeting"],["employees","🍱","وجبات موظفين","Employee meals"],["training","🎓","تدريب","Training"],["conference","🎤","مؤتمر","Conference"],["buffet","🍽️","بوفيه","Buffet"],["coffee","☕","Coffee Break","Coffee Break"]];
+
+const needs=[
+  ["meeting","💼","اجتماع","Meeting"],
+  ["employees","🍱","وجبات موظفين","Employee meals"],
+  ["training","🎓","تدريب","Training"],
+  ["conference","🎤","مؤتمر","Conference"],
+  ["buffet","🍽️","بوفيه","Buffet"],
+  ["coffee","☕","Coffee Break","Coffee Break"]
+];
+
 const T={
-ar:{people:"عدد الأشخاص",budget:"الميزانية للشخص",budgetAny:"أي ميزانية",all:"الكل",meeting:"اجتماعات",employees:"وجبات موظفين",training:"تدريب",conference:"مؤتمرات",buffet:"بوفيه",coffee:"Coffee Break",other:"أخرى",request:"طلب الباقة",per:"ر.ع / شخص",min:"الحد الأدنى",lead:"مهلة التجهيز",hours:"ساعة",empty:"لا توجد باقات منشورة تطابق بحثك حاليًا.",loadError:"تعذر تحميل الباقات حاليًا. يمكنك إرسال طلب مخصص.",name:"الاسم",phone:"رقم الهاتف",email:"البريد الإلكتروني (اختياري)",date:"التاريخ",location:"المدينة / المنطقة",notes:"ملاحظات",guests:"عدد الأشخاص",estimate:"السعر التقديري",send:"إرسال الطلب",sending:"جارٍ الإرسال...",customTitle:"طلب ضيافة مخصص",eventType:"نوع المناسبة",details:"تفاصيل الطعام والخدمة",customSend:"إرسال الطلب للمراجعة",mealsTitle:"برنامج وجبات الموظفين",company:"اسم الشركة",employeesLabel:"عدد الموظفين",weekdays:"عدد أيام الأسبوع",mealBudget:"ميزانية الوجبة / موظف",mealTime:"وقت التسليم",startDate:"تاريخ البداية",mealDetails:"الموقع والمتطلبات الغذائية",monthly:"ميزانية شهرية تقديرية",mealSend:"إرسال طلب البرنامج",successPackage:"تم استلام طلب الباقة. سنؤكد التوفر والتفاصيل النهائية قبل التنفيذ.",successCustom:"تم استلام الطلب. سنراجع التفاصيل قبل المطابقة مع مزود مناسب.",successMeals:"تم استلام طلب برنامج الوجبات وسنراجع تفاصيل الجدول.",badContact:"أدخل الاسم ورقم هاتف صحيحًا.",badFields:"أكمل الحقول المطلوبة بشكل صحيح.",rate:"تم إرسال عدة طلبات خلال وقت قصير. حاول مرة أخرى لاحقًا.",unavailable:"هذه الباقة لم تعد متاحة حاليًا.",smartEmpty:"اكتب تفاصيل طلبك أولًا.",smartReady:"تم تنظيم التفاصيل الأساسية. أكمل الطلب لإرساله للمراجعة.",placeholderSmart:"مثال: اجتماع لـ 80 شخص يوم الخميس في مسقط، Coffee Break والميزانية 4 ر.ع للشخص."},
-en:{people:"Guests",budget:"Budget / person",budgetAny:"Any budget",all:"All",meeting:"Meetings",employees:"Employee meals",training:"Training",conference:"Conferences",buffet:"Buffet",coffee:"Coffee Break",other:"Other",request:"Request package",per:"OMR / person",min:"Minimum",lead:"Lead time",hours:"hours",empty:"No published packages match your search right now.",loadError:"Packages are temporarily unavailable. You can still send a custom request.",name:"Name",phone:"Phone number",email:"Email (optional)",date:"Date",location:"City / area",notes:"Notes",guests:"Guests",estimate:"Estimated total",send:"Send request",sending:"Sending...",customTitle:"Custom catering request",eventType:"Event type",details:"Food and service details",customSend:"Send for review",mealsTitle:"Employee meal program",company:"Company name",employeesLabel:"Employees",weekdays:"Days per week",mealBudget:"Meal budget / employee",mealTime:"Delivery time",startDate:"Start date",mealDetails:"Location and dietary requirements",monthly:"Estimated monthly budget",mealSend:"Send program request",successPackage:"Your package request was received. Availability and final details will be confirmed before fulfillment.",successCustom:"Your request was received. We will review the details before matching a provider.",successMeals:"Your employee meal request was received for schedule review.",badContact:"Enter a valid name and phone number.",badFields:"Complete the required fields correctly.",rate:"Too many requests were sent in a short period. Please try again later.",unavailable:"This package is no longer available.",smartEmpty:"Describe your request first.",smartReady:"The key details are structured. Complete the form to submit for review.",placeholderSmart:"Example: Meeting for 80 people on Thursday in Muscat, Coffee Break, budget OMR 4 per person."}
+  ar:{people:"عدد الأشخاص",budgetAny:"أي ميزانية",all:"الكل",meeting:"اجتماعات",employees:"وجبات موظفين",training:"تدريب",conference:"مؤتمرات",buffet:"بوفيه",coffee:"Coffee Break",other:"أخرى",request:"اطلب هذه الباقة",per:"ر.ع / شخص",min:"الحد الأدنى",lead:"مهلة التجهيز",hours:"ساعة",empty:"لا توجد باقات منشورة تطابق بحثك حاليًا.",loadError:"تعذر تحميل الباقات حاليًا. يمكنك تقديم طلب عرض سعر مخصص.",smartEmpty:"اكتب تفاصيل طلبك أولًا.",smartReady:"تم ترتيب النقاط الأساسية. راجعها ثم تابع إلى طلب عرض السعر.",placeholderSmart:"مثال: مؤتمر لـ 120 شخص في مسقط، Coffee Break وغداء، خيارات نباتية، والميزانية 8 ر.ع للشخص."},
+  en:{people:"Guests",budgetAny:"Any budget",all:"All",meeting:"Meetings",employees:"Employee meals",training:"Training",conference:"Conferences",buffet:"Buffet",coffee:"Coffee Break",other:"Other",request:"Request this package",per:"OMR / person",min:"Minimum",lead:"Lead time",hours:"hours",empty:"No published packages match your search right now.",loadError:"Packages are temporarily unavailable. You can request custom quotes instead.",smartEmpty:"Describe your requirement first.",smartReady:"The key points are structured. Review them, then continue to the quote request.",placeholderSmart:"Example: Conference for 120 people in Muscat, coffee break and lunch, vegetarian options, budget OMR 8 per person."}
 };
+
 function t(k){return T[lang][k]||k}
+
 function applyLanguage(){
-  document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";document.body.classList.toggle("en",lang==="en");
+  document.documentElement.lang=lang;
+  document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+  document.body.classList.toggle("en",lang==="en");
   document.querySelectorAll("[data-ar]").forEach(e=>e.innerHTML=e.dataset[lang]);
-  document.getElementById("langBtn").textContent=lang==="ar"?"EN":"عربي";
-  document.getElementById("heroPeople").placeholder=t("people");
-  document.getElementById("heroBudget").innerHTML=`<option value="">${t("budgetAny")}</option><option value="3">${lang==="ar"?"حتى 3 ر.ع":"Up to OMR 3"}</option><option value="5">${lang==="ar"?"حتى 5 ر.ع":"Up to OMR 5"}</option><option value="10">${lang==="ar"?"حتى 10 ر.ع":"Up to OMR 10"}</option><option value="999">${lang==="ar"?"مفتوحة":"Open"}</option>`;
-  document.getElementById("smartText").placeholder=t("placeholderSmart");document.getElementById("smartSummary").textContent=t("smartReady");
+  const langBtn=document.getElementById("langBtn");if(langBtn)langBtn.textContent=lang==="ar"?"EN":"عربي";
+  const people=document.getElementById("heroPeople");if(people)people.placeholder=t("people");
+  const budget=document.getElementById("heroBudget");if(budget)budget.innerHTML=`<option value="">${t("budgetAny")}</option><option value="3">${lang==="ar"?"حتى 3 ر.ع":"Up to OMR 3"}</option><option value="5">${lang==="ar"?"حتى 5 ر.ع":"Up to OMR 5"}</option><option value="10">${lang==="ar"?"حتى 10 ر.ع":"Up to OMR 10"}</option><option value="999">${lang==="ar"?"مفتوحة":"Open"}</option>`;
+  const smart=document.getElementById("smartText");if(smart)smart.placeholder=t("placeholderSmart");
+  const summary=document.getElementById("smartSummary");if(summary&&!smartDraft)summary.textContent=t("smartReady");
   renderNeeds();renderFilters();renderPackages();
 }
+
 function switchLang(){lang=lang==="ar"?"en":"ar";localStorage.setItem("gch_lang",lang);applyLanguage()}
-function categoryType(v=""){v=String(v).toLowerCase();if(v.includes("coffee"))return"coffee";if(v.includes("employee")||v.includes("office")||v.includes("lunch"))return"employees";if(v.includes("train"))return"training";if(v.includes("conference"))return"conference";if(v.includes("buffet"))return"buffet";if(v.includes("meeting"))return"meeting";return"other"}
+
+function categoryType(v=""){
+  v=String(v).toLowerCase();
+  if(v.includes("coffee"))return"coffee";
+  if(v.includes("employee")||v.includes("office")||v.includes("lunch"))return"employees";
+  if(v.includes("train"))return"training";
+  if(v.includes("conference"))return"conference";
+  if(v.includes("buffet"))return"buffet";
+  if(v.includes("meeting"))return"meeting";
+  return"other";
+}
 function arr(v){return Array.isArray(v)?v:[]}
+
 async function loadPackages(){
   try{
     const [pp,pk]=await Promise.all([
@@ -25,58 +51,58 @@ async function loadPackages(){
     ]);
     if(pp.error)throw pp.error;if(pk.error)throw pk.error;
     providers=new Map((pp.data||[]).map(x=>[x.provider_id,x]));
-    packages=(pk.data||[]).filter(x=>providers.has(x.provider_id)).map(x=>({...x,type:x.category_key||categoryType(x.category),provider:providers.get(x.provider_id)}));packageLoadFailed=false;
+    packages=(pk.data||[]).filter(x=>providers.has(x.provider_id)).map(x=>({...x,type:x.category_key||categoryType(x.category),provider:providers.get(x.provider_id)}));
+    packageLoadFailed=false;
   }catch(e){console.error(e);packages=[];packageLoadFailed=true}
   renderPackages();
 }
-function renderNeeds(){document.getElementById("heroChoices").innerHTML=needs.map(n=>`<button class="choice ${selectedNeed===n[0]?"active":""}" onclick="selectedNeed='${n[0]}';renderNeeds()">${n[1]} ${lang==="ar"?n[2]:n[3]}</button>`).join("")}
-function renderFilters(){const xs=[["all",t("all")],...needs.map(n=>[n[0],lang==="ar"?n[2]:n[3]])];document.getElementById("filters").innerHTML=xs.map(x=>`<button class="filter ${activeFilter===x[0]?"active":""}" onclick="activeFilter='${x[0]}';renderFilters();renderPackages()">${x[1]}</button>`).join("")}
+
+function renderNeeds(){
+  const el=document.getElementById("heroChoices");if(!el)return;
+  el.innerHTML=needs.map(n=>`<button class="choice ${selectedNeed===n[0]?"active":""}" onclick="selectedNeed='${n[0]}';renderNeeds()">${n[1]} ${lang==="ar"?n[2]:n[3]}</button>`).join("");
+}
+
+function renderFilters(){
+  const el=document.getElementById("filters");if(!el)return;
+  const xs=[["all",t("all")],...needs.map(n=>[n[0],lang==="ar"?n[2]:n[3]])];
+  el.innerHTML=xs.map(x=>`<button class="filter ${activeFilter===x[0]?"active":""}" onclick="activeFilter='${x[0]}';renderFilters();renderPackages()">${x[1]}</button>`).join("");
+}
+
 function renderPackages(){
- const ppl=Number(document.getElementById("heroPeople")?.value||0),bud=Number(document.getElementById("heroBudget")?.value||0);
- const list=packages.filter(x=>(activeFilter==="all"||x.type===activeFilter||(activeFilter==="meeting"&&x.type==="coffee"))&&(!ppl||(ppl>=Number(x.min_people||1)&&ppl<=Number(x.max_people||99999)))&&(!bud||Number(x.price_per_person)<=bud));
- const grid=document.getElementById("packageGrid");
- if(!list.length){grid.innerHTML=`<div class="empty">${packageLoadFailed?t("loadError"):t("empty")}</div>`;return}
- grid.innerHTML=list.map(x=>{const items=lang==="en"&&arr(x.items_en).length?arr(x.items_en):arr(x.items);const name=lang==="en"?(x.name_en||x.name):x.name;return `<article class="package"><div class="pkg-head"><div class="vendor">${GCH.esc(x.provider.name)}</div><div class="pkg-type">${t(x.type)}</div><h3>${GCH.esc(name)}</h3><div class="price">${GCH.number(x.price_per_person,1)} <small>${t("per")}</small></div></div><div class="pkg-body"><ul>${items.map(i=>`<li>${GCH.esc(i)}</li>`).join("")||`<li>${lang==="ar"?"التفاصيل تظهر عند فتح الطلب":"Details shown when requesting"}</li>`}</ul><div class="pkg-meta"><span>${t("min")}: ${GCH.number(x.min_people)}</span><span>${t("lead")}: ${GCH.number(x.lead_time_hours)} ${t("hours")}</span></div><button class="primary" onclick="openPackage('${x.id}')">${t("request")}</button></div></article>`}).join("");
+  const grid=document.getElementById("packageGrid");if(!grid)return;
+  const ppl=Number(document.getElementById("heroPeople")?.value||0),bud=Number(document.getElementById("heroBudget")?.value||0);
+  const list=packages.filter(x=>(activeFilter==="all"||x.type===activeFilter||(activeFilter==="meeting"&&x.type==="coffee"))&&(!ppl||(ppl>=Number(x.min_people||1)&&ppl<=Number(x.max_people||99999)))&&(!bud||Number(x.price_per_person)<=bud));
+  if(!list.length){grid.innerHTML=`<div class="empty">${packageLoadFailed?t("loadError"):t("empty")}</div>`;return}
+  grid.innerHTML=list.map(x=>{
+    const items=lang==="en"&&arr(x.items_en).length?arr(x.items_en):arr(x.items),name=lang==="en"?(x.name_en||x.name):x.name;
+    return `<article class="package"><div class="pkg-head"><div class="vendor">${GCH.esc(x.provider.name)}</div><div class="pkg-type">${t(x.type)}</div><h3>${GCH.esc(name)}</h3><div class="price">${GCH.number(x.price_per_person,1)} <small>${t("per")}</small></div></div><div class="pkg-body"><ul>${items.map(i=>`<li>${GCH.esc(i)}</li>`).join("")||`<li>${lang==="ar"?"التفاصيل تظهر عند فتح الطلب":"Details shown when requesting"}</li>`}</ul><div class="pkg-meta"><span>${t("min")}: ${GCH.number(x.min_people)}</span><span>${t("lead")}: ${GCH.number(x.lead_time_hours)} ${t("hours")}</span></div><button class="primary" onclick="openPackage('${x.id}')">${t("request")}</button></div></article>`;
+  }).join("");
 }
-function findPackages(){activeFilter=selectedNeed;renderFilters();renderPackages();document.getElementById("packages").scrollIntoView()}
-function field(label,id,type="text",extra=""){return `<div class="field"><label for="${id}">${label}</label><input id="${id}" type="${type}" ${extra}></div>`}
-function basicFields(p){return `<div class="grid2">${field(t("name"),p+"name")}${field(t("phone"),p+"phone","tel",'inputmode="tel"')}</div>${field(t("email"),p+"email","email")}`}
-function modal(title,html){document.getElementById("modalTitle").textContent=title;document.getElementById("modalBody").innerHTML=html;GCH.clearMsg("modalMsg");GCH.openModal("requestModal")}
-function openPackage(id){
- const x=packages.find(p=>p.id===id);if(!x)return;const name=lang==="en"?(x.name_en||x.name):x.name;const pref=Math.max(Number(x.min_people||1),Number(document.getElementById("heroPeople").value)||Number(x.min_people||1));
- modal(`${t("request")}: ${name}`,`<div class="notice">${GCH.esc(x.provider.name)} · ${GCH.money(x.price_per_person,lang,1)} / ${lang==="ar"?"شخص":"person"}</div><div style="height:10px"></div>${basicFields("p")}<div class="grid2">${field(t("guests"),"ppeople","number",`min="${x.min_people}" max="${x.max_people}" value="${pref}" oninput="updateEstimate('${x.id}')"`) }${field(t("date"),"pdate","date",`min="${GCH.minDate(Number(x.lead_time_hours||0))}"`)}</div><div class="grid2">${field(t("location"),"plocation","text",'required')}${field(t("notes"),"pnotes")}</div><div class="estimate"><span>${t("estimate")}</span><b id="pestimate">—</b></div><button class="primary" id="submitBtn" style="width:100%" onclick="submitPackage('${x.id}')">${t("send")}</button>`);updateEstimate(id);
+
+function findPackages(){activeFilter=selectedNeed;renderFilters();renderPackages();document.getElementById("packageGrid")?.scrollIntoView({behavior:"smooth",block:"start"})}
+
+function extractSmart(text){
+  text=String(text||"").replace(/[٠-٩]/g,d=>String("٠١٢٣٤٥٦٧٨٩".indexOf(d)));
+  const p=text.match(/(\d+)\s*(?:شخص|موظف|ضيف|people|guests|employees)/i),b=text.match(/(?:ميزاني(?:ة|تي)|budget)[^\d]*(\d+(?:[.,]\d+)?)/i);
+  return{people:p?Number(p[1]):"",budget:b?Number(b[1].replace(",",".")):""};
 }
-function updateEstimate(id){const x=packages.find(p=>p.id===id),n=Number(document.getElementById("ppeople")?.value||0);if(!x||!n)return;const total=Math.max(n*Number(x.price_per_person||0)+Number(x.delivery_fee||0),Number(x.minimum_spend||0));document.getElementById("pestimate").textContent=GCH.money(total,lang,total%1?2:0)}
-async function send(body,success){
- const btn=document.getElementById("submitBtn");GCH.setBusy(btn,true,t("sending"));
- try{await GCH.publicRequest(body);GCH.msg("modalMsg",success,true);setTimeout(()=>GCH.closeModal("requestModal"),1500)}
- catch(e){console.error(e);let m=GCH.genericError(e);if(e.code==="rate_limited")m=t("rate");if(e.code==="package_unavailable")m=t("unavailable");GCH.msg("modalMsg",m,false)}
- finally{GCH.setBusy(btn,false)}
+
+function smartAnalyze(){
+  const input=document.getElementById("smartText"),summary=document.getElementById("smartSummary"),chipsEl=document.getElementById("smartChips");
+  smartDraft=(input?.value||"").trim();
+  if(!smartDraft){if(summary)summary.textContent=t("smartEmpty");if(chipsEl)chipsEl.innerHTML="";return}
+  const p=extractSmart(smartDraft),chips=[];
+  if(p.people)chips.push(lang==="ar"?`${GCH.number(p.people)} شخص`:`${GCH.number(p.people)} people`);
+  if(p.budget)chips.push(GCH.money(p.budget,lang,p.budget%1?1:0));
+  if(/coffee|قهوة|كوفي/i.test(smartDraft))chips.push("Coffee Break");
+  if(/مؤتمر|conference/i.test(smartDraft))chips.push(lang==="ar"?"مؤتمر":"Conference");
+  if(/تدريب|training/i.test(smartDraft))chips.push(lang==="ar"?"تدريب":"Training");
+  if(chipsEl)chipsEl.innerHTML=(chips.length?chips:[lang==="ar"?"طلب مخصص":"Custom request"]).map(x=>`<span class="chip">${GCH.esc(x)}</span>`).join("");
+  if(summary)summary.textContent=t("smartReady");
 }
-async function submitPackage(id){
- const x=packages.find(p=>p.id===id),name=document.getElementById("pname").value.trim(),phone=GCH.normalizePhone(document.getElementById("pphone").value),email=document.getElementById("pemail").value.trim(),people=Number(document.getElementById("ppeople").value),date=document.getElementById("pdate").value,location=document.getElementById("plocation").value.trim();
- if(!x||name.length<2||!GCH.validPhone(phone)){GCH.msg("modalMsg",t("badContact"));return}
- if(!Number.isInteger(people)||people<Number(x.min_people)||people>Number(x.max_people)||!date||!location){GCH.msg("modalMsg",t("badFields"));return}
- await send({request_type:"package",package_id:x.id,contact_name:name,contact_phone:phone,contact_email:email,event_date:date,people_count:people,location,details:{notes:document.getElementById("pnotes").value.trim()}},t("successPackage"));
-}
-function openCustom(prefill=""){
- modal(t("customTitle"),`${basicFields("c")}<div class="grid2"><div class="field"><label>${t("eventType")}</label><select id="ctype"><option value="meeting">${t("meeting")}</option><option value="training">${t("training")}</option><option value="conference">${t("conference")}</option><option value="buffet">${t("buffet")}</option><option value="other">${t("other")}</option></select></div>${field(t("guests"),"cpeople","number",'min="1"')}</div><div class="grid2">${field(t("date"),"cdate","date",`min="${GCH.minDate()}"`)}${field(t("location"),"clocation")}</div>${field(lang==="ar"?"الميزانية التقريبية (ر.ع)":"Approx. budget (OMR)","cbudget","number",'min="0" step="0.1"')}<div class="field"><label>${t("details")}</label><textarea id="cdetails">${GCH.esc(prefill||smartDraft)}</textarea></div><button class="primary" id="submitBtn" style="width:100%" onclick="submitCustom()">${t("customSend")}</button>`);
- const p=extractSmart(prefill||smartDraft);if(p.people)document.getElementById("cpeople").value=p.people;if(p.budget)document.getElementById("cbudget").value=p.budget;
-}
-async function submitCustom(){
- const name=document.getElementById("cname").value.trim(),phone=GCH.normalizePhone(document.getElementById("cphone").value),people=Number(document.getElementById("cpeople").value),date=document.getElementById("cdate").value,location=document.getElementById("clocation").value.trim(),budget=document.getElementById("cbudget").value;
- if(name.length<2||!GCH.validPhone(phone)){GCH.msg("modalMsg",t("badContact"));return}if(!Number.isInteger(people)||people<1||!date||!location){GCH.msg("modalMsg",t("badFields"));return}
- await send({request_type:"custom",contact_name:name,contact_phone:phone,contact_email:document.getElementById("cemail").value.trim(),event_date:date,people_count:people,location,budget:budget||null,budget_unit:"total",details:{event_type:document.getElementById("ctype").value,notes:document.getElementById("cdetails").value.trim()}},t("successCustom"));
-}
-function openMeals(){
- modal(t("mealsTitle"),`${basicFields("m")}<div class="grid2">${field(t("company"),"mcompany")}${field(t("employeesLabel"),"memployees","number",'min="1" oninput="mealEstimate()"')}</div><div class="grid2"><div class="field"><label>${t("weekdays")}</label><select id="mdays" onchange="mealEstimate()"><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>${field(t("mealBudget"),"mpp","number",'min="0.1" step="0.1" oninput="mealEstimate()"')}</div><div class="grid2">${field(t("startDate"),"mstart","date",`min="${GCH.minDate()}"`)}${field(t("mealTime"),"mtime","time")}</div><div class="field"><label>${t("mealDetails")}</label><textarea id="mdetails"></textarea></div><div class="estimate"><span>${t("monthly")}</span><b id="mestimate">—</b></div><button class="primary" id="submitBtn" style="width:100%" onclick="submitMeals()">${t("mealSend")}</button>`);
-}
-function mealEstimate(){const emp=Number(document.getElementById("memployees")?.value||0),days=Number(document.getElementById("mdays")?.value||0),pp=Number(document.getElementById("mpp")?.value||0),el=document.getElementById("mestimate");if(el)el.textContent=emp&&days&&pp?GCH.money(emp*days*4.33*pp,lang,0):"—"}
-async function submitMeals(){
- const name=document.getElementById("mname").value.trim(),phone=GCH.normalizePhone(document.getElementById("mphone").value),emp=Number(document.getElementById("memployees").value),days=Number(document.getElementById("mdays").value),pp=Number(document.getElementById("mpp").value),start=document.getElementById("mstart").value,time=document.getElementById("mtime").value,location=document.getElementById("mdetails").value.trim(),company=document.getElementById("mcompany").value.trim();
- if(name.length<2||!GCH.validPhone(phone)){GCH.msg("modalMsg",t("badContact"));return}if(!company||!Number.isInteger(emp)||emp<1||!pp||pp<=0||!start||!time||!location){GCH.msg("modalMsg",t("badFields"));return}
- await send({request_type:"employee_meals",contact_name:name,contact_phone:phone,contact_email:document.getElementById("memail").value.trim(),event_date:start,people_count:emp,location,budget:pp,budget_unit:"per_employee_meal",details:{company_name:company,days_per_week:days,price_per_employee:pp,delivery_time:time,notes:location}},t("successMeals"));
-}
-function extractSmart(text){text=String(text||"").replace(/[٠-٩]/g,d=>String("٠١٢٣٤٥٦٧٨٩".indexOf(d)));const p=text.match(/(\d+)\s*(?:شخص|موظف|ضيف|people|guests|employees)/i),b=text.match(/(?:ميزاني(?:ة|تي)|budget)[^\d]*(\d+(?:[.,]\d+)?)/i);return{people:p?Number(p[1]):"",budget:b?Number(b[1].replace(",",".")):""}}
-function smartAnalyze(){smartDraft=document.getElementById("smartText").value.trim();if(!smartDraft){document.getElementById("smartSummary").textContent=t("smartEmpty");return}const p=extractSmart(smartDraft),chips=[];if(p.people)chips.push(lang==="ar"?`${GCH.number(p.people)} شخص`:`${GCH.number(p.people)} people`);if(p.budget)chips.push(GCH.money(p.budget,lang,p.budget%1?1:0));if(/coffee|قهوة|كوفي/i.test(smartDraft))chips.push("Coffee Break");document.getElementById("smartChips").innerHTML=(chips.length?chips:[t("smartReady")]).map(x=>`<span class="chip">${GCH.esc(x)}</span>`).join("");document.getElementById("smartSummary").textContent=t("smartReady");openCustom(smartDraft)}
-document.getElementById("langBtn").addEventListener("click",switchLang);GCH.setupMobile();GCH.setupModal("requestModal");GCH.setupEscape();applyLanguage();loadPackages();
+
+GCH.setupMobile();
+GCH.setupModal("requestModal");
+GCH.setupEscape();
+applyLanguage();
+loadPackages();
