@@ -12,7 +12,8 @@
   if(isHome){
     window.openCustom=function(){
       const note=(document.getElementById('smartText')?.value||'').trim();
-      goCompanyRfq({gch_custom_intent:'1',gch_custom_notes:note||null});
+      if(note)localStorage.setItem('gch_request_draft',note);
+      location.href='./request.html';
     };
     window.openMeals=function(){
       location.href='./company/#employeeMeals';
